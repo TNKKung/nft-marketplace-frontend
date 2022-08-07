@@ -1,6 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useUserAccount } from "../store/UserAction/hook";
+
 
 const Header: React.FC = () => {
+  const [connectBtnText, setConnectBtnText] = useState('Connect');
+  const { address ,loginMetamask } = useUserAccount();
+
+  useEffect(() => {
+    if (window.ethereum) {
+      console.log('detected');
+    } else {
+      console.log('Not detect');
+    }
+  }, []);
+
+  useEffect(() => {
+    if(address == undefined){
+      setConnectBtnText('Connect');
+    }else{
+      setConnectBtnText(address);
+    }
+  }, [address]);
+
+  window.ethereum.on('accountsChanged',()=>{
+    if(address != undefined){
+    window.location.reload();}
+  })
+
   return (
     <div className="flex items-center justify-between w-full px-4 text-gray-600 bg-gray-100 border-b-2 h-14">
       <div className="flex flex-row items-center w-full space-x-4">
@@ -42,8 +68,8 @@ const Header: React.FC = () => {
           </svg>
         </button>
       </div>
-      <button className="flex items-center px-4 py-1 bg-gray-300 hover:bg-gray-400 rounded-2xl">
-        Connect
+      <button className="flex items-center px-4 py-1 bg-gray-300 hover:bg-gray-400 rounded-2xl" onClick={loginMetamask}>
+        {connectBtnText}
       </button>
     </div>
   );
