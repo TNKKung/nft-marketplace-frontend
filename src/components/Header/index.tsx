@@ -22,6 +22,11 @@ const Header: React.FC = () => {
     }
   }, [address]);
 
+  window.ethereum.on('accountsChanged',()=>{
+    if(address != undefined){
+    window.location.reload();}
+  })
+
   return (
     <div className="flex items-center justify-between w-full px-4 text-gray-600 bg-gray-100 border-b-2 h-14">
       <div className="flex flex-row items-center w-full space-x-4">
