@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useUserAccount } from "../../store/UserAction/hook";
+import { Link } from 'react-router-dom';
 import useAccount from "../../hook/useAccount";
 
 const Header: React.FC = () => {
@@ -31,12 +32,13 @@ const Header: React.FC = () => {
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               {/* <li><hr className="dropdown-divider" /></li> */}
-              <li><button className="dropdown-item">Profile</button></li>
-              <li><button className="dropdown-item"
+              <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
+              <li><Link className="dropdown-item" to="/setting">Setting</Link></li>
+              <li><Link className="dropdown-item" to="/"
                 onClick={() => {
                   loginMetamask();
                 }}>
-                Disconnect</button></li>
+                Disconnect</Link></li>
             </ul>
           </div>
         </li>
@@ -69,10 +71,10 @@ const Header: React.FC = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-light sticky-top shadow">
       <div className="container-fluid">
-        <a className="navbar-brand mx-3 d-flex flex-column align-items-center" href="#">
+        <Link className="navbar-brand mx-3 d-flex flex-column align-items-center" to="/">
           <div className="h6">NFT</div>
           <div className="h6">Marketplace</div>
-        </a>
+        </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>

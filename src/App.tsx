@@ -1,12 +1,19 @@
 import Header from "./components/Header";
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import SettingPage from "./components/Setting";
 function App() {
   return (
-    <div className="flex flex-col w-full h-screen">
-      <Header />
-      <div className="flex items-center justify-center w-full h-full text-xl font-bold">
-        setup frontend nft marketplace project
-      </div>
+    <div>
+      <BrowserRouter>
+        <Header />
+          <Routes>
+            <Route path="/" element={<Home/>}></Route>
+            <Route path="/profile" element={<Profile/>}></Route>
+            <Route path="/setting" element={<SettingPage/>}></Route>
+          </Routes>
+      </BrowserRouter>
     </div>
   );
 }
