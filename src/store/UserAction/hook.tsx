@@ -1,5 +1,8 @@
+import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, removeItem } from ".";
+
+import useAuth from "../../hook/useAuth";
 
 export const useUserAccount = () => {
   const address = useSelector(
@@ -7,16 +10,22 @@ export const useUserAccount = () => {
   );
   const dispatch = useDispatch();
 
-  const loginMetamask = () => {
-    if (address == undefined) {
-      window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .then((res: any) => {
-          // Return the address of the wallet
-          dispatch(addItem(res[0]));
+  const { handleLogin, handleLogout } = useAuth();
+
+  const loginMetamask = async () => {
+    if (address === undefined) {
+      if (window?.ethereum?.isMetaMask) {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
         });
+
+        const account = Web3.utils.toChecksumAddress(accounts[0]);
+        await handleLogin(account);
+        dispatch(addItem(account));
+      }
     } else {
       dispatch(removeItem());
+      handleLogout();
     }
   };
 
