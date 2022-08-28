@@ -26,7 +26,14 @@ const Header: React.FC = () => {
         </li>
       );
     } else {
-      return (
+      return (<div className="d-flex">
+        <li className="nav-item w-50 me-auto">
+          <div className="nav-link d-flex align-items-center">
+            <Link className="btn btn-secondary text-white ms-2" to="/createNFT">
+              Create
+            </Link>
+          </div>
+        </li>
         <li className="nav-item d-flex align-items-center">
           <div className="dropdown">
             <button
@@ -63,6 +70,7 @@ const Header: React.FC = () => {
             </ul>
           </div>
         </li>
+      </div>
       );
     }
   }
@@ -110,7 +118,7 @@ const Header: React.FC = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div className="navbar-collapse collapse" id="navbarNavAltMarkup">
           <ul className="navbar-nav w-100">
             <li className="nav-item w-50 me-auto">
               <div className="nav-link d-flex align-items-center">
