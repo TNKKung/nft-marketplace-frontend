@@ -41,13 +41,24 @@ const CreateNFT: React.FC = () => {
   }
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
+  const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
 
   const [creatorAddressInput, setCreatorAddressInput] = useState(address);
   const [creatorAddressClass, setCreatorAddressClass] = useState('');
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
 
   const addCreator = () => {
-    if (creatorAddressInput !== "") {
+    var TotalApprove = true;
+    var creatorAddressApprove = true;
+    var NewroyaltyTotal = royaltyTotal + creatorEarnInput;
+    if (NewroyaltyTotal > 10) {
+      TotalApprove = false;
+    }
+    if (creatorAddressInput === '') {
+      creatorAddressApprove = false;
+      setCreatorAddressClass('is-invalid');
+    }
+    if (creatorAddressApprove == true && TotalApprove == true) {
       var creatorData = {
         creatorAddress: creatorAddressInput,
         creatorEarn: creatorEarnInput
@@ -56,15 +67,15 @@ const CreateNFT: React.FC = () => {
       console.log(dummyCreatorAddressList);
       const checkEqual = dummyCreatorAddressList.some((element: any) =>
         element.creatorAddress == creatorData.creatorAddress)
-
       if (checkEqual == false) {
         dummyCreatorAddressList.push(creatorData);
         setCreatorAddressList(dummyCreatorAddressList);
         setCreatorAddressInput("");
         setCreatorEarnInput(0);
+        setRoyaltyTotal(NewroyaltyTotal);
+      }else{
+        setCreatorAddressClass('is-invalid');
       }
-    } else {
-      setCreatorAddressClass('is-invalid');
     }
   }
 
@@ -110,7 +121,8 @@ const CreateNFT: React.FC = () => {
       console.log(nftName);
       console.log(nftDescription);
       console.log(selectedCategory);
-      //infura IPFS
+      console.log(creatorAddressList);
+      // infura IPFS
       // const projectId = '';
       // const projectSecret = '';
       // const auth =
@@ -123,7 +135,7 @@ const CreateNFT: React.FC = () => {
       //     authorization: auth,
       //   },
       // });
-      // client.add('Hello World').then((res: any) => {
+      // client.add(imageNFT).then((res: any) => {
       //   console.log(res);
       // });
 
@@ -207,10 +219,12 @@ const CreateNFT: React.FC = () => {
                 <div className="col-8 py-2 border rounded">
                   <div className='container-fluid'>
                     <div className='row h5'>Creator royalty fee (%)</div>
-                    <CreatorRoyaltyFee creatorList={creatorAddressList} setCreatorList={setCreatorAddressList}/>
+                    <div className='row form-text'>Max total royalty fee 10%</div>
+                    <div className='row h6 mt-2'>Creator wallet address</div>
+                    <CreatorRoyaltyFee creatorList={creatorAddressList} setCreatorList={setCreatorAddressList} setTotal={setRoyaltyTotal} />
                     <div className='row mt-2 align-items-center'>
                       <div className='col-9 text-end fw-bold'>Total</div>
-                      <div className='col-2 text-center fw-bold'>0</div>
+                      <div className='col-2 text-center fw-bold'>{royaltyTotal}</div>
                       <div className='col-1 fw-bold'>%</div>
                     </div>
                     <div className='row h6 mt-2'>Add creator</div>
