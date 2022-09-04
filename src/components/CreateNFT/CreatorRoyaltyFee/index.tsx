@@ -11,7 +11,7 @@ function CreatorRoyaltyFee(props: CreatorRoyaltyFeeProps) {
     },[props.creatorList])
     const creatorAddresRender = (creatorWalletAddress: string, creatorEarn: number, index: number) => {
         return (
-            <div className='row mb-2 align-items-center bg-gray-100 rounded'>
+            <div className='row mb-2 align-items-center bg-gray-100 rounded' key={index}>
                 <div className='col-9 text-truncate'>{creatorWalletAddress}</div>
                 <div className='col-2 text-center'>{creatorEarn} %</div>
                 <div className='col-1'><button className='btn btn-light'

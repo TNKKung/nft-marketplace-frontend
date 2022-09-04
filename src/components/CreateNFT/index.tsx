@@ -3,6 +3,8 @@ import Select, { MultiValue } from 'react-select'
 import { create } from 'ipfs-http-client'
 import { useUserAccount } from '../../store/UserAction/hook';
 import CreatorRoyaltyFee from './CreatorRoyaltyFee';
+import { ethers } from 'ethers';
+import NFT_ABI from '../../contracts/NFT_ABI.json';
 
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
@@ -45,6 +47,7 @@ const CreateNFT: React.FC = () => {
 
   const [creatorAddressInput, setCreatorAddressInput] = useState(address);
   const [creatorAddressClass, setCreatorAddressClass] = useState('');
+  const [creatorEarnClass, setCreatorEarnClass] = useState('');
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
 
   const addCreator = () => {
@@ -54,7 +57,7 @@ const CreateNFT: React.FC = () => {
     if (NewroyaltyTotal > 10) {
       TotalApprove = false;
     }
-    if (creatorAddressInput === '') {
+    if (creatorAddressInput === '' || creatorAddressInput.length != 42) {
       creatorAddressApprove = false;
       setCreatorAddressClass('is-invalid');
     }
@@ -73,12 +76,11 @@ const CreateNFT: React.FC = () => {
         setCreatorAddressInput("");
         setCreatorEarnInput(0);
         setRoyaltyTotal(NewroyaltyTotal);
-      }else{
+      } else {
         setCreatorAddressClass('is-invalid');
       }
     }
   }
-
 
   function createNFT() {
     //Picture Name
@@ -116,37 +118,57 @@ const CreateNFT: React.FC = () => {
     }
 
     if (nftNameApprove == true && nftDescriptionApprove == true && nftImageApprove == true) {
+      const collaborator = creatorAddressList.map((item: any) => item.creatorAddress);
+      const collaboratorPercent = creatorAddressList.map((item: any) => item.creatorEarn);
       console.log('Success');
       console.log(imageNFT);
       console.log(nftName);
       console.log(nftDescription);
       console.log(selectedCategory);
-      console.log(creatorAddressList);
-      // infura IPFS
-      // const projectId = '';
-      // const projectSecret = '';
-      // const auth =
-      //   'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
-      // const client = create({
-      //   host: 'ipfs.infura.io',
-      //   port: 5001,
-      //   protocol: 'https',
-      //   headers: {
-      //     authorization: auth,
-      //   },
-      // });
-      // client.add(imageNFT).then((res: any) => {
-      //   console.log(res);
-      // });
+      console.log(collaborator);
+      console.log(collaboratorPercent);
+      //dummy IPFS
+      const dummyCID = 'QmdifLLzwFvEqPaELq7C1emwgyExndN6K27avd3YTvTcdi';
 
-      //Local IPFS
+      // infura IPFS
+      const projectId = '';
+      const projectSecret = '';
+      const auth =
+        'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+      const client = create({
+        host: 'ipfs.infura.io',
+        port: 5001,
+        protocol: 'https',
+        headers: {
+          authorization: auth,
+        },
+      });
+      client.add(imageNFT).then((CID: any) => {
+        console.log(CID.path);
+        //sent to backEnd function
+        mintNFTSmartContract(collaborator, collaboratorPercent, CID.path); console.log(dummyCID);
+        // mintNFTSmartContract(collaborator, collaboratorPercent, CID.path); console.log(CID.path);
+      });
+
+      // //Local IPFS
       // const client = create({ host: 'localhost', port: 5001, protocol: 'http' });
-      // client.add(imageNFT).then((pathCID: any) => {
-      //   console.log('http://localhost:8080/ipfs/' + pathCID.path);
+      // client.add(imageNFT).then((CID: any) => {
+      //   // console.log('http://localhost:8080/ipfs/' + CID.path);
+      //   console.log(CID.path);
+      //   mintNFTSmartContract(collaborator, collaboratorPercent, CID.path);
       // });
-      /////////get file http://localhost:8080/ipfs/QJumQEtSZbjc54r2gFprPioF4F9p1E2ekp4cxX9KYL1aNv **Note QJumQEt.. is CID
+      /////get file http://localhost:8080/ipfs/QJumQEtSZbjc54r2gFprPioF4F9p1E2ekp4cxX9KYL1aNv **Note QJumQEt.. is CID
     }
   }
+
+  async function mintNFTSmartContract(collaborator: string[], collaboratorPercent: number[], CID: string) {
+    const contractAddress = '0xf14f39df3511a622f5f0afc599898c80e20addcb'
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const mintNFT = new ethers.Contract(contractAddress, NFT_ABI, signer);
+    await mintNFT.mint(address, collaborator, collaboratorPercent, CID);
+  }
+
   return (
     <div className="container-fluid mt-5">
       <div className="row justify-content-center">
@@ -241,9 +263,11 @@ const CreateNFT: React.FC = () => {
                         </div>
                       </div>
                       <div className='col-2'>
-                        <input className='form-control text-end' type='number' min="0" max="10" value={creatorEarnInput}
+                        <input className={'form-control text-end ' + creatorEarnClass} type='number' min="0" max="10" value={creatorEarnInput}
                           onChange={e => {
-                            setCreatorEarnInput(e.target.valueAsNumber);
+                            if (e.target.value != '') {
+                              setCreatorEarnInput(e.target.valueAsNumber);
+                            }
                           }}></input>
                       </div>
                       <div className='col-1'>%</div>
