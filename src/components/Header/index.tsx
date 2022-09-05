@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { useUserAccount } from "../../store/UserAction/hook";
-import { Link } from "react-router-dom";
+import { shortenAddress } from "../../utils/addressHelper";
 
 const Header: React.FC = () => {
   const [connectBtnText, setConnectBtnText] = useState("Connect");
@@ -10,7 +11,7 @@ const Header: React.FC = () => {
   function isLogin() {
     if (address === undefined) {
       return (
-        <li className="nav-item d-flex align-items-center">
+        <li className="nav-item w d-flex align-items-center">
           <button
             className="nav-link btn btn-secondary text-white"
             onClick={() => {
@@ -37,12 +38,12 @@ const Header: React.FC = () => {
           <li className="nav-item d-flex align-items-center">
             <div className="dropdown">
               <button
-                className="btn btn-secondary dropdown-toggle"
+                className="btn btn-secondary dropdown-toggle w-36 truncate whitespace-nowrap"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                {connectBtnText}
+                {address ? shortenAddress(address) : connectBtnText}
               </button>
               <ul className="dropdown-menu dropdown-menu-end">
                 {/* <li><hr className="dropdown-divider" /></li> */}
