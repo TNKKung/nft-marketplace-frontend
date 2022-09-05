@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import Select, { MultiValue } from 'react-select'
-import { create } from 'ipfs-http-client'
-import { useUserAccount } from '../../store/UserAction/hook';
-import CreatorRoyaltyFee from './CreatorRoyaltyFee';
-import { ethers } from 'ethers';
-import NFT_ABI from '../../contracts/NFT_ABI.json';
+import React, { useState, useCallback } from "react";
+import Select, { MultiValue } from "react-select";
+import { create } from "ipfs-http-client";
+// import { ethers } from "ethers";
+
+import CreatorRoyaltyFee from "./CreatorRoyaltyFee";
+
+import { useUserAccount } from "../../store/UserAction/hook";
+// import NFT_ABI from "../../contracts/NFT_ABI.json";
+
+import useContracts from "../../hook/useContracts";
 
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
+  const { readTokenURI, mintNFT } = useContracts();
 
   const [imageNFT, setImageNFT] = useState([]);
   const [previewimageNFT, setPreviewImageNFT] = useState("");
@@ -22,12 +27,15 @@ const CreateNFT: React.FC = () => {
   const [descriptionInputClass, setDescriptionInputClass] = useState("");
   const [descriptionInvalidText, setDescriptionInvalidText] = useState("");
 
-  const [selectedCategory, setselectedCategory] = useState<MultiValue<{ value: string; label: string; }>>([]);
+  const [selectedCategory, setselectedCategory] = useState<
+    MultiValue<{ value: string; label: string }>
+  >([]);
+
   const categoryOptions = [
-    { value: 'artwork', label: 'Artwork' },
-    { value: 'memes', label: 'Memes' },
-    { value: 'photography', label: 'Photography' },
-    { value: 'collections', label: 'Collections' },
+    { value: "artwork", label: "Artwork" },
+    { value: "memes", label: "Memes" },
+    { value: "photography", label: "Photography" },
+    { value: "collections", label: "Collections" },
   ];
 
   const onSelectFile = (e: any) => {
@@ -40,14 +48,15 @@ const CreateNFT: React.FC = () => {
     } catch {
       setPreviewDisplay("d-none");
     }
-  }
+  };
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
+  const [percentList, setPercentList] = useState([]);
   const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
 
   const [creatorAddressInput, setCreatorAddressInput] = useState(address);
-  const [creatorAddressClass, setCreatorAddressClass] = useState('');
-  const [creatorEarnClass, setCreatorEarnClass] = useState('');
+  const [creatorAddressClass, setCreatorAddressClass] = useState("");
+  const [creatorEarnClass, setCreatorEarnClass] = useState("");
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
 
   const addCreator = () => {
@@ -57,30 +66,34 @@ const CreateNFT: React.FC = () => {
     if (NewroyaltyTotal > 10) {
       TotalApprove = false;
     }
-    if (creatorAddressInput === '' || creatorAddressInput.length != 42) {
+    if (creatorAddressInput === "" || creatorAddressInput.length !== 42) {
       creatorAddressApprove = false;
-      setCreatorAddressClass('is-invalid');
+      setCreatorAddressClass("is-invalid");
     }
-    if (creatorAddressApprove == true && TotalApprove == true) {
+    if (creatorAddressApprove === true && TotalApprove === true) {
       var creatorData = {
         creatorAddress: creatorAddressInput,
-        creatorEarn: creatorEarnInput
+        creatorEarn: creatorEarnInput,
       };
       var dummyCreatorAddressList: any = [...creatorAddressList];
-      console.log(dummyCreatorAddressList);
-      const checkEqual = dummyCreatorAddressList.some((element: any) =>
-        element.creatorAddress == creatorData.creatorAddress)
-      if (checkEqual == false) {
-        dummyCreatorAddressList.push(creatorData);
+      var dummyPercentList: any = [...percentList];
+      const checkEqual = dummyCreatorAddressList.some(
+        (element: any) => element.creatorAddress === creatorData.creatorAddress
+      );
+      if (!checkEqual) {
+        dummyCreatorAddressList.push(creatorData.creatorAddress);
+        dummyPercentList.push(creatorEarnInput);
         setCreatorAddressList(dummyCreatorAddressList);
+        setPercentList(dummyPercentList);
+
         setCreatorAddressInput("");
         setCreatorEarnInput(0);
         setRoyaltyTotal(NewroyaltyTotal);
       } else {
-        setCreatorAddressClass('is-invalid');
+        setCreatorAddressClass("is-invalid");
       }
     }
-  }
+  };
 
   function createNFT() {
     //Picture Name
@@ -93,7 +106,9 @@ const CreateNFT: React.FC = () => {
       if (nftName.length > 30) {
         nftNameApprove = false;
         setPictureNameInputClass("is-invalid");
-        setPictureNameInvalidText("Invalid input. Please enter name between 1-30");
+        setPictureNameInvalidText(
+          "Invalid input. Please enter name between 1-30"
+        );
       }
     }
 
@@ -102,13 +117,15 @@ const CreateNFT: React.FC = () => {
     if (nftDescription.length > 100) {
       nftDescriptionApprove = false;
       setDescriptionInputClass("is-invalid");
-      setDescriptionInvalidText("Invalid input. Please enter name between 1-30");
+      setDescriptionInvalidText(
+        "Invalid input. Please enter name between 1-30"
+      );
     }
 
     //Image
     var nftImageApprove = true;
     try {
-      if (imageNFT.length == 0) {
+      if (imageNFT.length === 0) {
         nftImageApprove = false;
         setInputFileClass("is-invalid");
       }
@@ -117,10 +134,18 @@ const CreateNFT: React.FC = () => {
       setInputFileClass("is-invalid");
     }
 
-    if (nftNameApprove == true && nftDescriptionApprove == true && nftImageApprove == true) {
-      const collaborator = creatorAddressList.map((item: any) => item.creatorAddress);
-      const collaboratorPercent = creatorAddressList.map((item: any) => item.creatorEarn);
-      console.log('Success');
+    if (
+      nftNameApprove === true &&
+      nftDescriptionApprove === true &&
+      nftImageApprove === true
+    ) {
+      const collaborator = creatorAddressList.map(
+        (item: any) => item.creatorAddress
+      );
+      const collaboratorPercent = creatorAddressList.map(
+        (item: any) => item.creatorEarn
+      );
+      console.log("Success");
       console.log(imageNFT);
       console.log(nftName);
       console.log(nftDescription);
@@ -128,17 +153,18 @@ const CreateNFT: React.FC = () => {
       console.log(collaborator);
       console.log(collaboratorPercent);
       //dummy IPFS
-      const dummyCID = 'QmdifLLzwFvEqPaELq7C1emwgyExndN6K27avd3YTvTcdi';
+      const dummyCID = "QmdifLLzwFvEqPaELq7C1emwgyExndN6K27avd3YTvTcdi";
 
       // infura IPFS
-      const projectId = '';
-      const projectSecret = '';
+      const projectId = "";
+      const projectSecret = "";
       const auth =
-        'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+        "Basic " +
+        Buffer.from(projectId + ":" + projectSecret).toString("base64");
       const client = create({
-        host: 'ipfs.infura.io',
+        host: "ipfs.infura.io",
         port: 5001,
-        protocol: 'https',
+        protocol: "https",
         headers: {
           authorization: auth,
         },
@@ -146,7 +172,8 @@ const CreateNFT: React.FC = () => {
       client.add(imageNFT).then((CID: any) => {
         console.log(CID.path);
         //sent to backEnd function
-        mintNFTSmartContract(collaborator, collaboratorPercent, CID.path); console.log(dummyCID);
+        // mintNFTSmartContract(collaborator, collaboratorPercent, CID.path);
+        console.log(dummyCID);
         // mintNFTSmartContract(collaborator, collaboratorPercent, CID.path); console.log(CID.path);
       });
 
@@ -161,40 +188,73 @@ const CreateNFT: React.FC = () => {
     }
   }
 
-  async function mintNFTSmartContract(collaborator: string[], collaboratorPercent: number[], CID: string) {
-    const contractAddress = '0xf14f39df3511a622f5f0afc599898c80e20addcb'
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const mintNFT = new ethers.Contract(contractAddress, NFT_ABI, signer);
-    await mintNFT.mint(address, collaborator, collaboratorPercent, CID);
-  }
+  const handleCreateNFT = useCallback(() => {
+    readTokenURI();
+    mintNFT(
+      nftName,
+      nftDescription,
+      selectedCategory,
+      creatorAddressList,
+      percentList,
+      "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
+    );
+  }, [
+    creatorAddressList,
+    mintNFT,
+    nftDescription,
+    nftName,
+    percentList,
+    readTokenURI,
+    selectedCategory,
+  ]);
 
   return (
     <div className="container-fluid mt-5">
       <div className="row justify-content-center">
-        <div className="col-md-auto"><h4>Create NFT</h4></div>
+        <div className="col-md-auto">
+          <h4>Create NFT</h4>
+        </div>
       </div>
       <div className="container-fluid mt-3">
         <div className="row">
           <div className="col-6">
-            <div className='container-fluid'>
-              <div className='row justify-content-end'>
-                <div className='col-6'>
-                  <div className='container-fluid'>
-                    <div className='row justify-content-center'><div className='col-auto'><h5>Upload Image<span className="text-danger">*</span></h5></div></div>
-                    <div className='row justify-content-center'>
-                      <div className='col-12'>
-                        <div className="form-text">Types supported: JPG, PNG</div>
-                        <input type="file" accept='image/png, image/jpeg' className={"form-control " + inputFileClass}
-                          onChange={onSelectFile}></input>
-                        <div id="validationPictureNameFeedback" className="invalid-feedback">
+            <div className="container-fluid">
+              <div className="row justify-content-end">
+                <div className="col-6">
+                  <div className="container-fluid">
+                    <div className="row justify-content-center">
+                      <div className="col-auto">
+                        <h5>
+                          Upload Image<span className="text-danger">*</span>
+                        </h5>
+                      </div>
+                    </div>
+                    <div className="row justify-content-center">
+                      <div className="col-12">
+                        <div className="form-text">
+                          Types supported: JPG, PNG
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/png, image/jpeg"
+                          className={"form-control " + inputFileClass}
+                          onChange={onSelectFile}
+                        ></input>
+                        <div
+                          id="validationPictureNameFeedback"
+                          className="invalid-feedback"
+                        >
                           Please upload image.
                         </div>
                       </div>
                     </div>
-                    <div className='row mt-2 justify-content-center'>
-                      <div className='col-12'>
-                        <img src={previewimageNFT} className={"img-thumbnail " + previewDisplay} alt="Image"></img>
+                    <div className="row mt-2 justify-content-center">
+                      <div className="col-12">
+                        <img
+                          src={previewimageNFT}
+                          className={"img-thumbnail " + previewDisplay}
+                          alt="IMG"
+                        />
                       </div>
                     </div>
                   </div>
@@ -205,74 +265,131 @@ const CreateNFT: React.FC = () => {
 
           <div className="col-6">
             <div className="container-fluid">
-              <div className='row'>
+              <div className="row">
                 <div className="col-6 mb-3">
-                  <label htmlFor="pictureNameInput" className="form-label">Name<span className="text-danger">*</span></label>
-                  <input className={"form-control " + pictureNameInputClass} id="pictureNameInput" placeholder="Name" type="text"
-                    onChange={e => {
+                  <label htmlFor="pictureNameInput" className="form-label">
+                    Name<span className="text-danger">*</span>
+                  </label>
+                  <input
+                    className={"form-control " + pictureNameInputClass}
+                    id="pictureNameInput"
+                    placeholder="Name"
+                    type="text"
+                    onChange={(e) => {
                       setNftName(e.target.value);
                       setPictureNameInputClass("");
-                    }} />
-                  <div id="validationPictureNameFeedback" className="invalid-feedback">
+                    }}
+                  />
+                  <div
+                    id="validationPictureNameFeedback"
+                    className="invalid-feedback"
+                  >
                     {pictureNameInvalidText}
                   </div>
                 </div>
               </div>
-              <div className='row'>
+              <div className="row">
                 <div className="col-6 mb-3">
-                  <label htmlFor="descriptionInput" className={"form-label " + descriptionInputClass}>Description (optional)</label>
-                  <textarea className="form-control" id="descriptionInput"
-                    onChange={e => {
+                  <label
+                    htmlFor="descriptionInput"
+                    className={"form-label " + descriptionInputClass}
+                  >
+                    Description (optional)
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="descriptionInput"
+                    onChange={(e) => {
                       setNftDescription(e.target.value);
                       setDescriptionInputClass("");
-                    }}></textarea>
-                  <div id="validationDescriptionFeedback" className="invalid-feedback">
+                    }}
+                  ></textarea>
+                  <div
+                    id="validationDescriptionFeedback"
+                    className="invalid-feedback"
+                  >
                     {descriptionInvalidText}
                   </div>
                 </div>
               </div>
-              <div className='row mb-3'>
+              <div className="row mb-3">
                 <div className="col-6">
-                  <label htmlFor="royaltyInput" className="form-label">Category</label>
-                  <Select onChange={setselectedCategory} options={categoryOptions} isMulti={true} />
+                  <label htmlFor="royaltyInput" className="form-label">
+                    Category
+                  </label>
+                  <Select
+                    onChange={setselectedCategory}
+                    options={categoryOptions}
+                    isMulti={true}
+                  />
                 </div>
               </div>
-              <div className='row'>
+              <div className="row">
                 <div className="col-8 py-2 border rounded">
-                  <div className='container-fluid'>
-                    <div className='row h5'>Creator royalty fee (%)</div>
-                    <div className='row form-text'>Max total royalty fee 10%</div>
-                    <div className='row h6 mt-2'>Creator wallet address</div>
-                    <CreatorRoyaltyFee creatorList={creatorAddressList} setCreatorList={setCreatorAddressList} setTotal={setRoyaltyTotal} />
-                    <div className='row mt-2 align-items-center'>
-                      <div className='col-9 text-end fw-bold'>Total</div>
-                      <div className='col-2 text-center fw-bold'>{royaltyTotal}</div>
-                      <div className='col-1 fw-bold'>%</div>
+                  <div className="container-fluid">
+                    <div className="row h5">Creator royalty fee (%)</div>
+                    <div className="row form-text">
+                      Max total royalty fee 10%
                     </div>
-                    <div className='row h6 mt-2'>Add creator</div>
-                    <div className='row'>
-                      <div className='col-9'>
-                        <input className={'form-control ' + creatorAddressClass} type='text'
-                          placeholder='Creator wallet address' value={creatorAddressInput}
-                          onChange={e => {
+                    <div className="row h6 mt-2">Creator wallet address</div>
+                    <CreatorRoyaltyFee
+                      creatorList={creatorAddressList}
+                      setCreatorList={setCreatorAddressList}
+                      setTotal={setRoyaltyTotal}
+                    />
+                    <div className="row mt-2 align-items-center">
+                      <div className="col-9 text-end fw-bold">Total</div>
+                      <div className="col-2 text-center fw-bold">
+                        {royaltyTotal}
+                      </div>
+                      <div className="col-1 fw-bold">%</div>
+                    </div>
+                    <div className="row h6 mt-2">Add creator</div>
+                    <div className="row">
+                      <div className="col-9">
+                        <input
+                          className={"form-control " + creatorAddressClass}
+                          type="text"
+                          placeholder="Creator wallet address"
+                          value={creatorAddressInput}
+                          onChange={(e) => {
                             setCreatorAddressInput(e.target.value);
-                            setCreatorAddressClass('');
-                          }}></input>
-                        <div id="validationWalletAddress" className="invalid-feedback">
+                            setCreatorAddressClass("");
+                          }}
+                        ></input>
+                        <div
+                          id="validationWalletAddress"
+                          className="invalid-feedback"
+                        >
                           Please provide wallet address.
                         </div>
                       </div>
-                      <div className='col-2'>
-                        <input className={'form-control text-end ' + creatorEarnClass} type='number' min="0" max="10" value={creatorEarnInput}
-                          onChange={e => {
-                            if (e.target.value != '') {
+                      <div className="col-2">
+                        <input
+                          className={
+                            "form-control text-end " + creatorEarnClass
+                          }
+                          type="number"
+                          min="0"
+                          max="10"
+                          value={creatorEarnInput}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
                               setCreatorEarnInput(e.target.valueAsNumber);
                             }
-                          }}></input>
+                          }}
+                        ></input>
                       </div>
-                      <div className='col-1'>%</div>
+                      <div className="col-1">%</div>
                     </div>
-                    <div className='row h6 mt-3'><button className="btn btn-secondary" onClick={addCreator}>Add Creator</button></div>
+                    <div className="row h6 mt-3">
+                      <button
+                        className="btn btn-secondary"
+                        onClick={addCreator}
+                      >
+                        Add Creator
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -285,13 +402,14 @@ const CreateNFT: React.FC = () => {
           <button
             className="btn btn-secondary text-white"
             onClick={() => {
-              createNFT();
-            }}>
+              handleCreateNFT();
+            }}
+          >
             Create
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 export default CreateNFT;
