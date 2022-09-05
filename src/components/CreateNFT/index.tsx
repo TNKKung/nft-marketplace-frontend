@@ -51,13 +51,14 @@ const CreateNFT: React.FC = () => {
   };
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
-  const [percentList, setPercentList] = useState([]);
   const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
 
   const [creatorAddressInput, setCreatorAddressInput] = useState(address);
   const [creatorAddressClass, setCreatorAddressClass] = useState("");
   const [creatorEarnClass, setCreatorEarnClass] = useState("");
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
+  const [addressList, setAddressList] = useState<any>();
+  const [percentList, setPercentList] = useState<any>();
 
   const addCreator = () => {
     var TotalApprove = true;
@@ -76,16 +77,20 @@ const CreateNFT: React.FC = () => {
         creatorEarn: creatorEarnInput,
       };
       var dummyCreatorAddressList: any = [...creatorAddressList];
-      var dummyPercentList: any = [...percentList];
       const checkEqual = dummyCreatorAddressList.some(
         (element: any) => element.creatorAddress === creatorData.creatorAddress
       );
       if (!checkEqual) {
-        dummyCreatorAddressList.push(creatorData.creatorAddress);
-        dummyPercentList.push(creatorEarnInput);
+        const collaborator = creatorAddressList.map(
+          (item: any) => item.creatorAddress
+        );
+        const collaboratorPercent = creatorAddressList.map(
+          (item: any) => item.creatorEarn
+        );
+        dummyCreatorAddressList.push(creatorData);
+        setAddressList(collaborator);
         setCreatorAddressList(dummyCreatorAddressList);
-        setPercentList(dummyPercentList);
-
+        setPercentList(collaboratorPercent);
         setCreatorAddressInput("");
         setCreatorEarnInput(0);
         setRoyaltyTotal(NewroyaltyTotal);
@@ -194,12 +199,12 @@ const CreateNFT: React.FC = () => {
       nftName,
       nftDescription,
       selectedCategory,
-      creatorAddressList,
+      addressList,
       percentList,
       "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
     );
   }, [
-    creatorAddressList,
+    addressList,
     mintNFT,
     nftDescription,
     nftName,
