@@ -55,12 +55,11 @@ const CreateNFT: React.FC = () => {
 
   const [creatorAddressInput, setCreatorAddressInput] = useState(address);
   const [creatorAddressClass, setCreatorAddressClass] = useState("");
-  const [creatorEarnClass, setCreatorEarnClass] = useState("");
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
   const [addressList, setAddressList] = useState<any>();
   const [percentList, setPercentList] = useState<any>();
 
-  const addCreator = () => {
+  const handleAddCreator = () => {
     var TotalApprove = true;
     var creatorAddressApprove = true;
     var NewroyaltyTotal = royaltyTotal + creatorEarnInput;
@@ -371,9 +370,7 @@ const CreateNFT: React.FC = () => {
                       </div>
                       <div className="col-2">
                         <input
-                          className={
-                            "form-control text-end " + creatorEarnClass
-                          }
+                          className="form-control text-end "
                           type="number"
                           min="0"
                           max="10"
@@ -390,7 +387,7 @@ const CreateNFT: React.FC = () => {
                     <div className="row h6 mt-3">
                       <button
                         className="btn btn-secondary"
-                        onClick={addCreator}
+                        onClick={handleAddCreator}
                       >
                         Add Creator
                       </button>
