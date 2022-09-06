@@ -101,13 +101,21 @@ const Header: React.FC = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-light sticky-top shadow">
       <div className="container-fluid">
-        <Link
-          className="navbar-brand mx-3 d-flex flex-column align-items-center"
-          to="/"
-        >
-          <div className="h6">NFT</div>
-          <div className="h6">Marketplace</div>
-        </Link>
+        <div className="contrainer-fluid d-flex flex-row align-items-center w-50">
+          <Link
+            className="navbar-brand mx-3 d-flex flex-column align-items-center"
+            to="/"
+          >
+            <div className="h6">NFT</div>
+            <div className="h6">Marketplace</div>
+          </Link>
+          <div className="w-100">
+            <input
+              className="form-control"
+              placeholder="Search by Collection / User / Address"
+            ></input>
+          </div>
+        </div>
         <button
           className="navbar-toggler"
           type="button"
@@ -121,17 +129,7 @@ const Header: React.FC = () => {
         </button>
         <div className="navbar-collapse collapse" id="navbarNavAltMarkup">
           <ul className="navbar-nav w-100">
-            <li className="nav-item w-50 me-auto">
-              <div className="nav-link d-flex align-items-center">
-                <input
-                  className="form-control w-50"
-                  placeholder="Search by Collection / User / Address"
-                ></input>
-                <button className="btn btn-secondary text-white dropdown-toggle ms-2">
-                  Filter
-                </button>
-              </div>
-            </li>
+            <div className='me-auto'></div>
             {isLogin()}
           </ul>
         </div>
