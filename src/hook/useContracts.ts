@@ -39,7 +39,7 @@ const useContracts = (): any => {
       console.log(error);
     }
     // console.log(Number(tokenCurrent) + 1);
-    const response = await axios.post("http://localhost:4000/createNFT", {
+    const response = await axios.post(`${baseUrl}/nft/`, {
       owner: address,
       nameNFT,
       description,
