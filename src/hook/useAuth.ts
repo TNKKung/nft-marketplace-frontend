@@ -1,13 +1,16 @@
 import axios from "axios";
 import Web3 from "web3";
+
 import { auth } from "../utils/firebase";
+import { baseUrl } from "../config";
 import { signInWithCustomToken, signOut } from "firebase/auth";
 
 const useAuth = (): any => {
   const handleLogin = async (address: string): Promise<boolean> => {
     try {
-      const baseUrl = "http://localhost:4000";
-      const response = await axios.get(`${baseUrl}/message?address=${address}`);
+      const response = await axios.get(
+        `${baseUrl}/auth/message?address=${address}`
+      );
       const messageToSign = response?.data?.messageToSign;
 
       if (!messageToSign) {
