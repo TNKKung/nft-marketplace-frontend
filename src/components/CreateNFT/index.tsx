@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect} from "react";
+import React, { useState, useCallback, useEffect, useRef} from "react";
 import Select, { MultiValue } from "react-select";
 
 import './createNFT.css';
@@ -10,10 +10,13 @@ import useIPFS from "../../hook/useIPFS";
 
 import useContracts from "../../hook/useContracts";
 
+import useAddress from "../../hook/useAddress";
+
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
   const { mintNFT } = useContracts();
   const { getIPFS } = useIPFS();
+  const { checkWalletAddress } = useAddress();
 
   const [imageNFT, setImageNFT] = useState([]);
   const [previewimageNFT, setPreviewImageNFT] = useState("");
@@ -48,6 +51,13 @@ const CreateNFT: React.FC = () => {
     { value: "photography", label: "Photography" },
     { value: "collections", label: "Collections" },
   ];
+
+  const ImageInputRef = useRef<any>(null);
+
+  const handleImageOnclick = () => {
+    ImageInputRef.current?.click();
+  }
+
 
   const handleOnSelectFile = (e: any) => {
     const selectedFiles = e.target.files[0];
@@ -104,6 +114,13 @@ const CreateNFT: React.FC = () => {
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
       setCreatorInputValid('Please provide wallet');
+    }
+    const checkCreatorAddress = checkWalletAddress(creatorAddressInput);
+    if(checkCreatorAddress == false){
+      creatorAddressApprove = false;
+      setCreatorAddressClass("is-invalid");
+      setCreatorEarnClass("is-invalid");
+      setCreatorInputValid('Wallet not found');
     }
     if (creatorAddressApprove === true && TotalApprove === true) {
       var creatorData = {
@@ -244,6 +261,7 @@ const CreateNFT: React.FC = () => {
                     </div>
                     <input
                       type="file"
+                      ref={ImageInputRef}
                       accept="image/png, image/jpeg"
                       className={"form-control " + inputFileClass}
                       onChange={handleOnSelectFile}
@@ -257,7 +275,7 @@ const CreateNFT: React.FC = () => {
                   </div>
                 </div>
                 <div className="row mt-2 justify-content-center">
-                  <div className="col-12">
+                  <div className="col-12 createNFT_cursor_pointer" onClick={handleImageOnclick}>
                     <img
                       src={previewimageNFT}
                       className={"img-thumbnail " + previewDisplay}
