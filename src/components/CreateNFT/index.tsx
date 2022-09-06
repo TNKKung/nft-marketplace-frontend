@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect, useRef} from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import Select, { MultiValue } from "react-select";
 
-import './createNFT.css';
+import "./createNFT.css";
 
 import CreatorRoyaltyFee from "./CreatorRoyaltyFee";
 
@@ -56,8 +56,7 @@ const CreateNFT: React.FC = () => {
 
   const handleImageOnclick = () => {
     ImageInputRef.current?.click();
-  }
-
+  };
 
   const handleOnSelectFile = (e: any) => {
     const selectedFiles = e.target.files[0];
@@ -66,30 +65,28 @@ const CreateNFT: React.FC = () => {
     try {
       setPreviewImageNFT(URL.createObjectURL(selectedFiles));
       setPreviewDisplay("");
-      setPreviewDummyDisplay('d-none');
+      setPreviewDummyDisplay("d-none");
     } catch {
       setPreviewDisplay("d-none");
-      setPreviewDummyDisplay('');
+      setPreviewDummyDisplay("");
     }
   };
 
   const handleSetNftName = useCallback((e: any) => {
     setNftName(e.target.value);
     setPictureNameInputClass("");
-  }, [])
+  }, []);
 
   const handleSetNftDescription = useCallback((e: any) => {
     setNftDescription(e.target.value);
     setDescriptionInputClass("");
-  }, [])
-
-  
+  }, []);
 
   const handleSetAddressInput = useCallback((e: any) => {
     setCreatorAddressInput(e.target.value);
     setCreatorAddressClass("");
     setCreatorEarnClass("");
-  }, [])
+  }, []);
 
   const handleSetCreatorEarnInput = useCallback((e: any) => {
     if (e.target.value !== "") {
@@ -97,7 +94,7 @@ const CreateNFT: React.FC = () => {
       setCreatorAddressClass("");
       setCreatorEarnClass("");
     }
-  }, [])
+  }, []);
 
   const handleAddCreator = () => {
     var TotalApprove = true;
@@ -107,20 +104,20 @@ const CreateNFT: React.FC = () => {
       TotalApprove = false;
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
-      setCreatorInputValid('Max Total royalty fee 10%');
+      setCreatorInputValid("Max Total royalty fee 10%");
     }
     if (creatorAddressInput === "" || creatorAddressInput.length !== 42) {
       creatorAddressApprove = false;
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
-      setCreatorInputValid('Please provide wallet');
+      setCreatorInputValid("Please provide wallet");
     }
     const checkCreatorAddress = checkWalletAddress(creatorAddressInput);
-    if(checkCreatorAddress == false){
+    if (checkCreatorAddress === false) {
       creatorAddressApprove = false;
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
-      setCreatorInputValid('Wallet not found');
+      setCreatorInputValid("Wallet not found");
     }
     if (creatorAddressApprove === true && TotalApprove === true) {
       var creatorData = {
@@ -140,7 +137,7 @@ const CreateNFT: React.FC = () => {
       } else {
         setCreatorAddressClass("is-invalid");
         setCreatorEarnClass("is-invalid");
-        setCreatorInputValid('Please provide another wallet');
+        setCreatorInputValid("Please provide another wallet");
       }
     }
   };
@@ -183,9 +180,11 @@ const CreateNFT: React.FC = () => {
       setInputFileClass("is-invalid");
     }
 
-    if (nftNameApprove === true &&
+    if (
+      nftNameApprove === true &&
       nftDescriptionApprove === true &&
-      nftImageApprove === true) {
+      nftImageApprove === true
+    ) {
       const collaborator = creatorAddressList.map(
         (item: any) => item.creatorAddress
       );
@@ -216,24 +215,24 @@ const CreateNFT: React.FC = () => {
     imageNFT,
   ]);
 
-  const [mClassUI, setMClassUI] = useState('flex-row');
-  const [uploadMClassUI, setuploadMClassUI] = useState('justify-content-end');
-  const [detailMClassUI, setDetailMClassUI] = useState('')
+  const [mClassUI, setMClassUI] = useState("flex-row");
+  const [uploadMClassUI, setuploadMClassUI] = useState("justify-content-end");
+  const [detailMClassUI, setDetailMClassUI] = useState("");
   const handleResize = useCallback(() => {
     if (window.innerWidth > 990) {
-      setMClassUI('flex-row');
-      setuploadMClassUI('justify-content-end');
-      setDetailMClassUI('')
+      setMClassUI("flex-row");
+      setuploadMClassUI("justify-content-end");
+      setDetailMClassUI("");
     } else {
-      setMClassUI('flex-column');
-      setuploadMClassUI('justify-content-center');
-      setDetailMClassUI('justify-content-center');
+      setMClassUI("flex-column");
+      setuploadMClassUI("justify-content-center");
+      setDetailMClassUI("justify-content-center");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    window.addEventListener('resize', handleResize)
-  })
+    window.addEventListener("resize", handleResize);
+  });
 
   return (
     <div className="container-fluid mt-5">
@@ -256,9 +255,7 @@ const CreateNFT: React.FC = () => {
                 </div>
                 <div className="row justify-content-center">
                   <div className="col-12">
-                    <div className="form-text">
-                      Types supported: JPG, PNG
-                    </div>
+                    <div className="form-text">Types supported: JPG, PNG</div>
                     <input
                       type="file"
                       ref={ImageInputRef}
@@ -275,13 +272,20 @@ const CreateNFT: React.FC = () => {
                   </div>
                 </div>
                 <div className="row mt-2 justify-content-center">
-                  <div className="col-12 createNFT_cursor_pointer" onClick={handleImageOnclick}>
+                  <div
+                    className="col-12 createNFT_cursor_pointer"
+                    onClick={handleImageOnclick}
+                  >
                     <img
                       src={previewimageNFT}
                       className={"img-thumbnail " + previewDisplay}
                       alt="IMG"
                     />
-                    <div className={'d-flex justify-content-center align-items-center border rounded border-2 w-100 createNFT_dummyPicture '+previewDummyDisplay}
+                    <div
+                      className={
+                        "d-flex justify-content-center align-items-center rounded border-2 w-100 createNFT_dummyPicture " +
+                        previewDummyDisplay
+                      }
                     >
                       <i className="bi bi-image createNFT_IconImageSize"></i>
                     </div>
@@ -347,12 +351,13 @@ const CreateNFT: React.FC = () => {
             </div>
           </div>
           <div className={"row " + detailMClassUI}>
-            <div className="col-8 py-2 border rounded" style={{ minWidth: '400px' }}>
+            <div
+              className="col-8 py-2 border rounded"
+              style={{ minWidth: "400px" }}
+            >
               <div className="container-fluid">
                 <div className="row h5">Creator royalty fee (%)</div>
-                <div className="row form-text">
-                  Max total royalty fee 10%
-                </div>
+                <div className="row form-text">Max total royalty fee 10%</div>
                 <div className="row h6 mt-2">Creator wallet address</div>
                 <CreatorRoyaltyFee
                   creatorList={creatorAddressList}
@@ -385,7 +390,7 @@ const CreateNFT: React.FC = () => {
                   </div>
                   <div className="col-2">
                     <input
-                      className={"form-control text-end "+creatorEarnClass}
+                      className={"form-control text-end " + creatorEarnClass}
                       type="number"
                       min="0"
                       max="10"
@@ -413,7 +418,8 @@ const CreateNFT: React.FC = () => {
         <div className="col-auto">
           <button
             className="btn btn-secondary text-white"
-            onClick={handleCreateNFT}>
+            onClick={handleCreateNFT}
+          >
             Create
           </button>
         </div>
