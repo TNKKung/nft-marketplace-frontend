@@ -35,23 +35,24 @@ const useContracts = (): any => {
       await contract.mint(address, collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
       tokenId = await contract.getTokenCurrent();
+      // console.log(Number(tokenCurrent) + 1);
+      const response = await axios.post(`${baseUrl}/nft/`, {
+        owner: address,
+        nameNFT,
+        description,
+        tokenId: Number(tokenId) + 1,
+        category,
+      });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
-    // console.log(Number(tokenCurrent) + 1);
-    const response = await axios.post(`${baseUrl}/nft/`, {
-      owner: address,
-      nameNFT,
-      description,
-      tokenId: Number(tokenId) + 1,
-      category,
-    });
-    console.log(response);
   };
 
-  const readTokenURI = async () => {
-    const res = await contract.tokenURI(1);
-    console.log(res);
+  const readTokenURI = async (tokenId: string) => {
+    const INTtokenID = parseInt(tokenId);
+    const res = await contract.tokenURI(INTtokenID);
+    return res;
   };
 
   return {

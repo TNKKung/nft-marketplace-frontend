@@ -4,6 +4,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import SettingPage from "./components/Setting";
 import CreateNFT from "./components/CreateNFT";
+import ViewNFT from "./components/ViewNFT";
 function App() {
   return (
     <div>
@@ -14,6 +15,7 @@ function App() {
             <Route path="/profile" element={<Profile/>}></Route>
             <Route path="/setting" element={<SettingPage/>}></Route>
             <Route path="/createNFT" element={<CreateNFT/>}></Route>
+            <Route path="/viewNFT/:tokenID" element={<ViewNFT/>}></Route>
           </Routes>
       </BrowserRouter>
     </div>
