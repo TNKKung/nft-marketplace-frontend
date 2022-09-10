@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import axios from "axios";
 
-import { CONTRACT_ADDRESS, baseUrl } from "../config";
+import { CONTRACT_ADDRESS, baseUrl, chainID } from "../config";
 import contractABI from "../config/abi.json";
 
 const useContracts = (): any => {
@@ -13,7 +13,7 @@ const useContracts = (): any => {
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x5" }], //chainId 0x5 = Goerli Test Network
+        params: [{ chainId: chainID }], //chainId 0x5 = Goerli Test Network
       });
     } catch (error) {
       console.log("Cancel switch chain");
@@ -55,8 +55,15 @@ const useContracts = (): any => {
     return res;
   };
 
+  const readOwnerTokenID = async (tokenId: string) => {
+    const INTtokenID = parseInt(tokenId);
+    const res = await contract.ownerOf(INTtokenID);
+    return res;
+  };
+
   return {
     readTokenURI,
+    readOwnerTokenID,
     mintNFT,
   };
 };

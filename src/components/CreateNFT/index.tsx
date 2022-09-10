@@ -230,6 +230,11 @@ const CreateNFT: React.FC = () => {
     }
   }, []);
 
+  useEffect(()=>{
+    handleResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
   useEffect(() => {
     window.addEventListener("resize", handleResize);
   });
