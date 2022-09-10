@@ -53,8 +53,9 @@ const ViewNFT: React.FC = () => {
     }, [detailsClass]);
 
     const handleImageView = useCallback(() => {
-        const modalImageView = new Modal(document.getElementById("modalImageView") as HTMLElement);
-        modalImageView.toggle();
+        const element = document.getElementById("modalImageView") as HTMLElement;
+        // const modalImageView = new Modal(element);
+        // modalImageView.toggle();
     }, []);
 
     const [mainClass2, setMainClass2] = useState(["", "w-50", false]);
