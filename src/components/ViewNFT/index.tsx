@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
+import useBackend from "../../hook/useBackend";
 import { CONTRACT_ADDRESS, blockchainName } from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
-import { Modal } from "bootstrap";
+
 const ViewNFT: React.FC = () => {
     const params = useParams();
     const [URLImage, setURLImage] = useState();
@@ -12,25 +13,32 @@ const ViewNFT: React.FC = () => {
     const [nftDescription, setNFTDescription] = useState<string>("");
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("");
     const { readTokenURI, readOwnerTokenID } = useContracts();
+    const { readTokenIdData } = useBackend();
 
-    const [loadingClass, sestLoadingClass] = useState("");
+    const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
 
     const fetchData = useCallback(async () => {
-        console.log("Fetch Data");
         const TokenURI = await readTokenURI(params.tokenID);
         setURLImage(TokenURI);
         const ownerAddress = await readOwnerTokenID(params.tokenID);
         setOwnerNFTAddress(ownerAddress);
+        const DataDetail = await readTokenIdData(params.tokenID);
 
-        // set NFT name and Description here
-        setNFTName("NFT Name");
-        setNFTDescription("Description NFT ...");
-
-        sestLoadingClass("d-none");
+        try {
+            setNFTName(DataDetail.nameNFT);
+            setNFTDescription(DataDetail.description);
+        } catch(error) {
+            setNFTName("Name NFT");
+            setNFTDescription("");
+        }
+        setLoadingClass("d-none");
         setMainClass1("d-flex");
     }, [params.tokenID,
-        readTokenURI, readOwnerTokenID]);
+        readTokenURI,
+        readOwnerTokenID,
+        readTokenIdData,
+    ]);
 
     const [descriptionClass, setDescriptionClass] = useState(["show", "-up"]);
     const [detailsClass, setDetailsClass] = useState(["", "-down"]);
@@ -51,12 +59,6 @@ const ViewNFT: React.FC = () => {
         }
 
     }, [detailsClass]);
-
-    const handleImageView = useCallback(() => {
-        const element = document.getElementById("modalImageView") as HTMLElement;
-        // const modalImageView = new Modal(element);
-        // modalImageView.toggle();
-    }, []);
 
     const [mainClass2, setMainClass2] = useState(["", "w-50", false]);
     const [imageClass, setImageClass] = useState(["justify-content-end", "col-7"]);
@@ -103,7 +105,6 @@ const ViewNFT: React.FC = () => {
                     <div className={"row " + imageClass[0]}><div className={imageClass[1]}><img className={"img-thumbnail viewNFT_cursor_pointer"}
                         src={URLImage}
                         alt="ImageNFT"
-                        onClick={handleImageView}
                     ></img></div>
                     </div>
                     <div className={"row my-3 " + imageClass[0]}>
@@ -178,16 +179,6 @@ const ViewNFT: React.FC = () => {
                     </div>
                 </div>
 
-            </div>
-            <div id="modalImageView" className="modal fade" tabIndex={-1}>
-                <div className="modal-dialog modal-dialog-centered modal-lg">
-                    <div className="modal-content">
-                        <img className={"img-thumbnail"}
-                            src={URLImage}
-                            alt="BigImageNFT"
-                        ></img>
-                    </div>
-                </div>
             </div>
         </div>
     )
