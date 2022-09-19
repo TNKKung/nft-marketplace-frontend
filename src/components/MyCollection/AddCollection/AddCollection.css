@@ -1,0 +1,28 @@
+.AddCollection_Popup {
+    background-color: rgba(24, 47, 54, 0.24);
+    z-index: 1040;
+}
+
+.AddCollection_cursor_pointer {
+    cursor: pointer;
+}
+
+
+
+@keyframes slide-in {
+    from {
+        transform: translate(-50%,-100%);
+        opacity: 0.25;
+    }
+
+    to {
+        transform: translate(-50%,-50%);
+        opacity: 1;
+    }
+}
+
+.AddCollection_form {
+    animation: slide-in 500ms;
+    transform: translate(-50%, -50%);
+    
+}

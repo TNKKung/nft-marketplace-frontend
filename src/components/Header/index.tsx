@@ -27,12 +27,27 @@ const Header: React.FC = () => {
         <div className="d-flex">
           <li className="nav-item w-50 me-auto">
             <div className="nav-link d-flex align-items-center">
-              <Link
-                className="btn btn-secondary text-white ms-2"
-                to="/createNFT"
-              >
-                Create
-              </Link>
+              <div className="dropdown">
+                <button className="btn btn-secondary dropdown-toggle text-white ms-2" type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Create
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end">
+                  {/* <li><hr className="dropdown-divider" /></li> */}
+                  <li>
+                    <Link className="dropdown-item" to="/myCollection">
+                      My collection
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="dropdown-item" to="/createNFT">
+                      Create NFT
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
           </li>
           <li className="nav-item d-flex align-items-center">
