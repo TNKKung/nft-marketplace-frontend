@@ -17,8 +17,17 @@ const useCollection = () => {
             return "Error";
         }
     }
+
+    const getCollectionbyAddress = async (address: string) => {
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/collection/getCollectionByOwner?owner=${address}`
+        );
+        return BackEndResponse?.data;
+    }
+
     return {
-        createCollection
+        createCollection,
+        getCollectionbyAddress
     };
 }
 export default useCollection;

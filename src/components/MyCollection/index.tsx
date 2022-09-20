@@ -1,11 +1,17 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import useCollection from '../../hook/useCollection';
+import { useUserAccount } from '../../store/UserAction/hook';
 import AddCollection from './AddCollection/AddCollection';
 import CollectionBox from './CollectionBox/CollectionBox';
+
 const MyCollection: React.FC = () => {
+    const { getCollectionbyAddress } = useCollection();
+    const { address } = useUserAccount();
     const [createCollection, setCreateCollection] = useState(false);
 
-    const [CollectionList, setCollectionList] = useState<string[]>(["First Collection","Second Collection"]);
+    const [collectionList, setCollectionList] = useState<any>([]);
 
+   
     const handleCreateCollection = useCallback(() => {
         if (createCollection === true) {
             setCreateCollection(false);
@@ -14,6 +20,20 @@ const MyCollection: React.FC = () => {
         }
     }, [createCollection]);
 
+    const fetchData = useCallback(async () => {
+        const collectionres = await getCollectionbyAddress(address);
+        console.log(collectionres);
+        setCollectionList(collectionres);
+    }, [address, getCollectionbyAddress])
+
+    const createCollectNotice = useCallback(()=>{
+        fetchData();
+    },[fetchData]);
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line
+    }, [])
     return (
         <div>
             <div className="container mt-5">
@@ -34,11 +54,12 @@ const MyCollection: React.FC = () => {
                     </div>
                 </div></div>
                 <div className="d-flex flex-row mt-3 flex-wrap">
-                    <CollectionBox CollectionName="First Collection" CollectionDescription="Description"></CollectionBox>
-                    <CollectionBox CollectionName="Second Collection" CollectionDescription="Description"></CollectionBox>
+                    {collectionList.map((obj: any, index: number) =>
+                        <CollectionBox CollectionName={obj.collectionName} CollectionDescription={obj.description} key={index}></CollectionBox>
+                    )}
                 </div>
             </div>
-            <AddCollection popupState={createCollection} setPopup={setCreateCollection}></AddCollection>
+            <AddCollection popupState={createCollection} setPopup={setCreateCollection} setCollectionList={createCollectNotice}></AddCollection>
         </div>
     )
 }

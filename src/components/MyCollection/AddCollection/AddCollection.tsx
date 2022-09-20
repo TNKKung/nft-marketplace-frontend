@@ -6,6 +6,7 @@ import "./AddCollection.css"
 interface AddCollectionProps {
   setPopup: any;
   popupState: any;
+  setCollectionList: any;
 }
 
 const AddCollection = (props: AddCollectionProps) => {
@@ -42,6 +43,7 @@ const AddCollection = (props: AddCollectionProps) => {
       const createCollectionRes = await createCollection(address, collectionName, collectionDescription);
       console.log(createCollectionRes);
       if (createCollectionRes === "Success") {
+        props.setCollectionList();
         props.setPopup(false);
         setLoadingPopUpClass("d-none");
       } else {
