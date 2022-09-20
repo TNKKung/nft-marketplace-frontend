@@ -26,3 +26,7 @@
     transform: translate(-50%, -50%);
     
 }
+
+.AddCollection_loadingClass {
+    background-color: rgba(24, 47, 54, 0.137);
+}
