@@ -1,0 +1,10 @@
+.NFTBox_box {
+    position: relative;
+    width: 300px;
+    cursor: pointer;
+}
+
+.NFTBox_previewImg {
+    width:300px;
+    height:300px;
+}

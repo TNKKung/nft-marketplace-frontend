@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import axios from "axios";
 
-import { CONTRACT_ADDRESS, baseUrl } from "../config";
+import { CONTRACT_ADDRESS, baseUrl, chainID } from "../config";
 import contractABI from "../config/abi.json";
 
 const useContracts = (): any => {
@@ -13,7 +13,7 @@ const useContracts = (): any => {
     try {
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x5" }], //chainId 0x5 = Goerli Test Network
+        params: [{ chainId: chainID }], //chainId 0x5 = Goerli Test Network
       });
     } catch (error) {
       console.log("Cancel switch chain");
@@ -35,27 +35,35 @@ const useContracts = (): any => {
       await contract.mint(address, collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
       tokenId = await contract.getTokenCurrent();
+      // console.log(Number(tokenCurrent) + 1);
+      const response = await axios.post(`${baseUrl}/nft/`, {
+        owner: address,
+        nameNFT,
+        description,
+        tokenId: Number(tokenId) + 1,
+        category,
+      });
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
-    // console.log(Number(tokenCurrent) + 1);
-    const response = await axios.post(`${baseUrl}/nft/`, {
-      owner: address,
-      nameNFT,
-      description,
-      tokenId: Number(tokenId) + 1,
-      category,
-    });
-    console.log(response);
   };
 
-  const readTokenURI = async () => {
-    const res = await contract.tokenURI(1);
-    console.log(res);
+  const readTokenURI = async (tokenId: string) => {
+    const INTtokenID = parseInt(tokenId);
+    const res = await contract.tokenURI(INTtokenID);
+    return res;
+  };
+
+  const readOwnerTokenID = async (tokenId: string) => {
+    const INTtokenID = parseInt(tokenId);
+    const res = await contract.ownerOf(INTtokenID);
+    return res;
   };
 
   return {
     readTokenURI,
+    readOwnerTokenID,
     mintNFT,
   };
 };
