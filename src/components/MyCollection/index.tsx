@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import useCollection from '../../hook/useCollection';
 import { useUserAccount } from '../../store/UserAction/hook';
 import AddCollection from './AddCollection/AddCollection';
-import CollectionBox from './CollectionBox/CollectionBox';
+import CollectionBox from '../boxComponent/CollectionBox/CollectionBox';
 
 const MyCollection: React.FC = () => {
     const { getCollectionbyAddress } = useCollection();
@@ -11,7 +11,7 @@ const MyCollection: React.FC = () => {
 
     const [collectionList, setCollectionList] = useState<any>([]);
 
-   
+
     const handleCreateCollection = useCallback(() => {
         if (createCollection === true) {
             setCreateCollection(false);
@@ -22,13 +22,12 @@ const MyCollection: React.FC = () => {
 
     const fetchData = useCallback(async () => {
         const collectionres = await getCollectionbyAddress(address);
-        console.log(collectionres);
         setCollectionList(collectionres);
     }, [address, getCollectionbyAddress])
 
-    const createCollectNotice = useCallback(()=>{
+    const createCollectNotice = useCallback(() => {
         fetchData();
-    },[fetchData]);
+    }, [fetchData]);
 
     useEffect(() => {
         fetchData();
@@ -55,7 +54,19 @@ const MyCollection: React.FC = () => {
                 </div></div>
                 <div className="d-flex flex-row mt-3 flex-wrap">
                     {collectionList.map((obj: any, index: number) =>
-                        <CollectionBox CollectionName={obj.collectionName} CollectionDescription={obj.description} key={index}></CollectionBox>
+                        <div className="position-relative m-2">
+                            <CollectionBox CollectionName={obj.collectionName} CollectionDescription={obj.description} key={index}></CollectionBox>
+                            <div className="position-absolute top-0 end-0">
+                                <button className="btn" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
+                                <ul className="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <button className="dropdown-item text-end">
+                                            Delete
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>

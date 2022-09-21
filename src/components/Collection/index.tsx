@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import NFTBox from "./NFTBox/NFTBox";
+import NFTBox from "../boxComponent/NFTBox/NFTBox";
 
 const Collection: React.FC = () => {
     // const params = useParams();
