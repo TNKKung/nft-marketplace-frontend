@@ -26,7 +26,8 @@ const useContracts = (): any => {
     category: any,
     collaborator: string[],
     collaboratorPercent: number[],
-    uri: string
+    uri: string,
+    collection: string
   ) => {
     const address = await signer.getAddress();
     let tokenId;
@@ -42,6 +43,7 @@ const useContracts = (): any => {
         description,
         tokenId: Number(tokenId) + 1,
         category,
+        collection,
       });
       console.log(response);
     } catch (error) {

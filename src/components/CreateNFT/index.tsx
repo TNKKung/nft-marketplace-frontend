@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import Select, { MultiValue } from "react-select";
+import Select, { MultiValue, SingleValue } from "react-select";
 
 import "./createNFT.css";
 
@@ -12,11 +12,14 @@ import useContracts from "../../hook/useContracts";
 
 import useAddress from "../../hook/useAddress";
 
+import useCollection from "../../hook/useCollection";
+
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
   const { mintNFT } = useContracts();
   const { getIPFS } = useIPFS();
   const { checkWalletAddress } = useAddress();
+  const { getCollectionbyAddress } = useCollection();
 
   const [imageNFT, setImageNFT] = useState([]);
   const [previewimageNFT, setPreviewImageNFT] = useState("");
@@ -35,6 +38,20 @@ const CreateNFT: React.FC = () => {
   const [selectedCategory, setselectedCategory] = useState<
     MultiValue<{ value: string; label: string }>
   >([]);
+  const categoryOptions = [
+    { value: "artwork", label: "Artwork" },
+    { value: "memes", label: "Memes" },
+    { value: "photography", label: "Photography" },
+    { value: "collections", label: "Collections" },
+  ];
+
+  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>();
+  const [CollectionOptions, setCollectionOptions] = useState<any>([
+    { value: "artwork", label: "Artwork" },
+    { value: "memes", label: "Memes" },
+    { value: "photography", label: "Photography" },
+    { value: "collections", label: "Collections" },
+  ]);
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
   const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
@@ -45,12 +62,7 @@ const CreateNFT: React.FC = () => {
   const [creatorEarnClass, setCreatorEarnClass] = useState("");
   const [creatorInputValid, setCreatorInputValid] = useState("");
 
-  const categoryOptions = [
-    { value: "artwork", label: "Artwork" },
-    { value: "memes", label: "Memes" },
-    { value: "photography", label: "Photography" },
-    { value: "collections", label: "Collections" },
-  ];
+
 
   const ImageInputRef = useRef<any>(null);
 
@@ -143,6 +155,7 @@ const CreateNFT: React.FC = () => {
   };
 
   const handleCreateNFT = useCallback(async () => {
+
     //Picture Name
     var nftNameApprove = true;
     if (nftName.length <= 0) {
@@ -166,6 +179,13 @@ const CreateNFT: React.FC = () => {
       setDescriptionInvalidText(
         "Invalid input. Please enter name between 1-30"
       );
+    }
+    //Collection
+    var collection = "";
+    if (selectedCollection?.value === undefined) {
+      collection = "";
+    } else {
+      collection = selectedCollection.value;
     }
 
     //Image
@@ -195,13 +215,15 @@ const CreateNFT: React.FC = () => {
       if (CID !== false) {
         console.log(collaborator);
         console.log(collaboratorPercent);
+        console.log(collection);
         mintNFT(
           nftName,
           nftDescription,
           selectedCategory,
           collaborator,
           collaboratorPercent,
-          CID
+          CID,
+          collection,
         );
       }
     }
@@ -213,6 +235,7 @@ const CreateNFT: React.FC = () => {
     selectedCategory,
     getIPFS,
     imageNFT,
+    selectedCollection,
   ]);
 
   const [mClassUI, setMClassUI] = useState("flex-row");
@@ -230,10 +253,26 @@ const CreateNFT: React.FC = () => {
     }
   }, []);
 
-  useEffect(()=>{
+  const fetchDate = useCallback(async () => {
+    const getMyCollection = await getCollectionbyAddress(address);
+    var myCollectionOptions = [];
+    for (let i = 0; i < getMyCollection.length; i++) {
+      myCollectionOptions.push({
+        value: getMyCollection[i].collectionId,
+        label: getMyCollection[i].collectionName
+      });
+    }
+    setCollectionOptions(myCollectionOptions);
+  }, [
+    getCollectionbyAddress,
+    address
+  ]);
+
+  useEffect(() => {
     handleResize();
+    fetchDate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  }, [])
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -345,13 +384,25 @@ const CreateNFT: React.FC = () => {
           </div>
           <div className={"row mb-3 " + detailMClassUI}>
             <div className="col-6">
-              <label htmlFor="royaltyInput" className="form-label">
+              <label className="form-label">
                 Category
               </label>
               <Select
                 onChange={setselectedCategory}
                 options={categoryOptions}
                 isMulti={true}
+              />
+            </div>
+          </div>
+          <div className={"row mb-3 " + detailMClassUI}>
+            <div className="col-6">
+              <label className="form-label">
+                Collection
+              </label>
+              <Select
+                onChange={setSelectedCollection}
+                options={CollectionOptions}
+                isMulti={false}
               />
             </div>
           </div>

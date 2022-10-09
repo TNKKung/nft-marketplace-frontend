@@ -18,7 +18,7 @@ function App() {
             <Route path="/setting" element={<SettingPage/>}></Route>
             <Route path="/createNFT" element={<CreateNFT/>}></Route>
             <Route path="/myCollection" element={<MyCollection/>}></Route>
-            <Route path="/collection/:name/:address" element={<Collection/>}></Route>
+            <Route path="/collection/:collectionId" element={<Collection/>}></Route>
             <Route path="/viewNFT/:tokenID" element={<ViewNFT/>}></Route>
           </Routes>
       </BrowserRouter>

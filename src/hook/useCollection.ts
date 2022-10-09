@@ -18,6 +18,15 @@ const useCollection = () => {
         }
     }
 
+    const deleteCollection = async (collectionId: string) => {
+        try{
+            await axios.delete(`${baseUrl}/collection/?id=${collectionId}`);
+            return "Success";
+        } catch (error){
+            return "Error";
+        }
+    }
+
     const getCollectionbyAddress = async (address: string) => {
         const BackEndResponse = await axios.get(
             `${baseUrl}/collection/getCollectionByOwner?owner=${address}`
@@ -25,9 +34,18 @@ const useCollection = () => {
         return BackEndResponse?.data;
     }
 
+    const getCollectionbyId = async (collectionId: string) => {
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/collection/getCollectionById?id=${collectionId}`
+        );
+        return BackEndResponse?.data;
+    }
+
     return {
         createCollection,
-        getCollectionbyAddress
+        deleteCollection,
+        getCollectionbyAddress,
+        getCollectionbyId
     };
 }
 export default useCollection;

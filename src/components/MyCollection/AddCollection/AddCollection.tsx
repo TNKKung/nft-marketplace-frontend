@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import useCollection from '../../../hook/useCollection';
 import { useUserAccount } from '../../../store/UserAction/hook';
-import "./AddCollection.css"
+import "../ModalCustom.css"
 
 interface AddCollectionProps {
   setPopup: any;
@@ -80,15 +80,15 @@ const AddCollection = (props: AddCollectionProps) => {
   }
 
   return (
-    <div className={"position-fixed top-0 w-100 h-100 AddCollection_Popup " + showPopUpClass}>
+    <div className={"position-fixed top-0 w-100 h-100 Modal_Popup " + showPopUpClass}>
 
       <div className="position-absolute top-0 w-100 h-100" onClick={closeModal}></div>
 
-      <div className={"position-relative top-50 start-50 w-25 bg-white rounded AddCollection_form"}>
+      <div className={"position-relative top-50 start-50 w-25 bg-white rounded Modal_form"}>
         <div className="container-fluid p-3">
           <div className="row justify-content-between align-items-center">
             <div className="col-auto"><h5>Create Collection</h5></div>
-            <div className="col-auto"><h4><i className="bi bi-x-lg AddCollection_cursor_pointer" onClick={closeModal}></i></h4></div>
+            <div className="col-auto"><h4><i className="bi bi-x-lg Modal_cursor_pointer" onClick={closeModal}></i></h4></div>
           </div>
           <div className="row mt-3"><div className="col">
             <div className="form-label">Collection Name <span className="text-danger">*</span></div>
@@ -109,7 +109,7 @@ const AddCollection = (props: AddCollectionProps) => {
         </div>
       </div>
       
-      <div className={"position-fixed top-0 w-100 h-100 AddCollection_loadingClass d-flex justify-content-center align-items-center " + loadingPopUpClass}>
+      <div className={"position-fixed top-0 w-100 h-100 Modal_loadingClass d-flex justify-content-center align-items-center " + loadingPopUpClass}>
         <div className="spinner-border viewNFT_loading" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>

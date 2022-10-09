@@ -3,11 +3,14 @@ import useCollection from '../../hook/useCollection';
 import { useUserAccount } from '../../store/UserAction/hook';
 import AddCollection from './AddCollection/AddCollection';
 import CollectionBox from '../boxComponent/CollectionBox/CollectionBox';
+import DeleteCollection from './DeleteCollection/DeleteCollection';
 
 const MyCollection: React.FC = () => {
     const { getCollectionbyAddress } = useCollection();
     const { address } = useUserAccount();
     const [createCollection, setCreateCollection] = useState(false);
+    const [deleteCollection, setDeleteCollection] = useState(false);
+    const [selectDeleteCollection, setSelectDeleteCollection] = useState<any>({});
 
     const [collectionList, setCollectionList] = useState<any>([]);
 
@@ -19,6 +22,16 @@ const MyCollection: React.FC = () => {
             setCreateCollection(true);
         }
     }, [createCollection]);
+
+    const handleDeleteCollection = useCallback((CollectionId:string) => {
+        setSelectDeleteCollection(CollectionId);
+
+        if (deleteCollection === true) {
+            setDeleteCollection(false);
+        } else {
+            setDeleteCollection(true);
+        }
+    }, [deleteCollection])
 
     const fetchData = useCallback(async () => {
         const collectionres = await getCollectionbyAddress(address);
@@ -54,13 +67,13 @@ const MyCollection: React.FC = () => {
                 </div></div>
                 <div className="d-flex flex-row mt-3 flex-wrap">
                     {collectionList.map((obj: any, index: number) =>
-                        <div className="position-relative m-2">
-                            <CollectionBox CollectionName={obj.collectionName} CollectionDescription={obj.description} key={index}></CollectionBox>
+                        <div className="position-relative m-2" key={index}>
+                            <CollectionBox CollectionId={obj.id} CollectionName={obj.collectionName} CollectionDescription={obj.description}></CollectionBox>
                             <div className="position-absolute top-0 end-0">
                                 <button className="btn" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
                                 <ul className="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <button className="dropdown-item text-end">
+                                        <button className="dropdown-item text-end" onClick={() => { handleDeleteCollection(obj) }}>
                                             Delete
                                         </button>
                                     </li>
@@ -71,6 +84,11 @@ const MyCollection: React.FC = () => {
                 </div>
             </div>
             <AddCollection popupState={createCollection} setPopup={setCreateCollection} setCollectionList={createCollectNotice}></AddCollection>
+            <DeleteCollection popupState={deleteCollection} 
+            setPopup={setDeleteCollection} 
+            setCollectionList={createCollectNotice}
+            collectionObject={selectDeleteCollection}
+            ></DeleteCollection>
         </div>
     )
 }
