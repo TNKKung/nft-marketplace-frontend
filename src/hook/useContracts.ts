@@ -33,7 +33,7 @@ const useContracts = (): any => {
     let tokenId;
     await changeNetwork();
     try {
-      await contract.mint(address, collaborator, collaboratorPercent, uri);
+      const tx = await contract.mint(address, collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
       tokenId = await contract.getTokenCurrent();
       // console.log(Number(tokenCurrent) + 1);
@@ -46,6 +46,8 @@ const useContracts = (): any => {
         collection,
       });
       console.log(response);
+      const receipt = await tx.wait();
+      console.log(receipt.logs);
     } catch (error) {
       console.log(error);
     }

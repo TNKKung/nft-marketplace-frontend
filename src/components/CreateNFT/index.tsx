@@ -448,6 +448,7 @@ const CreateNFT: React.FC = () => {
                     <input
                       className={"form-control text-end " + creatorEarnClass}
                       type="number"
+                      step={0.01}
                       min="0"
                       max="10"
                       value={creatorEarnInput}
