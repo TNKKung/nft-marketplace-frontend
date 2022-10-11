@@ -4,10 +4,14 @@ import axios from "axios";
 import { CONTRACT_ADDRESS, baseUrl, chainID } from "../config";
 import contractABI from "../config/abi.json";
 
+import { useTransactionAction } from "../store/TransactionAction/hook";
+
 const useContracts = (): any => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
+
+  const { setWaitTransaction } = useTransactionAction();
 
   const changeNetwork = async () => {
     try {
@@ -35,6 +39,7 @@ const useContracts = (): any => {
     try {
       const tx = await contract.mint(address, collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
+      setWaitTransaction(true);
       tokenId = await contract.getTokenCurrent();
       // console.log(Number(tokenCurrent) + 1);
       const response = await axios.post(`${baseUrl}/nft/`, {
@@ -48,8 +53,10 @@ const useContracts = (): any => {
       console.log(response);
       const receipt = await tx.wait();
       console.log(receipt.logs);
+      return Number(tokenId) + 1;
     } catch (error) {
       console.log(error);
+      return undefined;
     }
   };
 
