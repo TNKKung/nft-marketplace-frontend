@@ -19,9 +19,15 @@ const SellNFT: React.FC = () => {
     const { readTokenURI, readOwnerTokenID } = useContracts();
     const { readTokenIdData } = useBackend();
 
+    const [amountInput, setAmountInput] = useState(1);
+
     const [loadingClass, setLoadingClass] = useState("");
     const [textPlaceholder, setTextPlaceholder] = useState("placeholder-glow")
     const [mainClass1, setMainClass1] = useState("d-none");
+
+    const handleAmountInput = useCallback((e:any)=>{
+        setAmountInput(e.target.value);
+    },[]);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
@@ -98,7 +104,9 @@ const SellNFT: React.FC = () => {
                     <div className="row">
                         <div className="col-auto input-group">
                             <span className="input-group-text">{blockchainName}</span>
-                            <input className="form-control" type="number" step="0.1" placeholder="Amount"></input>
+                            <input className="form-control" type="number" step="0.1" placeholder="Amount" 
+                            value={amountInput}
+                            onChange={handleAmountInput}></input>
                             {/* <span className="input-group-text">$ 0.00</span> */}
                         </div>
                     </div>
@@ -115,8 +123,8 @@ const SellNFT: React.FC = () => {
                             <div className="col-auto text-muted">2.5%</div>
                         </div>
                         <div className="row mt-3 justify-content-between">
-                            <div className="col-auto h6">Total Earning</div>
-                            <div className="col-auto h6">0.00</div>
+                            <div className="col-auto h6">Total Earning (GoerliETH)</div>
+                            <div className="col-auto h6">{amountInput*((100-2.5-2.5)/100)}</div>
                         </div>
                     </div>
                     <div className="row mt-5 justify-content-center">
