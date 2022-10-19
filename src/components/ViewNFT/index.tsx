@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react"
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
 import { CONTRACT_ADDRESS, blockchainName } from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
 
+import { useUserAccount } from "../../store/UserAction/hook";
+
 const ViewNFT: React.FC = () => {
     const params = useParams();
+    const {address} = useUserAccount();
+
     const [URLImage, setURLImage] = useState();
     const [nftName, setNFTName] = useState<string>("");
     const [nftDescription, setNFTDescription] = useState<string>("");
@@ -28,7 +32,7 @@ const ViewNFT: React.FC = () => {
         try {
             setNFTName(DataDetail.nameNFT);
             setNFTDescription(DataDetail.description);
-        } catch(error) {
+        } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
         }
@@ -164,15 +168,20 @@ const ViewNFT: React.FC = () => {
                                         <div className="col">{ownerNFTAddress === "" ? "" : shortenAddress(ownerNFTAddress)}</div>
                                     </div>
                                 </div>
-                                <div className="row mt-3"><div className="col-12 px-0">
-                                    <div className="contrainer py-2 border rounded">
-                                        <div className="row justify-content-end px-3">
-                                            <div className="col-auto">
-                                                <button className="btn btn-secondary">Sell</button>
+                                <div className="row mt-3">
+                                    <div className="col-12 px-0">
+                                        <div className="contrainer py-2 border rounded">
+                                            <div className="row justify-content-end px-3">
+                                                <div className="col-auto">
+                                                    {address === ownerNFTAddress ?
+                                                    <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link>
+                                                    : 
+                                                    <button className="btn btn-secondary">Buy</button>}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div></div>
+                                </div>
                                 <div className="row my-3"><div className="col-auto h5">Transaction</div></div>
                             </div>
                         </div>

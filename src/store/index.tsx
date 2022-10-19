@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { save, load } from "redux-localstorage-simple";
 
 import userAccount from "./UserAction";
+import transactionRes from "./TransactionAction";
 
 const PERSISTED_KEYS = {
   states: ["userAccount"],
@@ -12,6 +13,7 @@ const PERSISTED_KEYS = {
 const store = configureStore({
   reducer: {
     userAccount: userAccount,
+    transactionRes: transactionRes
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save(PERSISTED_KEYS)),

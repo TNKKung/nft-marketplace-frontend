@@ -1,19 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+// import { LazyLoadImage } from "react-lazy-load-image-component";
 import "./NFTBox.css"
 import useBackend from "../../../hook/useBackend"
+import useContracts from "../../../hook/useContracts";
 
 interface CollectionProps {
     TokenID: string;
 }
 const NFTBox = (props: CollectionProps) => {
+    const [URLImage, setURLImage] = useState("data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==");
     const { readTokenIdData } = useBackend();
+    const { readTokenURI } = useContracts();
     const [ loadingDataClass, setLoadingDataClass] = useState("placeholder bg-secondary");
 
-    const [ NFTname, setNFTName ] = useState(" ");  
+    const [ NFTname, setNFTName ] = useState("");  
     const fetchData = useCallback(async () => {
         const DataDetail = await readTokenIdData(props.TokenID);
         try {
+            const TokenURI = await readTokenURI(props.TokenID);
+            setURLImage(TokenURI);
             setNFTName(DataDetail.nameNFT);
             setLoadingDataClass("");
         } catch (error) {
@@ -21,6 +27,7 @@ const NFTBox = (props: CollectionProps) => {
         }
     }, [props.TokenID,
         readTokenIdData,
+        readTokenURI
     ]);
 
     useEffect(() => {
@@ -29,9 +36,9 @@ const NFTBox = (props: CollectionProps) => {
     }, [])
     return (
         <div>
-            <div className="NFTBox_box d-flex flex-column align-items-center border rounded p-4 m-2 shadow-sm">
-                <img className={"NFTBox_previewImg"} src="" alt="previewImage"></img>
-                <h6 className={"w-100 text-break text-truncate " + loadingDataClass}>{NFTname}</h6>
+            <div className="NFTBox_box d-flex flex-column align-items-center border rounded m-2 shadow-sm">
+                <img className={"NFTBox_previewImg"} src={URLImage} alt="previewImage" loading="lazy"></img>
+                <h6 className={"p-3 m-0 w-100 text-break text-truncate " + loadingDataClass}>{NFTname}</h6>
 
                 <Link className="position-absolute top-0 w-100 h-100" to={"/viewNFT/" + props.TokenID}></Link>
 

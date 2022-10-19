@@ -71,6 +71,7 @@
     ]
   },
   "devDependencies": {
-    "@types/bootstrap": "^5.2.4"
+    "@types/bootstrap": "^5.2.4",
+    "@types/react-lazy-load-image-component": "^1.5.2"
   }
 }
