@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import useCollection from '../../../hook/useCollection';
-import "../ModalCustom.css"
+import "../../../css/ModalCustom.css"
 
 interface DeleteCollectionProps {
     setPopup: any;

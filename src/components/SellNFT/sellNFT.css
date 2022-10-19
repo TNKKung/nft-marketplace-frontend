@@ -1,0 +1,16 @@
+.sellNFT_BackButton {
+    font-size: 1.5em;
+}
+
+.sellNFT_cursor_pointer {
+    cursor: pointer;
+}
+
+.sellNFT_previewImg {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    background-color: gray;
+    border: solid white 4px;
+    border-radius: 10%;
+}

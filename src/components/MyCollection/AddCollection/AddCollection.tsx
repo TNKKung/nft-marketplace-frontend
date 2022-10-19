@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import useCollection from '../../../hook/useCollection';
 import { useUserAccount } from '../../../store/UserAction/hook';
-import "../ModalCustom.css"
+import "../../../css/ModalCustom.css"
 
 interface AddCollectionProps {
   setPopup: any;
