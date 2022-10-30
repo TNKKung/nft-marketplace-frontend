@@ -108,7 +108,7 @@ const useContracts = (): any => {
     }
   }
 
-  const buyNFT = async (tokenId: string) => {
+  const buyNFT = async (tokenId: string, idDocNFT: string) => {
     try {
       const price = await getPrice(tokenId);
       const itemID = await contract_market.itemFromTokenId(tokenId);
@@ -116,13 +116,23 @@ const useContracts = (): any => {
       const tx = await contract_market.saleNFTItem(CONTRACT_ADDRESS, itemID, options0);
       await tx.wait();
       await axios.patch(`${baseUrl}/nft/updateOwner`, {
-        id: tokenId,
+        id: idDocNFT,
         contract: CONTRACT_ADDRESS
       });
       return true;
     } catch (error) {
       console.log(error);
       return false;
+    }
+  }
+
+  const getNFTforSaleList = async () => {
+    try {
+      const itemList = await contract_market.fetchNFTItems();
+      return itemList;
+    } catch (error) {
+      console.log(error);
+      return {};
     }
   }
 
@@ -133,7 +143,8 @@ const useContracts = (): any => {
     sellNFT,
     buyNFT,
     cancelSellNFT,
-    getPrice
+    getPrice,
+    getNFTforSaleList
   };
 };
 

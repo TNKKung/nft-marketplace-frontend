@@ -5,7 +5,7 @@ import useBackend from "../../hook/useBackend";
 import { CONTRACT_ADDRESS, blockchainName, Market_ADDRESS } from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
-
+import { weiToEther } from "../../utils/costHelper";
 import { useUserAccount } from "../../store/UserAction/hook";
 
 const ViewNFT: React.FC = () => {
@@ -14,10 +14,12 @@ const ViewNFT: React.FC = () => {
 
     const [saleNFTStatus, setSaleNFTStatus] = useState(false);
     const [URLImage, setURLImage] = useState();
+    const [nftDocument, setNFTDocument] = useState("");
     const [nftName, setNFTName] = useState<string>("");
     const [nftDescription, setNFTDescription] = useState<string>("");
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
-    const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT } = useContracts();
+    const [nftCost, setNFTCost] = useState(0);
+    const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
     const { readTokenIdData } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
@@ -29,6 +31,13 @@ const ViewNFT: React.FC = () => {
         const realOwnerAddress = await readOwnerTokenID(params.tokenID);
         if (realOwnerAddress === Market_ADDRESS) {
             setSaleNFTStatus(true);
+            try {
+                const weiCost = await getPrice(params.tokenID);
+                setNFTCost(weiToEther(weiCost));
+            } catch (Error) {
+                console.log(Error);
+            }
+
         } else {
             setSaleNFTStatus(false);
         }
@@ -39,6 +48,7 @@ const ViewNFT: React.FC = () => {
             setNFTName(DataDetail.nameNFT);
             setNFTDescription(DataDetail.description);
             setOwnerNFTAddress(DataDetail.ownerAddres);
+            setNFTDocument(DataDetail.id);
         } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
@@ -52,13 +62,14 @@ const ViewNFT: React.FC = () => {
     ]);
 
     const handleBuyNFT = useCallback(async () => {
-        const buyNFTStatus = await buyNFT(params.tokenID);
+        const buyNFTStatus = await buyNFT(params.tokenID, nftDocument);
         if (buyNFTStatus === true) {
             fetchData();
         }
     }, [params.tokenID,
         buyNFT,
-        fetchData]);
+        fetchData,
+        nftDocument]);
 
     const handleCancelSellNFT = useCallback(async () => {
         const cancelStatus = await cancelSellNFT(params.tokenID);
@@ -197,17 +208,32 @@ const ViewNFT: React.FC = () => {
                                 <div className="row mt-3">
                                     <div className="col-12 px-0">
                                         <div className="contrainer py-2 border rounded">
-                                            <div className="row justify-content-end px-3">
-                                                <div className="col-auto">
-                                                    {address === ownerNFTAddress ?
-                                                        saleNFTStatus === false ?
-                                                            <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link> :
+                                            {address === ownerNFTAddress ?
+                                                saleNFTStatus === false ?
+                                                    <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                        <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link></div>
+                                                    </div>
+                                                    :
+                                                    <div className="row justify-content-between align-items-center px-3">
+                                                        <div className="col-auto">{nftCost}</div>
+                                                        <div className="col-auto">
                                                             <button className="btn btn-secondary" onClick={handleCancelSellNFT}>Cancel sell</button>
-                                                        :
-                                                        <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
-                                                    }
-                                                </div>
-                                            </div>
+                                                        </div>
+                                                    </div>
+                                                :
+                                                saleNFTStatus === false ?
+                                                    <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                        <button className="btn btn-secondary" disabled>Buy</button></div>
+                                                    </div>
+                                                    :
+                                                    <div className="row justify-content-between align-items-center px-3">
+                                                        <div className="col-auto">{nftCost}</div>
+                                                        <div className="col-auto">
+                                                            <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                        </div>
+                                                    </div>
+
+                                            }
                                         </div>
                                     </div>
                                 </div>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
 
 const Header: React.FC = () => {
   const [connectBtnText, setConnectBtnText] = useState("Connect");
-  const { address, loginMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount , logoutMetamask } = useUserAccount();
+  let navigate = useNavigate();
 
   function isLogin() {
     if (address === undefined) {
@@ -77,7 +78,7 @@ const Header: React.FC = () => {
                     className="dropdown-item"
                     to="/"
                     onClick={() => {
-                      loginMetamask();
+                      logoutMetamask();
                     }}
                   >
                     Disconnect
@@ -107,11 +108,15 @@ const Header: React.FC = () => {
     }
   }, [address]);
 
-  window.ethereum.on("accountsChanged", () => {
-    if (address !== undefined) {
-      window.location.reload();
-    }
-  });
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", () => {
+      if (address !== undefined) {
+        changeMetamaskAccount();
+        navigate("/");
+      }
+    });
+  },[address,changeMetamaskAccount,navigate]);
+  
 
   return (
     <nav className="navbar navbar-expand-lg bg-light sticky-top shadow-sm">
