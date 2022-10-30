@@ -31,14 +31,14 @@ const useCollection = () => {
         const BackEndResponse = await axios.get(
             `${baseUrl}/collection/getCollectionByOwner?owner=${address}`
         );
-        return BackEndResponse?.data;
+        return BackEndResponse?.data.response;
     }
 
     const getCollectionbyId = async (collectionId: string) => {
         const BackEndResponse = await axios.get(
             `${baseUrl}/collection/getCollectionById?id=${collectionId}`
         );
-        return BackEndResponse?.data;
+        return BackEndResponse?.data.response;
     }
 
     return {

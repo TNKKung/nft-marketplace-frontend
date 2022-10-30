@@ -2,11 +2,12 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
-import { blockchainName } from "../../config"
+import { blockchainName, Market_ADDRESS } from "../../config"
 import "./sellNFT.css"
-import { shortenAddress } from "../../utils/addressHelper";
+// import { shortenAddress } from "../../utils/addressHelper";
 
 import { useUserAccount } from "../../store/UserAction/hook";
+
 
 const SellNFT: React.FC = () => {
     const params = useParams();
@@ -16,7 +17,7 @@ const SellNFT: React.FC = () => {
     const [URLImage, setURLImage] = useState();
     const [nftName, setNFTName] = useState<string>("");
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("");
-    const { readTokenURI, readOwnerTokenID } = useContracts();
+    const { readTokenURI, readOwnerTokenID, sellNFT } = useContracts();
     const { readTokenIdData } = useBackend();
 
     const [amountInput, setAmountInput] = useState(1);
@@ -25,24 +26,40 @@ const SellNFT: React.FC = () => {
     const [textPlaceholder, setTextPlaceholder] = useState("placeholder-glow")
     const [mainClass1, setMainClass1] = useState("d-none");
 
-    const handleAmountInput = useCallback((e:any)=>{
+    const handleAmountInput = useCallback((e: any) => {
         setAmountInput(e.target.value);
-    },[]);
+    }, []);
+
+    const handleSellInput = useCallback(async () => {
+        console.log(amountInput);
+        const tx = await sellNFT(params.tokenID, amountInput);
+        if (tx === true) {
+            navigate("/viewNFT/" + params.tokenID);
+        }
+    }, [amountInput,
+        navigate,
+        params.tokenID,
+        sellNFT]);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
         setURLImage(TokenURI);
         const ownerAddress = await readOwnerTokenID(params.tokenID);
         setOwnerNFTAddress(ownerAddress);
-        if (ownerAddress !== address) {
+        if (ownerAddress === Market_ADDRESS) {
             navigate("/viewNFT/" + params.tokenID);
         }
         const DataDetail = await readTokenIdData(params.tokenID);
 
         try {
             setNFTName(DataDetail.nameNFT);
+            setOwnerNFTAddress(DataDetail.ownerAddres);
+            if (ownerAddress !== address) {
+                navigate("/viewNFT/" + params.tokenID);
+            }
         } catch (error) {
             setNFTName("Name NFT");
+            setOwnerNFTAddress("");
         }
         setLoadingClass("d-none");
         setMainClass1("");
@@ -88,7 +105,7 @@ const SellNFT: React.FC = () => {
                                 <i className="bi bi-chevron-left sellNFT_BackButton"></i></Link>
                             </div>
                             <div className="col-auto">
-                                <img className="sellNFT_previewImg" src={URLImage}></img>
+                                <img className="sellNFT_previewImg" src={URLImage} alt={"URLImage"}></img>
                             </div>
                             <div className={"col-auto h4" + textPlaceholder}>{nftName}</div>
                         </div>
@@ -104,9 +121,9 @@ const SellNFT: React.FC = () => {
                     <div className="row">
                         <div className="col-auto input-group">
                             <span className="input-group-text">{blockchainName}</span>
-                            <input className="form-control" type="number" step="0.1" placeholder="Amount" 
-                            value={amountInput}
-                            onChange={handleAmountInput}></input>
+                            <input className="form-control" type="number" step="0.1" placeholder="Amount"
+                                value={amountInput}
+                                onChange={handleAmountInput}></input>
                             {/* <span className="input-group-text">$ 0.00</span> */}
                         </div>
                     </div>
@@ -124,12 +141,12 @@ const SellNFT: React.FC = () => {
                         </div>
                         <div className="row mt-3 justify-content-between">
                             <div className="col-auto h6">Total Earning (GoerliETH)</div>
-                            <div className="col-auto h6">{amountInput*((100-2.5-2.5)/100)}</div>
+                            <div className="col-auto h6">{amountInput * ((100 - 2.5 - 2.5) / 100)}</div>
                         </div>
                     </div>
                     <div className="row mt-5 justify-content-center">
                         <div className="col-auto">
-                            <button className="btn btn-secondary">Sell your NFT</button>
+                            <button className="btn btn-secondary" onClick={handleSellInput}>Sell your NFT</button>
                         </div>
                     </div>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Link, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
-import { CONTRACT_ADDRESS, blockchainName } from "../../config"
+import { CONTRACT_ADDRESS, blockchainName, Market_ADDRESS } from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
 
@@ -10,13 +10,14 @@ import { useUserAccount } from "../../store/UserAction/hook";
 
 const ViewNFT: React.FC = () => {
     const params = useParams();
-    const {address} = useUserAccount();
+    const { address } = useUserAccount();
 
+    const [saleNFTStatus, setSaleNFTStatus] = useState(false);
     const [URLImage, setURLImage] = useState();
     const [nftName, setNFTName] = useState<string>("");
     const [nftDescription, setNFTDescription] = useState<string>("");
-    const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("");
-    const { readTokenURI, readOwnerTokenID } = useContracts();
+    const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
+    const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT } = useContracts();
     const { readTokenIdData } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
@@ -25,13 +26,19 @@ const ViewNFT: React.FC = () => {
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
         setURLImage(TokenURI);
-        const ownerAddress = await readOwnerTokenID(params.tokenID);
-        setOwnerNFTAddress(ownerAddress);
-        const DataDetail = await readTokenIdData(params.tokenID);
+        const realOwnerAddress = await readOwnerTokenID(params.tokenID);
+        if (realOwnerAddress === Market_ADDRESS) {
+            setSaleNFTStatus(true);
+        } else {
+            setSaleNFTStatus(false);
+        }
 
+        const DataDetail = await readTokenIdData(params.tokenID);
+        console.log(DataDetail);
         try {
             setNFTName(DataDetail.nameNFT);
             setNFTDescription(DataDetail.description);
+            setOwnerNFTAddress(DataDetail.ownerAddres);
         } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
@@ -43,6 +50,24 @@ const ViewNFT: React.FC = () => {
         readOwnerTokenID,
         readTokenIdData,
     ]);
+
+    const handleBuyNFT = useCallback(async () => {
+        const buyNFTStatus = await buyNFT(params.tokenID);
+        if (buyNFTStatus === true) {
+            fetchData();
+        }
+    }, [params.tokenID,
+        buyNFT,
+        fetchData]);
+
+    const handleCancelSellNFT = useCallback(async () => {
+        const cancelStatus = await cancelSellNFT(params.tokenID);
+        if (cancelStatus === true) {
+            fetchData();
+        }
+    }, [params.tokenID,
+        cancelSellNFT,
+        fetchData]);
 
     const [descriptionClass, setDescriptionClass] = useState(["show", "-up"]);
     const [detailsClass, setDetailsClass] = useState(["", "-down"]);
@@ -103,7 +128,7 @@ const ViewNFT: React.FC = () => {
                         <div className="row h4">{nftName}</div>
                         <div className="row mb-3">
                             <div className="col-auto">Owner by</div>
-                            <div className="col">{ownerNFTAddress === "" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                            <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                         </div>
                     </div>
                     <div className={"row " + imageClass[0]}><div className={imageClass[1]}><img className={"img-thumbnail viewNFT_cursor_pointer"}
@@ -165,7 +190,8 @@ const ViewNFT: React.FC = () => {
                                     <div className="row h4">{nftName}</div>
                                     <div className="row">
                                         <div className="col-auto">Owner by</div>
-                                        <div className="col">{ownerNFTAddress === "" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                                        {/*  */}
+                                        <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                                     </div>
                                 </div>
                                 <div className="row mt-3">
@@ -174,9 +200,12 @@ const ViewNFT: React.FC = () => {
                                             <div className="row justify-content-end px-3">
                                                 <div className="col-auto">
                                                     {address === ownerNFTAddress ?
-                                                    <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link>
-                                                    : 
-                                                    <button className="btn btn-secondary">Buy</button>}
+                                                        saleNFTStatus === false ?
+                                                            <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link> :
+                                                            <button className="btn btn-secondary" onClick={handleCancelSellNFT}>Cancel sell</button>
+                                                        :
+                                                        <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

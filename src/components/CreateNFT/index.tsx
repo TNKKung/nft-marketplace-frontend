@@ -183,9 +183,9 @@ const CreateNFT: React.FC = () => {
       );
     }
     //Collection
-    var collection = "";
+    var collection = " ";
     if (selectedCollection?.value === undefined) {
-      collection = "";
+      collection = " ";
     } else {
       collection = selectedCollection.value;
     }
@@ -219,9 +219,18 @@ const CreateNFT: React.FC = () => {
         console.log(collaboratorPercent);
         console.log(collection);
         setConfirmModal(true);
+        var sentNftnftName = nftName;
+        if(sentNftnftName === ""){
+          sentNftnftName = " ";
+        }
+        var sentNftDescription = nftDescription;
+        if(sentNftDescription === ""){
+          sentNftDescription = " ";
+        }
+
         const minNFTRes = await mintNFT(
-          nftName,
-          nftDescription,
+          sentNftnftName,
+          sentNftDescription,
           selectedCategory,
           collaborator,
           collaboratorPercent,
