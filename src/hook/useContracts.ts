@@ -80,6 +80,7 @@ const useContracts = (): any => {
     const convertPrice = BigNumber.from(Number(price * 1e18).toString());
     try {
       const tx = await contract_market.listedNFTItem(CONTRACT_ADDRESS, Number(tokenId), convertPrice);
+      setWaitTransaction(true);
       await tx.wait();
       return true;
     } catch (error) {
@@ -92,6 +93,7 @@ const useContracts = (): any => {
     try {
       const itemFromTokenId = await contract_market.itemFromTokenId(tokenId);
       const tx = await contract_market.unListNFTItem(CONTRACT_ADDRESS, itemFromTokenId);
+      setWaitTransaction(true);
       await tx.wait();
       return true;
     } catch (error) {
@@ -114,6 +116,7 @@ const useContracts = (): any => {
       const itemID = await contract_market.itemFromTokenId(tokenId);
       const options0 = { value: ethers.utils.parseEther((Number(price) / 1e18).toString()) };
       const tx = await contract_market.saleNFTItem(CONTRACT_ADDRESS, itemID, options0);
+      setWaitTransaction(true);
       await tx.wait();
       await axios.patch(`${baseUrl}/nft/updateOwner`, {
         id: idDocNFT,

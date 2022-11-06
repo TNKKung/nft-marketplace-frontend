@@ -4,7 +4,7 @@ import Select, { MultiValue, SingleValue } from "react-select";
 import "./createNFT.css";
 
 import CreatorRoyaltyFee from "./CreatorRoyaltyFee";
-import WaitTransactionModal from "./WaitTransaction"
+import WaitTransactionModal from "../WaitTransaction"
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { useTransactionAction } from "../../store/TransactionAction/hook";

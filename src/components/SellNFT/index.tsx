@@ -7,12 +7,16 @@ import "./sellNFT.css"
 // import { shortenAddress } from "../../utils/addressHelper";
 
 import { useUserAccount } from "../../store/UserAction/hook";
+import { useTransactionAction } from "../../store/TransactionAction/hook";
+import WaitTransactionModal from "../WaitTransaction";
 
 
 const SellNFT: React.FC = () => {
     const params = useParams();
     const { address } = useUserAccount();
     let navigate = useNavigate();
+
+    const { setWaitTransaction } = useTransactionAction();
 
     const [URLImage, setURLImage] = useState();
     const [nftName, setNFTName] = useState<string>("");
@@ -21,6 +25,8 @@ const SellNFT: React.FC = () => {
     const { readTokenIdData } = useBackend();
 
     const [amountInput, setAmountInput] = useState(1);
+
+    const [confirmModal, setConfirmModal] = useState(false);
 
     const [loadingClass, setLoadingClass] = useState("");
     const [textPlaceholder, setTextPlaceholder] = useState("placeholder-glow")
@@ -32,9 +38,13 @@ const SellNFT: React.FC = () => {
 
     const handleSellInput = useCallback(async () => {
         console.log(amountInput);
+        setConfirmModal(true);
         const tx = await sellNFT(params.tokenID, amountInput);
         if (tx === true) {
+            setWaitTransaction(false);
             navigate("/viewNFT/" + params.tokenID);
+        }else{
+            setConfirmModal(false);
         }
     }, [amountInput,
         navigate,
@@ -152,6 +162,7 @@ const SellNFT: React.FC = () => {
 
                 </div>
             </div>
+            <WaitTransactionModal popupState={confirmModal} setPopup={setConfirmModal} ></WaitTransactionModal>
         </div>
     )
 }

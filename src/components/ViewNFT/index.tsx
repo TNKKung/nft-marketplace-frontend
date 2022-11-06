@@ -8,9 +8,14 @@ import { shortenAddress } from "../../utils/addressHelper";
 import { weiToEther } from "../../utils/costHelper";
 import { useUserAccount } from "../../store/UserAction/hook";
 
+import WaitTransactionModal from "../WaitTransaction";
+import { useTransactionAction } from "../../store/TransactionAction/hook";
+
 const ViewNFT: React.FC = () => {
     const params = useParams();
     const { address } = useUserAccount();
+
+    const { setWaitTransaction } = useTransactionAction();
 
     const [saleNFTStatus, setSaleNFTStatus] = useState(false);
     const [URLImage, setURLImage] = useState();
@@ -24,6 +29,8 @@ const ViewNFT: React.FC = () => {
 
     const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
+
+    const [confirmModal, setConfirmModal] = useState(false);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
@@ -62,9 +69,13 @@ const ViewNFT: React.FC = () => {
     ]);
 
     const handleBuyNFT = useCallback(async () => {
+        setConfirmModal(true);
         const buyNFTStatus = await buyNFT(params.tokenID, nftDocument);
         if (buyNFTStatus === true) {
             fetchData();
+            setWaitTransaction(false);
+        }else{
+            setConfirmModal(false);
         }
     }, [params.tokenID,
         buyNFT,
@@ -72,9 +83,13 @@ const ViewNFT: React.FC = () => {
         nftDocument]);
 
     const handleCancelSellNFT = useCallback(async () => {
+        setConfirmModal(true);
         const cancelStatus = await cancelSellNFT(params.tokenID);
         if (cancelStatus === true) {
             fetchData();
+            setWaitTransaction(false);
+        }else{
+            setConfirmModal(false);
         }
     }, [params.tokenID,
         cancelSellNFT,
@@ -215,7 +230,7 @@ const ViewNFT: React.FC = () => {
                                                     </div>
                                                     :
                                                     <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto">{nftCost}</div>
+                                                        <div className="col-auto">{nftCost} {blockchainName}ETH</div>
                                                         <div className="col-auto">
                                                             <button className="btn btn-secondary" onClick={handleCancelSellNFT}>Cancel sell</button>
                                                         </div>
@@ -227,7 +242,7 @@ const ViewNFT: React.FC = () => {
                                                     </div>
                                                     :
                                                     <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto">{nftCost}</div>
+                                                        <div className="col-auto">{nftCost} {blockchainName}ETH</div>
                                                         <div className="col-auto">
                                                             <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
                                                         </div>
@@ -242,8 +257,8 @@ const ViewNFT: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
+            <WaitTransactionModal popupState={confirmModal} setPopup={setConfirmModal} ></WaitTransactionModal>
         </div>
     )
 }
