@@ -76,6 +76,16 @@ const useContracts = (): any => {
     return res;
   };
 
+  const readCollabPercent = async (tokenId: string) => {
+    const INTtokenID = parseInt(tokenId);
+    const res = await contract.collaboratotPercentageOf(INTtokenID);
+    let CollabPercent = 0;
+    res.forEach((value:BigNumber) => {
+      CollabPercent += value.toNumber()
+    });
+    return CollabPercent;
+  };
+
   const sellNFT = async (tokenId: string, price: number) => {
     const convertPrice = BigNumber.from(Number(price * 1e18).toString());
     try {
@@ -147,7 +157,8 @@ const useContracts = (): any => {
     buyNFT,
     cancelSellNFT,
     getPrice,
-    getNFTforSaleList
+    getNFTforSaleList,
+    readCollabPercent
   };
 };
 

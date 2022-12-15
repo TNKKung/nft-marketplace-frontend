@@ -66,6 +66,7 @@ const ViewNFT: React.FC = () => {
         readTokenURI,
         readOwnerTokenID,
         readTokenIdData,
+        getPrice,
     ]);
 
     const handleBuyNFT = useCallback(async () => {
@@ -74,13 +75,14 @@ const ViewNFT: React.FC = () => {
         if (buyNFTStatus === true) {
             fetchData();
             setWaitTransaction(false);
-        }else{
+        } else {
             setConfirmModal(false);
         }
     }, [params.tokenID,
         buyNFT,
         fetchData,
-        nftDocument]);
+        nftDocument,
+        setWaitTransaction]);
 
     const handleCancelSellNFT = useCallback(async () => {
         setConfirmModal(true);
@@ -88,12 +90,13 @@ const ViewNFT: React.FC = () => {
         if (cancelStatus === true) {
             fetchData();
             setWaitTransaction(false);
-        }else{
+        } else {
             setConfirmModal(false);
         }
     }, [params.tokenID,
         cancelSellNFT,
-        fetchData]);
+        fetchData,
+        setWaitTransaction]);
 
     const [descriptionClass, setDescriptionClass] = useState(["show", "-up"]);
     const [detailsClass, setDetailsClass] = useState(["", "-down"]);
