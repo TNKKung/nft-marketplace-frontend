@@ -133,6 +133,12 @@ const CreateNFT: React.FC = () => {
       setCreatorEarnClass("is-invalid");
       setCreatorInputValid("Wallet not found");
     }
+    if(creatorAddressList.length >= 2){
+      creatorAddressApprove = false;
+      setCreatorAddressClass("is-invalid");
+      setCreatorEarnClass("is-invalid");
+      setCreatorInputValid("Max 2 creator");
+    }
     if (creatorAddressApprove === true && TotalApprove === true) {
       var creatorData = {
         creatorAddress: creatorAddressInput,
@@ -435,7 +441,7 @@ const CreateNFT: React.FC = () => {
                 <div className="container-fluid">
                   <div className="row h5">Creator royalty fee (%)</div>
                   <div className="row form-text">Max total royalty fee 10%</div>
-                  <div className="row h6 mt-2">Creator wallet address</div>
+                  <div className="row h6 mt-2">Creator wallet address (Max : 2 Creator)</div>
                   <CreatorRoyaltyFee
                     creatorList={creatorAddressList}
                     setCreatorList={setCreatorAddressList}
