@@ -222,7 +222,7 @@ const ViewNFT: React.FC = () => {
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-12 px-0">
-                                        <div className="contrainer py-2 border rounded">
+                                        <div className="contrainer py-2 border rounded bg-gray-50">
                                             {address === ownerNFTAddress ?
                                                 saleNFTStatus === false ?
                                                     <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
@@ -230,7 +230,7 @@ const ViewNFT: React.FC = () => {
                                                     </div>
                                                     :
                                                     <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto">{nftCost} {blockchainName}ETH</div>
+                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
                                                         <div className="col-auto">
                                                             <button className="btn btn-secondary" onClick={handleCancelSellNFT}>Cancel sell</button>
                                                         </div>
@@ -242,7 +242,7 @@ const ViewNFT: React.FC = () => {
                                                     </div>
                                                     :
                                                     <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto">{nftCost} {blockchainName}ETH</div>
+                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
                                                         <div className="col-auto">
                                                             <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
                                                         </div>
