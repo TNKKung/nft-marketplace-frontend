@@ -4,7 +4,7 @@ import Select, { MultiValue, SingleValue } from "react-select";
 import "./createNFT.css";
 
 import CreatorRoyaltyFee from "./CreatorRoyaltyFee";
-import WaitTransactionModal from "./WaitTransaction"
+import WaitTransactionModal from "../WaitTransaction"
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { useTransactionAction } from "../../store/TransactionAction/hook";
@@ -133,6 +133,12 @@ const CreateNFT: React.FC = () => {
       setCreatorEarnClass("is-invalid");
       setCreatorInputValid("Wallet not found");
     }
+    if(creatorAddressList.length >= 2){
+      creatorAddressApprove = false;
+      setCreatorAddressClass("is-invalid");
+      setCreatorEarnClass("is-invalid");
+      setCreatorInputValid("Max 2 creator");
+    }
     if (creatorAddressApprove === true && TotalApprove === true) {
       var creatorData = {
         creatorAddress: creatorAddressInput,
@@ -183,9 +189,9 @@ const CreateNFT: React.FC = () => {
       );
     }
     //Collection
-    var collection = "";
+    var collection = " ";
     if (selectedCollection?.value === undefined) {
-      collection = "";
+      collection = " ";
     } else {
       collection = selectedCollection.value;
     }
@@ -219,9 +225,18 @@ const CreateNFT: React.FC = () => {
         console.log(collaboratorPercent);
         console.log(collection);
         setConfirmModal(true);
+        var sentNftnftName = nftName;
+        if(sentNftnftName === ""){
+          sentNftnftName = " ";
+        }
+        var sentNftDescription = nftDescription;
+        if(sentNftDescription === ""){
+          sentNftDescription = " ";
+        }
+
         const minNFTRes = await mintNFT(
-          nftName,
-          nftDescription,
+          sentNftnftName,
+          sentNftDescription,
           selectedCategory,
           collaborator,
           collaboratorPercent,
@@ -426,7 +441,7 @@ const CreateNFT: React.FC = () => {
                 <div className="container-fluid">
                   <div className="row h5">Creator royalty fee (%)</div>
                   <div className="row form-text">Max total royalty fee 10%</div>
-                  <div className="row h6 mt-2">Creator wallet address</div>
+                  <div className="row h6 mt-2">Creator wallet address (Max : 2 Creator)</div>
                   <CreatorRoyaltyFee
                     creatorList={creatorAddressList}
                     setCreatorList={setCreatorAddressList}

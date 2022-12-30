@@ -2,36 +2,60 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Link, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
-import { CONTRACT_ADDRESS, blockchainName } from "../../config"
+import { CONTRACT_ADDRESS, blockchainName, Market_ADDRESS } from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
-
+import { weiToEther } from "../../utils/costHelper";
 import { useUserAccount } from "../../store/UserAction/hook";
+
+import WaitTransactionModal from "../WaitTransaction";
+import { useTransactionAction } from "../../store/TransactionAction/hook";
 
 const ViewNFT: React.FC = () => {
     const params = useParams();
-    const {address} = useUserAccount();
+    const { address } = useUserAccount();
 
+    const { setWaitTransaction } = useTransactionAction();
+
+    const [saleNFTStatus, setSaleNFTStatus] = useState(false);
     const [URLImage, setURLImage] = useState();
+    const [nftDocument, setNFTDocument] = useState("");
     const [nftName, setNFTName] = useState<string>("");
     const [nftDescription, setNFTDescription] = useState<string>("");
-    const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("");
-    const { readTokenURI, readOwnerTokenID } = useContracts();
+    const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
+    const [nftCost, setNFTCost] = useState(0);
+    const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
     const { readTokenIdData } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
 
+    const [confirmModal, setConfirmModal] = useState(false);
+
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
         setURLImage(TokenURI);
-        const ownerAddress = await readOwnerTokenID(params.tokenID);
-        setOwnerNFTAddress(ownerAddress);
-        const DataDetail = await readTokenIdData(params.tokenID);
+        const realOwnerAddress = await readOwnerTokenID(params.tokenID);
+        if (realOwnerAddress === Market_ADDRESS) {
+            setSaleNFTStatus(true);
+            try {
+                const weiCost = await getPrice(params.tokenID);
+                setNFTCost(weiToEther(weiCost));
+            } catch (Error) {
+                console.log(Error);
+            }
 
+        } else {
+            setSaleNFTStatus(false);
+        }
+
+        const DataDetail = await readTokenIdData(params.tokenID);
+        console.log(DataDetail);
         try {
             setNFTName(DataDetail.nameNFT);
             setNFTDescription(DataDetail.description);
+            setOwnerNFTAddress(DataDetail.ownerAddres);
+            setNFTDocument(DataDetail.id);
         } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
@@ -42,7 +66,37 @@ const ViewNFT: React.FC = () => {
         readTokenURI,
         readOwnerTokenID,
         readTokenIdData,
+        getPrice,
     ]);
+
+    const handleBuyNFT = useCallback(async () => {
+        setConfirmModal(true);
+        const buyNFTStatus = await buyNFT(params.tokenID, nftDocument);
+        if (buyNFTStatus === true) {
+            fetchData();
+            setWaitTransaction(false);
+        } else {
+            setConfirmModal(false);
+        }
+    }, [params.tokenID,
+        buyNFT,
+        fetchData,
+        nftDocument,
+        setWaitTransaction]);
+
+    const handleCancelSellNFT = useCallback(async () => {
+        setConfirmModal(true);
+        const cancelStatus = await cancelSellNFT(params.tokenID);
+        if (cancelStatus === true) {
+            fetchData();
+            setWaitTransaction(false);
+        } else {
+            setConfirmModal(false);
+        }
+    }, [params.tokenID,
+        cancelSellNFT,
+        fetchData,
+        setWaitTransaction]);
 
     const [descriptionClass, setDescriptionClass] = useState(["show", "-up"]);
     const [detailsClass, setDetailsClass] = useState(["", "-down"]);
@@ -103,7 +157,7 @@ const ViewNFT: React.FC = () => {
                         <div className="row h4">{nftName}</div>
                         <div className="row mb-3">
                             <div className="col-auto">Owner by</div>
-                            <div className="col">{ownerNFTAddress === "" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                            <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                         </div>
                     </div>
                     <div className={"row " + imageClass[0]}><div className={imageClass[1]}><img className={"img-thumbnail viewNFT_cursor_pointer"}
@@ -165,20 +219,39 @@ const ViewNFT: React.FC = () => {
                                     <div className="row h4">{nftName}</div>
                                     <div className="row">
                                         <div className="col-auto">Owner by</div>
-                                        <div className="col">{ownerNFTAddress === "" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                                        {/*  */}
+                                        <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                                     </div>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-12 px-0">
-                                        <div className="contrainer py-2 border rounded">
-                                            <div className="row justify-content-end px-3">
-                                                <div className="col-auto">
-                                                    {address === ownerNFTAddress ?
-                                                    <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link>
-                                                    : 
-                                                    <button className="btn btn-secondary">Buy</button>}
-                                                </div>
-                                            </div>
+                                        <div className="contrainer py-2 border rounded bg-gray-50">
+                                            {address === ownerNFTAddress ?
+                                                saleNFTStatus === false ?
+                                                    <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                        <Link to={"/sellNFT/" + params.tokenID} className="btn btn-secondary">Sell</Link></div>
+                                                    </div>
+                                                    :
+                                                    <div className="row justify-content-between align-items-center px-3">
+                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
+                                                        <div className="col-auto">
+                                                            <button className="btn btn-secondary" onClick={handleCancelSellNFT}>Cancel sell</button>
+                                                        </div>
+                                                    </div>
+                                                :
+                                                saleNFTStatus === false ?
+                                                    <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                        <button className="btn btn-secondary" disabled>Buy</button></div>
+                                                    </div>
+                                                    :
+                                                    <div className="row justify-content-between align-items-center px-3">
+                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
+                                                        <div className="col-auto">
+                                                            <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                        </div>
+                                                    </div>
+
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -187,8 +260,8 @@ const ViewNFT: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
             </div>
+            <WaitTransactionModal popupState={confirmModal} setPopup={setConfirmModal} ></WaitTransactionModal>
         </div>
     )
 }
