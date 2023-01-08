@@ -11,7 +11,10 @@ const useAuth = (): any => {
       const response = await axios.get(
         `${baseUrl}/auth/message?address=${address}`
       );
-      const messageToSign = response?.data?.messageToSign;
+
+      const messageToSign = response.data.response.messageToSign;
+
+      console.log(messageToSign);
 
       if (!messageToSign) {
         throw new Error("Invalid message to sign");
@@ -25,16 +28,20 @@ const useAuth = (): any => {
       );
 
       const jwtResponse = await axios.get(
-        `${baseUrl}/jwt?address=${address}&signature=${signature}`
+        `${baseUrl}/auth/jwt?address=${address}&signature=${signature}`
       );
 
-      const customToken = jwtResponse?.data?.customToken;
+      console.log(jwtResponse);
+
+      const customToken = jwtResponse?.data?.response.customToken;
+
+      console.log(customToken);
 
       if (!customToken) {
         throw new Error("Invalid JWT");
       }
-
-      await signInWithCustomToken(auth, customToken);
+      const res = await signInWithCustomToken(auth, customToken);
+      console.log(res);
       return true;
     } catch (e) {
       return false;
