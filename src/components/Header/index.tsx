@@ -119,7 +119,7 @@ const Header: React.FC = () => {
   
 
   return (
-    <nav className="navbar navbar-expand-lg bg-light sticky-top shadow-sm">
+    <nav className="navbar navbar-expand-lg bg-white sticky-top shadow-sm">
       <div className="container-fluid">
         <div className="contrainer-fluid d-flex flex-row align-items-center w-50">
           <Link
