@@ -1,0 +1,42 @@
+.Profile_profileImg {
+    width: 200px;
+    height:200px;
+    object-fit: cover;
+    background-color: gray;
+}
+
+.Profile_nav {
+    padding-bottom: 5px;
+    border-bottom: 2px solid white;
+}
+
+.Profile_nav_select {
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+}
+
+.nft_show_list {
+    width: 340px;
+    min-height: 387px;
+}
+
+@media screen and (min-width: 800px) {
+    .nft_show_list {
+        width: 660px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .nft_show_list {
+        width: 970px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .nft_show_list {
+        width: 1298px;
+    }
+}
+
+
+
