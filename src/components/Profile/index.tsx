@@ -66,12 +66,13 @@ const Profile: React.FC = () => {
       return nft.nameNFT.toLowerCase().includes(e.target.value.toLowerCase());
     });
 
-    console.log(includeNFT);
-    setFilterShowNFTList([]);
-    setFilterShowNFTList(includeNFT);
-  }, [onDefaultShowNFT]);
+    if(JSON.stringify(filterShowNFTList) !== JSON.stringify(includeNFT)){
+      setFilterShowNFTList(includeNFT);
+    }
+  }, [onDefaultShowNFT,filterShowNFTList]);
 
   const fetchData = useCallback(async () => {
+    setFriendCount(0);
     const OwnNFTListRes = await readTokenIdFromAddress(address);
     try {
       setOwnNftList(OwnNFTListRes);
@@ -89,7 +90,6 @@ const Profile: React.FC = () => {
 
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
   useEffect(() => {
-    if(searchInput.length%2 === 1 || searchInput.length === 0)
     setMapShowNFT([]);
   }, [filterShowNFTList]);
 
@@ -106,7 +106,8 @@ const Profile: React.FC = () => {
       });
       setMapShowNFT(mapNFTList);
     }
-  },[mapShowNFT,filterShowNFTList])
+    // eslint-disable-next-line
+  },[mapShowNFT])
 
   return (
     <div className="container-fluid">
@@ -173,12 +174,6 @@ const Profile: React.FC = () => {
                   <div className="row justify-content-center align-items-center">
                     <div className="col-auto">
                       <div className="d-flex flex-row p-2 mt-3 flex-wrap border border-secondary-subtle rounded nft_show_list">
-                        {/* {filterShowNFT.map((obj: any, index: number) => {
-                          return <div key={index}>
-                            <NFTBox TokenID={Number(obj.tokenId).toString()}></NFTBox>
-                          </div>
-                        }
-                        )} */}
                         {mapShowNFT}
                       </div>
                     </div>
