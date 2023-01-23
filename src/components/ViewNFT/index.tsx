@@ -216,7 +216,10 @@ const ViewNFT: React.FC = () => {
                         <div className={rightDetailClass[1]}>
                             <div className="container-fluid">
                                 <div className={mainClass2[2] === false ? "" : "d-none"}>
-                                    <div className="row h4">{nftName}</div>
+                                    <div className="row h4 justify-content-between align-items-center">
+                                        <div className="col-auto">{nftName}</div>
+                                        <i className="col-auto bi bi-heart viewNFT_cursor_pointer"></i>
+                                    </div>
                                     <div className="row">
                                         <div className="col-auto">Owner by</div>
                                         {/*  */}
