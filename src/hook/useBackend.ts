@@ -15,9 +15,111 @@ const useBackend = () => {
         );
         return BackEndResponse.data.response;
     }
-    return{
+
+    const readProfileAddress = async (address: string | undefined) => {
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/user/getUserByAddress?address=${address}`
+        );
+        return BackEndResponse.data.response[0];
+    }
+
+    const checkLikeUser = async (profileAddress: string, address: string) => {
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/user/getUserByAddress?address=${address}`
+        );
+        try {
+            const addressFriendList = BackEndResponse.data.response[0].friendList;
+            console.log(addressFriendList);
+            if (addressFriendList.includes(profileAddress) === true) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    const addLikeUser = async (profileAddress: string, address: string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/addFriendList?address=${address}`,
+                { friendAddress : profileAddress }
+            );
+            return "Success"
+        }
+        catch (error) {
+            return "Error"
+        }
+    }
+
+    const removeLikeUser = async (profileAddress: string, address: string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/unfriendList?address=${address}`,
+                { friendAddress : profileAddress }
+            );
+            return "Success"
+        }
+        catch (error) {
+            return "Error"
+        }
+    }
+
+    const editInfoProfile = async (name:string, bio:string, twitter:string, instagram:string, contact:string, address:string)=> {
+        try {
+            await axios.post(
+                `${baseUrl}/user/editInfoUser?address=${address}`,
+                {
+                    name:name,
+                    bio:bio,
+                    twitter:twitter,
+                    instagram:instagram,
+                    contact:contact
+                }
+            );
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const editImageProfile = async (profileImage:string, address:string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/editImageProfile?address=${address}`,
+                {
+                    profileImage:profileImage
+                }
+            );
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const editImageBackground = async (profileImage:string, address:string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/editImageBackground?address=${address}`,
+                {
+                    backgroundImage:profileImage
+                }
+            );
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    return {
         readTokenIdData,
-        readTokenIdFromAddress
+        readTokenIdFromAddress,
+        readProfileAddress,
+        checkLikeUser,
+        addLikeUser,
+        removeLikeUser,
+        editInfoProfile,
+        editImageProfile,
+        editImageBackground
     };
 }
 export default useBackend;

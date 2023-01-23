@@ -15,7 +15,7 @@ function App() {
         <Header />
           <Routes>
             <Route path="/" element={<Home/>}></Route>
-            <Route path="/profile" element={<Profile/>}></Route>
+            <Route path="/profile/:walletAddress" element={<Profile/>}></Route>
             <Route path="/setting" element={<SettingPage/>}></Route>
             <Route path="/createNFT" element={<CreateNFT/>}></Route>
             <Route path="/myCollection" element={<MyCollection/>}></Route>

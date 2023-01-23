@@ -5,6 +5,12 @@
     background-color: gray;
 }
 
+.Profile_bgProfileImg {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+
 .Profile_nav {
     padding-bottom: 5px;
     border-bottom: 2px solid white;

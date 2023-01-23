@@ -64,7 +64,7 @@ const Header: React.FC = () => {
               <ul className="dropdown-menu dropdown-menu-end">
                 {/* <li><hr className="dropdown-divider" /></li> */}
                 <li>
-                  <Link className="dropdown-item" to="/profile">
+                  <Link className="dropdown-item" to={"/profile/"+address}>
                     Profile
                   </Link>
                 </li>
