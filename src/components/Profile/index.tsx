@@ -136,7 +136,6 @@ const Profile: React.FC = () => {
     if (profileAddress !== address) {
       const checkProfileLike = await checkLikeUser(profileAddress, address);
       try {
-        console.log(checkProfileLike);
         setProfileLike(checkProfileLike);
       } catch (error) {
         console.log(error);
@@ -156,35 +155,23 @@ const Profile: React.FC = () => {
   }, []);
 
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
-  const ResetMapShowNFT = useCallback(() => {
-    setMapShowNFT([]);
-  }, []);
-
-  useEffect(() => {
-    ResetMapShowNFT();
-  }, [ResetMapShowNFT,
-    filterShowNFTList]);
-
   const NewMapShowNFT = useCallback(() => {
-    if (mapShowNFT.length === 0) {
       let mapNFTList: any = [];
-      let count = 0;
       filterShowNFTList.forEach(mapNFT => {
         mapNFTList.push(
-          <div key={count}>
+          <div key={Number(mapNFT.tokenId).toString()}>
             <NFTBox TokenID={Number(mapNFT.tokenId).toString()}></NFTBox>
           </div>);
-        count += 1;
       });
       setMapShowNFT(mapNFTList);
-    }
+
   }, [filterShowNFTList,
-    mapShowNFT
   ]);
 
   useEffect(() => {
     NewMapShowNFT();
-  }, [mapShowNFT])
+    // eslint-disable-next-line
+  }, [filterShowNFTList]);
 
   return (
     <div className="container-fluid">

@@ -37,14 +37,18 @@ const ViewNFT: React.FC = () => {
 
     const [likeNft, setLikeNft] = useState(false);
     const handleLikeNFT = useCallback(async () => {
-        if(likeNft === false){
+        if (likeNft === false) {
             setLikeNft(true);
             addLikeNFT(params.tokenID, address);
-        }else{
+        } else {
             setLikeNft(false);
             removeLikeNFT(params.tokenID, address);
         }
-    },[likeNft]);
+    }, [likeNft,
+        addLikeNFT,
+        removeLikeNFT,
+        address,
+        params]);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
@@ -76,9 +80,9 @@ const ViewNFT: React.FC = () => {
         }
         setLoadingClass("d-none");
         setMainClass1("d-flex");
-        
+
         setLikeNft(await checkLikeNFT(params.tokenID, address));
-        
+
 
     }, [params.tokenID,
         readTokenURI,

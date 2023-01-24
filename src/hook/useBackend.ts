@@ -29,7 +29,6 @@ const useBackend = () => {
         );
         try {
             const addressFriendList = BackEndResponse.data.response[0].friendList;
-            console.log(addressFriendList);
             if (addressFriendList.includes(profileAddress) === true) {
                 return true;
             } else {
@@ -116,7 +115,6 @@ const useBackend = () => {
         );
         try {
             const addressFriendList = BackEndResponse.data.response[0].favoriteNFT;
-            console.log(addressFriendList);
             if (addressFriendList.includes(tokenId) === true) {
                 return true;
             } else {
