@@ -44,7 +44,7 @@ const useBackend = () => {
         try {
             await axios.post(
                 `${baseUrl}/user/addFriendList?address=${address}`,
-                { friendAddress : profileAddress }
+                { friendAddress: profileAddress }
             );
             return "Success"
         }
@@ -57,7 +57,7 @@ const useBackend = () => {
         try {
             await axios.post(
                 `${baseUrl}/user/unfriendList?address=${address}`,
-                { friendAddress : profileAddress }
+                { friendAddress: profileAddress }
             );
             return "Success"
         }
@@ -66,45 +66,45 @@ const useBackend = () => {
         }
     }
 
-    const editInfoProfile = async (name:string, bio:string, twitter:string, instagram:string, contact:string, address:string)=> {
+    const editInfoProfile = async (name: string, bio: string, twitter: string, instagram: string, contact: string, address: string) => {
         try {
             await axios.post(
                 `${baseUrl}/user/editInfoUser?address=${address}`,
                 {
-                    name:name,
-                    bio:bio,
-                    twitter:twitter,
-                    instagram:instagram,
-                    contact:contact
+                    name: name,
+                    bio: bio,
+                    twitter: twitter,
+                    instagram: instagram,
+                    contact: contact
                 }
             );
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
 
-    const editImageProfile = async (profileImage:string, address:string) => {
+    const editImageProfile = async (profileImage: string, address: string) => {
         try {
             await axios.post(
                 `${baseUrl}/user/editImageProfile?address=${address}`,
                 {
-                    profileImage:profileImage
+                    profileImage: profileImage
                 }
             );
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
 
-    const editImageBackground = async (profileImage:string, address:string) => {
+    const editImageBackground = async (profileImage: string, address: string) => {
         try {
             await axios.post(
                 `${baseUrl}/user/editImageBackground?address=${address}`,
                 {
-                    backgroundImage:profileImage
+                    backgroundImage: profileImage
                 }
             );
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
@@ -114,8 +114,11 @@ const useBackend = () => {
             `${baseUrl}/user/getUserByAddress?address=${address}`
         );
         try {
-            const addressFriendList = BackEndResponse.data.response[0].favoriteNFT;
-            if (addressFriendList.includes(tokenId) === true) {
+            const favoriteNFTList = BackEndResponse.data.response[0].favoriteNFT;
+            const filterFavoriteNFT = favoriteNFTList.filter((Nftlist:any)=>{
+                return Nftlist.tokenId === tokenId
+            })
+            if (filterFavoriteNFT.length > 0) {
                 return true;
             } else {
                 return false;
@@ -126,11 +129,15 @@ const useBackend = () => {
         }
     }
 
-    const addLikeNFT = async (tokenId: string | undefined, address: string) => {
+    const addLikeNFT = async (tokenId: string | undefined, nameNFT: string, category: any[], address: string) => {
         try {
             await axios.post(
                 `${baseUrl}/user/addFavoriteNFT?address=${address}`,
-                { tokenId : tokenId }
+                {
+                    tokenId: tokenId,
+                    nameNFT: nameNFT,
+                    category: category
+                }
             );
             return "Success"
         }
@@ -143,7 +150,7 @@ const useBackend = () => {
         try {
             await axios.post(
                 `${baseUrl}/user/removeFavoriteNFT?address=${address}`,
-                { tokenId : tokenId }
+                { tokenId: tokenId }
             );
             return "Success"
         }

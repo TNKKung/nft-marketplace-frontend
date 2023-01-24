@@ -29,6 +29,7 @@ const Profile: React.FC = () => {
   const [profileLike, setProfileLike] = useState(false);
 
   const [ownNftList, setOwnNftList] = useState<any[]>([]);
+  const [favoriteNftList, setFavoriteNftList] = useState<any[]>([]);
 
   const [friendCount, setFriendCount] = useState(0);
 
@@ -65,10 +66,10 @@ const Profile: React.FC = () => {
 
   const navFavoriteBtn = useCallback(async () => {
     resetNav();
-    setOnDefaultShowNFT([]);
-    setFilterShowNFTList([]);
+    setOnDefaultShowNFT(favoriteNftList);
+    setFilterShowNFTList(favoriteNftList);
     setFavorite("Profile_nav_select")
-  }, [resetNav]);
+  }, [resetNav, favoriteNftList]);
 
   const navCreatedBtn = useCallback(async () => {
     resetNav();
@@ -123,10 +124,11 @@ const Profile: React.FC = () => {
       console.log(profileDataRes);
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
-      if(profileDataRes.profileImage !== ""){
+      setFavoriteNftList(profileDataRes.favoriteNFT);
+      if (profileDataRes.profileImage !== "") {
         setProfileMainImg(profileDataRes.profileImage);
       }
-      if(profileDataRes.backgroundImage !== ""){
+      if (profileDataRes.backgroundImage !== "") {
         setProfileBgImg(profileDataRes.backgroundImage);
       }
       setFriendCount(profileDataRes.friendList.length);
@@ -156,14 +158,14 @@ const Profile: React.FC = () => {
 
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
   const NewMapShowNFT = useCallback(() => {
-      let mapNFTList: any = [];
-      filterShowNFTList.forEach(mapNFT => {
-        mapNFTList.push(
-          <div key={Number(mapNFT.tokenId).toString()}>
-            <NFTBox TokenID={Number(mapNFT.tokenId).toString()}></NFTBox>
-          </div>);
-      });
-      setMapShowNFT(mapNFTList);
+    let mapNFTList: any = [];
+    filterShowNFTList.forEach(mapNFT => {
+      mapNFTList.push(
+        <div key={Number(mapNFT.tokenId).toString()}>
+          <NFTBox TokenID={Number(mapNFT.tokenId).toString()}></NFTBox>
+        </div>);
+    });
+    setMapShowNFT(mapNFTList);
 
   }, [filterShowNFTList,
   ]);
