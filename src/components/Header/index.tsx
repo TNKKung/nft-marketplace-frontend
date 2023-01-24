@@ -34,9 +34,9 @@ const Header: React.FC = () => {
   ]);
 
   useEffect(() => {
-    if (address !== undefined){
+    if (address !== undefined) {
       fetchAddress();
-    }else{
+    } else {
       setprofileImg(blankImage);
     }
     // eslint-disable-next-line
@@ -57,7 +57,7 @@ const Header: React.FC = () => {
     } else {
       return (
         <div className="d-flex align-items-center">
-          <div className="dropdown">
+          <div className="dropdown header_create_btn">
             <button className="btn btn-secondary dropdown-toggle text-white" type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false">
@@ -94,6 +94,20 @@ const Header: React.FC = () => {
                 Copy address
               </li>
               <li><hr className="dropdown-divider"></hr></li>
+              <div className="header_profile_create">
+                <li>
+                  <Link
+                    className="dropdown-item text-end" to="/createNFT">
+                    Create NFT
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item text-end" to="/myCollection">
+                    My collection
+                  </Link>
+                </li>
+                <li><hr className="dropdown-divider"></hr></li>
+              </div>
               <li>
                 <Link className="dropdown-item text-end" to={"/profile/" + address}>
                   Profile
@@ -175,6 +189,22 @@ const Header: React.FC = () => {
                   className="form-control"
                   placeholder="Search by Collection / User / Address"
                 ></input>
+              </div>
+              <div className="dropdown ms-2 me-1 header_dropdown_form">
+                <button
+                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Collection </button>
+              </div>
+              <div className="dropdown m-1 header_dropdown_form">
+                <button
+                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Single owner </button>
               </div>
             </div>
 
