@@ -204,7 +204,7 @@ const Profile: React.FC = () => {
                     </div>
                   </div>
                   <div className="row my-2"><div className="col-auto border border-secondary rounded">{shortenAddress(profileAddress)}</div></div>
-                  <div className="row"><div className="col-auto border border-secondary rounded">friend {friendCount} people</div></div>
+                  <div className="row"><div className="col-auto border border-secondary rounded">friend {friendCount}</div></div>
                 </div>
               </div>
 

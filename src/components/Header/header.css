@@ -1,0 +1,35 @@
+.header_btn_profile {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.header_btn_profile:active {
+    border: 2px solid black;
+}
+
+.header_input_form {
+    width: 800px;
+}
+
+.header_nav {
+    position: sticky;
+    top: 0px;
+    z-index: 200;
+    background: white;
+
+}
+
+.header_brand {
+    text-decoration: none;
+    color: black;
+}
+
+.header_brand:hover {
+    color: black;
+}
+
+.header_cursor_pointer {
+    cursor: pointer;
+}
