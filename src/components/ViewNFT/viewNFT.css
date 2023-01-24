@@ -5,3 +5,7 @@
 .viewNFT_cursor_pointer{
     cursor: pointer;
   }
+
+.viewNFT_address_path:hover {
+    text-decoration: underline;
+}
