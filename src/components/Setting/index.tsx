@@ -20,7 +20,7 @@ const SettingPage: React.FC = () => {
     const [profileInfoData, setProfileInfoData] = useState<any>();
 
     const profileImageInputRef = useRef<any>(null);
-    const [profileImage, setProfileImage] = useState([]);
+    const [profileImage, setProfileImage] = useState(undefined);
     const [previewProfileImage, setPreviewProfileImage] = useState(blankImage);
     const handleImageOnclick = () => {
         profileImageInputRef.current?.click();
@@ -41,7 +41,7 @@ const SettingPage: React.FC = () => {
     }, [profileInfoData]);
 
     const profileBgImageInputRef = useRef<any>(null);
-    const [profileBgImage, setProfileBgImage] = useState([]);
+    const [profileBgImage, setProfileBgImage] = useState(undefined);
     const [previewProfileBgImage, setPreviewProfileBgImage] = useState(blankBgImage);
     const handleBgImageOnclick = () => {
         profileBgImageInputRef.current?.click();
@@ -91,14 +91,15 @@ const SettingPage: React.FC = () => {
         }
         if (profileNameChecked === true) {
             editInfoProfile(profileName, profileBio, profiletwitter, profileInstagram, profileContact, address);
-            if (profileImage.length !== 0) {
+            console.log(profileImage);
+            if (profileImage !== undefined) {
                 console.log("editprofileImg");
                 const CIDprofileImage = await getIPFS(profileImage);
                 if (CIDprofileImage !== false) {
                     editImageProfile(CIDprofileImage, address);
                 }
             }
-            if (profileBgImage.length !== 0) {
+            if (profileBgImage !== undefined) {
                 console.log("editprofileBgImg");
                 const CIDprofileBgImage = await getIPFS(profileBgImage);
                 if (CIDprofileBgImage !== false) {
