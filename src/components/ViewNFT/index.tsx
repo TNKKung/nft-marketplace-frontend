@@ -25,12 +25,26 @@ const ViewNFT: React.FC = () => {
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
     const [nftCost, setNFTCost] = useState(0);
     const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
-    const { readTokenIdData } = useBackend();
+    const { readTokenIdData,
+        checkLikeNFT,
+        addLikeNFT,
+        removeLikeNFT } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
 
     const [confirmModal, setConfirmModal] = useState(false);
+
+    const [likeNft, setLikeNft] = useState(false);
+    const handleLikeNFT = useCallback(async () => {
+        if(likeNft === false){
+            setLikeNft(true);
+            addLikeNFT(params.tokenID, address);
+        }else{
+            setLikeNft(false);
+            removeLikeNFT(params.tokenID, address);
+        }
+    },[likeNft]);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
@@ -62,11 +76,17 @@ const ViewNFT: React.FC = () => {
         }
         setLoadingClass("d-none");
         setMainClass1("d-flex");
+        
+        setLikeNft(await checkLikeNFT(params.tokenID, address));
+        
+
     }, [params.tokenID,
         readTokenURI,
         readOwnerTokenID,
         readTokenIdData,
         getPrice,
+        checkLikeNFT,
+        address
     ]);
 
     const handleBuyNFT = useCallback(async () => {
@@ -218,7 +238,11 @@ const ViewNFT: React.FC = () => {
                                 <div className={mainClass2[2] === false ? "" : "d-none"}>
                                     <div className="row h4 justify-content-between align-items-center">
                                         <div className="col-auto">{nftName}</div>
-                                        <i className="col-auto bi bi-heart viewNFT_cursor_pointer"></i>
+                                        <div className="col-auto viewNFT_cursor_pointer" onClick={handleLikeNFT}>
+                                            {likeNft === false ?
+                                                <i className="bi bi-heart "></i> :
+                                                <i className="bi bi-heart-fill"></i>}
+                                        </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-auto">Owner by</div>

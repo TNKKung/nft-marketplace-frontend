@@ -110,6 +110,50 @@ const useBackend = () => {
         }
     }
 
+    const checkLikeNFT = async (tokenId: string | undefined, address: string) => {
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/user/getUserByAddress?address=${address}`
+        );
+        try {
+            const addressFriendList = BackEndResponse.data.response[0].favoriteNFT;
+            console.log(addressFriendList);
+            if (addressFriendList.includes(tokenId) === true) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
+    const addLikeNFT = async (tokenId: string | undefined, address: string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/addFavoriteNFT?address=${address}`,
+                { tokenId : tokenId }
+            );
+            return "Success"
+        }
+        catch (error) {
+            return "Error"
+        }
+    }
+
+    const removeLikeNFT = async (tokenId: string | undefined, address: string) => {
+        try {
+            await axios.post(
+                `${baseUrl}/user/removeFavoriteNFT?address=${address}`,
+                { tokenId : tokenId }
+            );
+            return "Success"
+        }
+        catch (error) {
+            return "Error"
+        }
+    }
+
     return {
         readTokenIdData,
         readTokenIdFromAddress,
@@ -119,7 +163,11 @@ const useBackend = () => {
         removeLikeUser,
         editInfoProfile,
         editImageProfile,
-        editImageBackground
+        editImageBackground,
+        checkLikeNFT,
+        addLikeNFT,
+        removeLikeNFT
+
     };
 }
 export default useBackend;
