@@ -29,6 +29,8 @@ export const useUserAccount = () => {
   };
 
   const changeMetamaskAccount = async () => {
+    dispatch(removeItem());
+    handleLogout();
     if (window?.ethereum?.isMetaMask) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",

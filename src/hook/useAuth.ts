@@ -6,21 +6,16 @@ import { baseUrl } from "../config";
 import { signInWithCustomToken, signOut } from "firebase/auth";
 
 const useAuth = (): any => {
+  const web3 = new Web3(Web3.givenProvider);
   const handleLogin = async (address: string): Promise<boolean> => {
     try {
       const response = await axios.get(
         `${baseUrl}/auth/message?address=${address}`
       );
-
       const messageToSign = response.data.response.messageToSign;
-
-      console.log(messageToSign);
-
       if (!messageToSign) {
         throw new Error("Invalid message to sign");
       }
-
-      const web3 = new Web3(Web3.givenProvider);
       const signature = await web3.eth.personal.sign(
         messageToSign,
         address,

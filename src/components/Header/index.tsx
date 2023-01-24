@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useUserAccount } from "../../store/UserAction/hook";
@@ -6,7 +6,7 @@ import { shortenAddress } from "../../utils/addressHelper";
 
 const Header: React.FC = () => {
   const [connectBtnText, setConnectBtnText] = useState("Connect");
-  const { address, loginMetamask, changeMetamaskAccount , logoutMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } = useUserAccount();
   let navigate = useNavigate();
 
   function isLogin() {
@@ -64,7 +64,7 @@ const Header: React.FC = () => {
               <ul className="dropdown-menu dropdown-menu-end">
                 {/* <li><hr className="dropdown-divider" /></li> */}
                 <li>
-                  <Link className="dropdown-item" to={"/profile/"+address}>
+                  <Link className="dropdown-item" to={"/profile/" + address}>
                     Profile
                   </Link>
                 </li>
@@ -108,15 +108,33 @@ const Header: React.FC = () => {
     }
   }, [address]);
 
+  const [accountsChanged, setAccountsChanged] = useState(false);
+
+  const changeAccount = useCallback(async () => {
+    if (address !== undefined) {
+      navigate("/");
+      await changeMetamaskAccount();
+      setAccountsChanged(false);
+    }
+  }, [address,
+    navigate,
+    changeMetamaskAccount
+  ]);
+
   useEffect(() => {
-    window.ethereum.on("accountsChanged", () => {
-      if (address !== undefined) {
-        changeMetamaskAccount();
-        navigate("/");
-      }
-    });
-  },[address,changeMetamaskAccount,navigate]);
-  
+    if (address !== undefined) {
+      window.ethereum.on("accountsChanged", () => {
+        setAccountsChanged(true);
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (accountsChanged === true) {
+      changeAccount();
+    }
+    // eslint-disable-next-line
+  }, [accountsChanged])
 
   return (
     <nav className="navbar navbar-expand-lg bg-white sticky-top shadow-sm">
