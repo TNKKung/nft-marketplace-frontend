@@ -116,7 +116,7 @@ const useBackend = () => {
         try {
             const favoriteNFTList = BackEndResponse.data.response[0].favoriteNFT;
             const filterFavoriteNFT = favoriteNFTList.filter((Nftlist:any)=>{
-                return Nftlist.tokenId === tokenId
+                return Nftlist.tokenId === Number(tokenId)
             })
             if (filterFavoriteNFT.length > 0) {
                 return true;
@@ -134,9 +134,7 @@ const useBackend = () => {
             await axios.post(
                 `${baseUrl}/user/addFavoriteNFT?address=${address}`,
                 {
-                    tokenId: tokenId,
-                    nameNFT: nameNFT,
-                    category: category
+                    tokenId: Number(tokenId),
                 }
             );
             return "Success"
@@ -150,7 +148,7 @@ const useBackend = () => {
         try {
             await axios.post(
                 `${baseUrl}/user/removeFavoriteNFT?address=${address}`,
-                { tokenId: tokenId }
+                { tokenId: Number(tokenId) }
             );
             return "Success"
         }
