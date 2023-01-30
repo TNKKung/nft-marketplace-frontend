@@ -80,18 +80,21 @@ const useContracts = (): any => {
     const INTtokenID = parseInt(tokenId);
     const res = await contract.collaboratotPercentageOf(INTtokenID);
     let CollabPercent = 0;
-    res.forEach((value:BigNumber) => {
+    res.forEach((value: BigNumber) => {
       CollabPercent += value.toNumber()
     });
     return CollabPercent;
   };
 
-  const sellNFT = async (tokenId: string, price: number) => {
+  const sellNFT = async (tokenId: string, price: number, idDocNFT: string) => {
     const convertPrice = BigNumber.from(Number(price * 1e18).toString());
     try {
       const tx = await contract_market.listedNFTItem(CONTRACT_ADDRESS, Number(tokenId), convertPrice);
       setWaitTransaction(true);
       await tx.wait();
+      await axios.patch(`${baseUrl}/nft/listingForSale`, {
+        id: idDocNFT,
+      });
       return true;
     } catch (error) {
       console.log(error);
@@ -99,12 +102,15 @@ const useContracts = (): any => {
     }
   }
 
-  const cancelSellNFT = async (tokenId: string) => {
+  const cancelSellNFT = async (tokenId: string, idDocNFT: string) => {
     try {
       const itemFromTokenId = await contract_market.itemFromTokenId(tokenId);
       const tx = await contract_market.unListNFTItem(CONTRACT_ADDRESS, itemFromTokenId);
       setWaitTransaction(true);
       await tx.wait();
+      await axios.patch(`${baseUrl}/nft/unlistingForSale`, {
+        id: idDocNFT,
+      });
       return true;
     } catch (error) {
       return false;
@@ -132,6 +138,9 @@ const useContracts = (): any => {
         id: idDocNFT,
         contract: CONTRACT_ADDRESS
       });
+      await axios.patch(`${baseUrl}/nft/unlistingForSale`, {
+        id: idDocNFT,
+      });
       return true;
     } catch (error) {
       console.log(error);
@@ -148,6 +157,14 @@ const useContracts = (): any => {
       return {};
     }
   }
+
+  // const getPassTransaction = async (tokenId: string) => {
+  //   try {
+  //     const tx = await contract.getPastEvents
+  //   } catch (error) {
+
+  //   }
+  // }
 
   return {
     readTokenURI,
