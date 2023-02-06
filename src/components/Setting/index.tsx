@@ -13,7 +13,7 @@ const SettingPage: React.FC = () => {
         editInfoProfile,
         editImageProfile,
         editImageBackground } = useBackend();
-    const { address } = useUserAccount();
+    const { address, changeImgProfile } = useUserAccount();
     const { getIPFS } = useIPFS();
     let navigate = useNavigate();
 
@@ -98,6 +98,7 @@ const SettingPage: React.FC = () => {
                 console.log(CIDprofileImage);
                 if (CIDprofileImage !== false) {
                     editImageProfile(CIDprofileImage, address);
+                    changeImgProfile(CIDprofileImage);
                 }
             }
             if (profileBgImage !== undefined) {
@@ -123,7 +124,8 @@ const SettingPage: React.FC = () => {
         editImageProfile,
         getIPFS,
         profileBgImage,
-        profileImage
+        profileImage,
+        changeImgProfile
     ]);
 
     const fetchData = useCallback(async () => {

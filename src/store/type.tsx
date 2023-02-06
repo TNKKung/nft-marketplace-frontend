@@ -1,5 +1,6 @@
 export interface userAccountProps {
     address: any;
+    profileImg: string;
 }
 
 export interface TransactionResProps {

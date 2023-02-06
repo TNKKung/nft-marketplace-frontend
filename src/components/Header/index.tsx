@@ -8,21 +8,20 @@ import blankImage from "./blankImg.png";
 import "./header.css"
 
 const Header: React.FC = () => {
-  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask, changeImgProfile, profileImg } = useUserAccount();
   const { readProfileAddress } = useBackend();
 
   let navigate = useNavigate();
 
-  const [profileImg, setprofileImg] = useState(blankImage);
   const fetchAddress = useCallback(async () => {
     if (address !== undefined) {
       const ProfileRes = await readProfileAddress(address);
       try {
         console.log(ProfileRes);
-        if (ProfileRes !== "") {
-          setprofileImg(ProfileRes.profileImage);
+        if (ProfileRes.profileImage !== "") {
+          changeImgProfile(ProfileRes.profileImage);
         } else {
-          setprofileImg(blankImage);
+          changeImgProfile(blankImage);
         }
       } catch (error) {
         console.log(error);
@@ -30,14 +29,16 @@ const Header: React.FC = () => {
     }
   }, [
     address,
-    readProfileAddress
+    readProfileAddress,
+    changeImgProfile
   ]);
 
   useEffect(() => {
     if (address !== undefined) {
       fetchAddress();
     } else {
-      setprofileImg(blankImage);
+      // setprofileImg(blankImage);
+      changeImgProfile(blankImage);
     }
     // eslint-disable-next-line
   }, [address]);
