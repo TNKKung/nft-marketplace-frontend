@@ -3,7 +3,7 @@ import Web3 from "web3";
 
 import { auth } from "../utils/firebase";
 import { baseUrl } from "../config";
-import { signInWithCustomToken, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 
 const useAuth = (): any => {
   const web3 = new Web3(Web3.givenProvider);
@@ -19,24 +19,22 @@ const useAuth = (): any => {
       const signature = await web3.eth.personal.sign(
         messageToSign,
         address,
-        "111"
+        "123456"
       );
 
       const jwtResponse = await axios.get(
         `${baseUrl}/auth/jwt?address=${address}&signature=${signature}`
       );
 
-      console.log(jwtResponse);
-
-      const customToken = jwtResponse?.data?.response.customToken;
-
-      console.log(customToken);
-
-      if (!customToken) {
+      const [accessToken, refreshToken] = [
+        jwtResponse?.data?.response.accessToken,
+        jwtResponse?.data?.response.refreshToken,
+      ];
+      console.log({ accessToken, refreshToken });
+      if (!accessToken && !refreshToken) {
         throw new Error("Invalid JWT");
       }
-      const res = await signInWithCustomToken(auth, customToken);
-      console.log(res);
+
       return true;
     } catch (e) {
       return false;
