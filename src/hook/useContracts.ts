@@ -45,6 +45,8 @@ const useContracts = (): any => {
       const tx = await contract.mint(collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
       setWaitTransaction(true);
+      await tx.wait();
+      console.log(tx);
       tokenId = await contract.getTokenCurrent();
       // console.log(Number(tokenCurrent) + 1);
       // console.log(collection);
@@ -53,15 +55,15 @@ const useContracts = (): any => {
         ownerAddres: address,
         nameNFT,
         description,
-        tokenId: Number(tokenId) + 1,
+        tokenId: Number(tokenId),
         category,
         collectionId: collection,
+        transactionHash: tx.hash
       },
       config);
       console.log(response);
-      await tx.wait();
       // console.log(receipt.logs);
-      return Number(tokenId) + 1;
+      return Number(tokenId);
     } catch (error) {
       console.log(error);
       return undefined;

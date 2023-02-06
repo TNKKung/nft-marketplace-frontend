@@ -47,12 +47,9 @@ const CreateNFT: React.FC = () => {
     { value: "collections", label: "Collections" },
   ];
 
-  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>();
+  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>({value: "",label: "..."});
   const [CollectionOptions, setCollectionOptions] = useState<any>([
-    { value: "artwork", label: "Artwork" },
-    { value: "memes", label: "Memes" },
-    { value: "photography", label: "Photography" },
-    { value: "collections", label: "Collections" },
+    { value: " ", label: "..." },
   ]);
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
@@ -189,12 +186,13 @@ const CreateNFT: React.FC = () => {
       );
     }
     //Collection
-    var collection = " ";
-    if (selectedCollection?.value === undefined) {
-      collection = " ";
+    var collection: string | undefined = "";
+    if (selectedCollection?.value === "") {
+      collection = "none";
     } else {
-      collection = selectedCollection.value;
+      collection = selectedCollection?.value;
     }
+    console.log(collection);
 
     //Image
     var nftImageApprove = true;
