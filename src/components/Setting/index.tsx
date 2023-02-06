@@ -95,6 +95,7 @@ const SettingPage: React.FC = () => {
             if (profileImage !== undefined) {
                 console.log("editprofileImg");
                 const CIDprofileImage = await getIPFS(profileImage);
+                console.log(CIDprofileImage);
                 if (CIDprofileImage !== false) {
                     editImageProfile(CIDprofileImage, address);
                 }
@@ -102,6 +103,7 @@ const SettingPage: React.FC = () => {
             if (profileBgImage !== undefined) {
                 console.log("editprofileBgImg");
                 const CIDprofileBgImage = await getIPFS(profileBgImage);
+                console.log(CIDprofileBgImage);
                 if (CIDprofileBgImage !== false) {
                     editImageBackground(CIDprofileBgImage, address);
                 }

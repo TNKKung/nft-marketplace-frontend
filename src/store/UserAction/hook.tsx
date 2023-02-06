@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, removeItem } from ".";
+import { addRefreshJWT } from "../JWTAction";
 
 import useAuth from "../../hook/useAuth";
 
@@ -28,12 +29,14 @@ export const useUserAccount = () => {
       }
     } else {
       dispatch(removeItem());
+      dispatch(addRefreshJWT(""));
       handleLogout();
     }
   };
 
   const changeMetamaskAccount = async () => {
     dispatch(removeItem());
+    dispatch(addRefreshJWT(""));
     handleLogout();
     if (window?.ethereum?.isMetaMask) {
       const accounts = await window.ethereum.request({
@@ -51,6 +54,7 @@ export const useUserAccount = () => {
 
   const logoutMetamask = async () => {
     dispatch(removeItem());
+    dispatch(addRefreshJWT(""));
     handleLogout();
   }
 
