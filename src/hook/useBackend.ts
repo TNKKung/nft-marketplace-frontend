@@ -184,6 +184,19 @@ const useBackend = () => {
         }
     }
 
+    const getAllTransaction = async (idDocNFT: string) =>{
+        try{
+            const config = await getConfig();
+            const transactionRes = await axios.get(
+                `${baseUrl}/nft/getAllTransaction?id=${idDocNFT}`,
+                config
+            );
+            return transactionRes.data.response
+        }catch(error){
+            return false
+        }
+    }
+
     return {
         readTokenIdData,
         readTokenIdFromAddress,
@@ -196,7 +209,8 @@ const useBackend = () => {
         editImageBackground,
         checkLikeNFT,
         addLikeNFT,
-        removeLikeNFT
+        removeLikeNFT,
+        getAllTransaction
 
     };
 }

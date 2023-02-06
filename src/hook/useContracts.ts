@@ -154,6 +154,11 @@ const useContracts = (): any => {
         id: idDocNFT,
       },
       config);
+      await axios.post(`${baseUrl}/nft/addTransactionHash`,{
+        id: idDocNFT,
+        transactionHash:tx.hash
+      },
+      config);
       return true;
     } catch (error) {
       console.log(error);
@@ -170,14 +175,6 @@ const useContracts = (): any => {
       return {};
     }
   }
-
-  // const getPassTransaction = async (tokenId: string) => {
-  //   try {
-  //     const tx = await contract.getPastEvents
-  //   } catch (error) {
-
-  //   }
-  // }
 
   return {
     readTokenURI,

@@ -26,11 +26,13 @@ const ViewNFT: React.FC = () => {
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
     const [nftCategory, setNftCategory] = useState<any[]>([]);
     const [nftCost, setNFTCost] = useState(0);
+    const [nftTransaction, setNftTransaction] = useState<any[]>([]);
     const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
     const { readTokenIdData,
         checkLikeNFT,
         addLikeNFT,
-        removeLikeNFT } = useBackend();
+        removeLikeNFT,
+        getAllTransaction } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
@@ -91,7 +93,12 @@ const ViewNFT: React.FC = () => {
         setMainClass1("d-flex");
 
         setLikeNft(await checkLikeNFT(params.tokenID, address));
-
+        const transactionRes = await getAllTransaction(DataDetail.id);
+        try {
+            setNftTransaction(transactionRes);
+        } catch (error) {
+            console.log(error);
+        }
 
     }, [params.tokenID,
         readTokenURI,
@@ -99,7 +106,8 @@ const ViewNFT: React.FC = () => {
         readTokenIdData,
         getPrice,
         checkLikeNFT,
-        address
+        address,
+        getAllTransaction
     ]);
 
     const handleBuyNFT = useCallback(async () => {
@@ -306,7 +314,30 @@ const ViewNFT: React.FC = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row my-3"><div className="col-auto h5">Transaction</div></div>
+                                <div className="row mt-4 mb-1"><div className="col-auto h5">Transaction</div></div>
+                                <div className="row">
+                                    <table className="table w-100">
+                                        <thead className="table-dark">
+                                            <tr>
+                                                <th scope="col" className="w-25 ps-3">Event</th>
+                                                <th scope="col" className="w-25">Price(ETH)</th>
+                                                <th scope="col" className="w-25">Owner</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {[...nftTransaction].reverse().map((transaction, index) =>
+                                                <tr key={index}>
+                                                    <td className="w-25 ps-3">{transaction.event}</td>
+                                                    <td>{!isNaN(transaction.eventData.price) ? transaction.eventData.price / 1000000000000000000 : ""}</td>
+                                                    <td>
+                                                        <div className="viewNFT_cursor_pointer viewNFT_address_path" onClick={() => handlePathOwner(transaction.eventData.owner)}>
+                                                            {shortenAddress(transaction.eventData.owner)}</div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
