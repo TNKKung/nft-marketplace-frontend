@@ -133,7 +133,7 @@ const CreateNFT: React.FC = () => {
       setCreatorEarnClass("is-invalid");
       setCreatorInputValid("Wallet not found");
     }
-    if(creatorAddressList.length >= 2){
+    if (creatorAddressList.length >= 2) {
       creatorAddressApprove = false;
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
@@ -226,11 +226,11 @@ const CreateNFT: React.FC = () => {
         console.log(collection);
         setConfirmModal(true);
         var sentNftnftName = nftName;
-        if(sentNftnftName === ""){
+        if (sentNftnftName === "") {
           sentNftnftName = " ";
         }
         var sentNftDescription = nftDescription;
-        if(sentNftDescription === ""){
+        if (sentNftDescription === "") {
           sentNftDescription = " ";
         }
 
@@ -243,10 +243,10 @@ const CreateNFT: React.FC = () => {
           CID,
           collection,
         );
-        if(minNFTRes !== undefined){
+        if (minNFTRes !== undefined) {
           setWaitTransaction(false);
           navigate("/viewNFT/" + minNFTRes)
-        }else{
+        } else {
           setConfirmModal(false);
         }
       }
@@ -281,7 +281,12 @@ const CreateNFT: React.FC = () => {
 
   const fetchDate = useCallback(async () => {
     const getMyCollection = await getCollectionbyAddress(address);
-    var myCollectionOptions = [];
+    var myCollectionOptions = [
+      {
+        value: "",
+        label: "..."
+      }
+    ];
     for (let i = 0; i < getMyCollection.length; i++) {
       myCollectionOptions.push({
         value: getMyCollection[i].collectionId,

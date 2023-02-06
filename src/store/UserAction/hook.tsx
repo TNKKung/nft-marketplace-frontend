@@ -19,8 +19,12 @@ export const useUserAccount = () => {
           method: "eth_requestAccounts",
         });
         const account = Web3.utils.toChecksumAddress(accounts[0]);
-        await handleLogin(account);
-        dispatch(addItem(account));
+        const loginSuccess = await handleLogin(account);
+        if (loginSuccess)
+          dispatch(addItem(account));
+        else {
+          alert("Login unsuccess!");
+        }
       }
     } else {
       dispatch(removeItem());
@@ -29,13 +33,19 @@ export const useUserAccount = () => {
   };
 
   const changeMetamaskAccount = async () => {
+    dispatch(removeItem());
+    handleLogout();
     if (window?.ethereum?.isMetaMask) {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
       const account = Web3.utils.toChecksumAddress(accounts[0]);
-      await handleLogin(account);
-      dispatch(addItem(account));
+      const loginSuccess = await handleLogin(account);
+      if (loginSuccess)
+        dispatch(addItem(account));
+      else {
+        alert("Login unsuccess!");
+      }
     }
   }
 

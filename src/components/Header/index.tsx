@@ -1,92 +1,136 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useBackend from "../../hook/useBackend";
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
+import blankImage from "./blankImg.png";
+import "./header.css"
 
 const Header: React.FC = () => {
-  const [connectBtnText, setConnectBtnText] = useState("Connect");
-  const { address, loginMetamask, changeMetamaskAccount , logoutMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } = useUserAccount();
+  const { readProfileAddress } = useBackend();
+
   let navigate = useNavigate();
+
+  const [profileImg, setprofileImg] = useState(blankImage);
+  const fetchAddress = useCallback(async () => {
+    if (address !== undefined) {
+      const ProfileRes = await readProfileAddress(address);
+      try {
+        console.log(ProfileRes);
+        if (ProfileRes !== "") {
+          setprofileImg(ProfileRes.profileImage);
+        } else {
+          setprofileImg(blankImage);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [
+    address,
+    readProfileAddress
+  ]);
+
+  useEffect(() => {
+    if (address !== undefined) {
+      fetchAddress();
+    } else {
+      setprofileImg(blankImage);
+    }
+    // eslint-disable-next-line
+  }, [address]);
 
   function isLogin() {
     if (address === undefined) {
       return (
-        <li className="nav-item w d-flex align-items-center">
-          <button
-            className="nav-link btn btn-secondary text-white"
-            onClick={() => {
-              loginMetamask();
-            }}
-          >
-            Connect Wallet
-          </button>
-        </li>
+        <button
+          className="btn btn-outline-secondary mx-3"
+          onClick={() => {
+            loginMetamask();
+          }}
+        >
+          Connect Wallet
+        </button>
       );
     } else {
       return (
-        <div className="d-flex">
-          <li className="nav-item w-50 me-auto">
-            <div className="nav-link d-flex align-items-center">
-              <div className="dropdown">
-                <button className="btn btn-secondary dropdown-toggle text-white ms-2" type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  Create
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  {/* <li><hr className="dropdown-divider" /></li> */}
-                  <li>
-                    <Link className="dropdown-item" to="/myCollection">
-                      My collection
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className="dropdown-item" to="/createNFT">
-                      Create NFT
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li className="nav-item d-flex align-items-center">
-            <div className="dropdown">
-              <button
-                className="btn btn-secondary dropdown-toggle w-36 truncate whitespace-nowrap"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                {address ? shortenAddress(address) : connectBtnText}
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                {/* <li><hr className="dropdown-divider" /></li> */}
-                <li>
-                  <Link className="dropdown-item" to="/profile">
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="/setting">
-                    Setting
-                  </Link>
-                </li>
+        <div className="d-flex align-items-center">
+          <div className="dropdown header_create_btn">
+            <button className="btn btn-secondary dropdown-toggle text-white" type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Create
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li>
+                <Link
+                  className="dropdown-item text-end" to="/createNFT">
+                  Create NFT
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item text-end" to="/myCollection">
+                  My collection
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="dropdown mx-3">
+            <button
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              className="d-flex align-items-center"
+            >
+              <img className="header_btn_profile" src={profileImg} alt="profilePicture" />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li className="dropdown-item-text text-end">
+                {shortenAddress(address)}
+              </li>
+              <li className="dropdown-item text-end header_cursor_pointer" onClick={() => navigator.clipboard.writeText(address)}>
+                Copy address
+              </li>
+              <li><hr className="dropdown-divider"></hr></li>
+              <div className="header_profile_create">
                 <li>
                   <Link
-                    className="dropdown-item"
-                    to="/"
-                    onClick={() => {
-                      logoutMetamask();
-                    }}
-                  >
-                    Disconnect
+                    className="dropdown-item text-end" to="/createNFT">
+                    Create NFT
                   </Link>
                 </li>
-              </ul>
-            </div>
-          </li>
+                <li>
+                  <Link className="dropdown-item text-end" to="/myCollection">
+                    My collection
+                  </Link>
+                </li>
+                <li><hr className="dropdown-divider"></hr></li>
+              </div>
+              <li>
+                <Link className="dropdown-item text-end" to={"/profile/" + address}>
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item text-end" to="/setting">
+                  Setting
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="dropdown-item text-end"
+                  to="/"
+                  onClick={() => {
+                    logoutMetamask();
+                  }}
+                >
+                  Disconnect
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       );
     }
@@ -100,61 +144,77 @@ const Header: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (address === undefined) {
-      setConnectBtnText("Connect");
-    } else {
-      setConnectBtnText(address);
+  const [accountsChanged, setAccountsChanged] = useState(false);
+
+  const changeAccount = useCallback(async () => {
+    if (address !== undefined) {
+      navigate("/");
+      await changeMetamaskAccount();
+      setAccountsChanged(false);
     }
-  }, [address]);
+  }, [address,
+    navigate,
+    changeMetamaskAccount
+  ]);
 
   useEffect(() => {
-    window.ethereum.on("accountsChanged", () => {
-      if (address !== undefined) {
-        changeMetamaskAccount();
-        navigate("/");
-      }
-    });
-  },[address,changeMetamaskAccount,navigate]);
-  
+    if (address !== undefined) {
+      window.ethereum.on("accountsChanged", () => {
+        setAccountsChanged(true);
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (accountsChanged === true) {
+      changeAccount();
+    }
+    // eslint-disable-next-line
+  }, [accountsChanged])
 
   return (
-    <nav className="navbar navbar-expand-lg bg-light sticky-top shadow-sm">
-      <div className="container-fluid">
-        <div className="contrainer-fluid d-flex flex-row align-items-center w-50">
-          <Link
-            className="navbar-brand mx-3 d-flex flex-column align-items-center"
-            to="/"
-          >
-            <div className="h6">NFT</div>
-            <div className="h6">Marketplace</div>
-          </Link>
-          <div className="w-100">
-            <input
-              className="form-control"
-              placeholder="Search by Collection / User / Address"
-            ></input>
+
+    <div className="container-fluid py-2 header_nav shadow-sm">
+      <div className="row justify-content-between align-items-center">
+        <div className="col-auto">
+          <div className="d-flex">
+            <Link className="d-flex flex-column align-items-center px-3 header_brand" to="/">
+              <div className="h6">NFT</div>
+              <div className="h6">Marketplace</div>
+            </Link>
+
+            <div className="d-flex align-items-center px-3">
+              <div className="header_input_form">
+                <input
+                  className="form-control"
+                  placeholder="Search by Collection / User / Address"
+                ></input>
+              </div>
+              <div className="dropdown ms-2 me-1 header_dropdown_form">
+                <button
+                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Collection </button>
+              </div>
+              <div className="dropdown m-1 header_dropdown_form">
+                <button
+                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  Single owner </button>
+              </div>
+            </div>
+
           </div>
         </div>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="navbar-collapse collapse" id="navbarNavAltMarkup">
-          <ul className="navbar-nav w-100">
-            <div className='me-auto'></div>
-            {isLogin()}
-          </ul>
+        <div className="col-auto">
+          {isLogin()}
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 

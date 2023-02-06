@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react"
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
 import { CONTRACT_ADDRESS, blockchainName, Market_ADDRESS } from "../../config"
@@ -14,6 +14,7 @@ import { useTransactionAction } from "../../store/TransactionAction/hook";
 const ViewNFT: React.FC = () => {
     const params = useParams();
     const { address } = useUserAccount();
+    let navigate = useNavigate();
 
     const { setWaitTransaction } = useTransactionAction();
 
@@ -23,14 +24,39 @@ const ViewNFT: React.FC = () => {
     const [nftName, setNFTName] = useState<string>("");
     const [nftDescription, setNFTDescription] = useState<string>("");
     const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>("0x0000000000000000000000000000000000000000");
+    const [nftCategory, setNftCategory] = useState<any[]>([]);
     const [nftCost, setNFTCost] = useState(0);
     const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
-    const { readTokenIdData } = useBackend();
+    const { readTokenIdData,
+        checkLikeNFT,
+        addLikeNFT,
+        removeLikeNFT } = useBackend();
 
     const [loadingClass, setLoadingClass] = useState("");
     const [mainClass1, setMainClass1] = useState("d-none");
 
     const [confirmModal, setConfirmModal] = useState(false);
+
+    const handlePathOwner = useCallback((walletAddress: string) => {
+        navigate("/profile/" + walletAddress);
+    }, [navigate]);
+
+    const [likeNft, setLikeNft] = useState(false);
+    const handleLikeNFT = useCallback(async () => {
+        if (likeNft === false) {
+            setLikeNft(true);
+            addLikeNFT(params.tokenID, nftName, nftCategory, address);
+        } else {
+            setLikeNft(false);
+            removeLikeNFT(params.tokenID, address);
+        }
+    }, [likeNft,
+        addLikeNFT,
+        removeLikeNFT,
+        address,
+        params,
+        nftCategory,
+        nftName]);
 
     const fetchData = useCallback(async () => {
         const TokenURI = await readTokenURI(params.tokenID);
@@ -56,17 +82,24 @@ const ViewNFT: React.FC = () => {
             setNFTDescription(DataDetail.description);
             setOwnerNFTAddress(DataDetail.ownerAddres);
             setNFTDocument(DataDetail.id);
+            setNftCategory(DataDetail.category);
         } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
         }
         setLoadingClass("d-none");
         setMainClass1("d-flex");
+
+        setLikeNft(await checkLikeNFT(params.tokenID, address));
+
+
     }, [params.tokenID,
         readTokenURI,
         readOwnerTokenID,
         readTokenIdData,
         getPrice,
+        checkLikeNFT,
+        address
     ]);
 
     const handleBuyNFT = useCallback(async () => {
@@ -86,7 +119,7 @@ const ViewNFT: React.FC = () => {
 
     const handleCancelSellNFT = useCallback(async () => {
         setConfirmModal(true);
-        const cancelStatus = await cancelSellNFT(params.tokenID);
+        const cancelStatus = await cancelSellNFT(params.tokenID, nftDocument);
         if (cancelStatus === true) {
             fetchData();
             setWaitTransaction(false);
@@ -96,6 +129,7 @@ const ViewNFT: React.FC = () => {
     }, [params.tokenID,
         cancelSellNFT,
         fetchData,
+        nftDocument,
         setWaitTransaction]);
 
     const [descriptionClass, setDescriptionClass] = useState(["show", "-up"]);
@@ -154,10 +188,19 @@ const ViewNFT: React.FC = () => {
             <div className={"container-fluid mt-5 " + mainClass1 + " " + mainClass2[0]}>
                 <div className={"container-fluid " + mainClass2[1]}>
                     <div className={mainClass2[2] === false ? "d-none" : ""}>
-                        <div className="row h4">{nftName}</div>
+                        <div className="row h4 justify-content-between align-items-center">
+                            <div className="col-auto">{nftName}</div>
+                            <div className="col-auto viewNFT_cursor_pointer" onClick={handleLikeNFT}>
+                                {likeNft === false ?
+                                    <i className="bi bi-heart "></i> :
+                                    <i className="bi bi-heart-fill"></i>}
+                            </div>
+                        </div>
                         <div className="row mb-3">
                             <div className="col-auto">Owner by</div>
-                            <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                            <div className="col viewNFT_address_path viewNFT_cursor_pointer"
+                                onClick={() => handlePathOwner(ownerNFTAddress)}
+                            >{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                         </div>
                     </div>
                     <div className={"row " + imageClass[0]}><div className={imageClass[1]}><img className={"img-thumbnail viewNFT_cursor_pointer"}
@@ -216,11 +259,19 @@ const ViewNFT: React.FC = () => {
                         <div className={rightDetailClass[1]}>
                             <div className="container-fluid">
                                 <div className={mainClass2[2] === false ? "" : "d-none"}>
-                                    <div className="row h4">{nftName}</div>
+                                    <div className="row h4 justify-content-between align-items-center">
+                                        <div className="col-auto">{nftName}</div>
+                                        <div className="col-auto viewNFT_cursor_pointer" onClick={handleLikeNFT}>
+                                            {likeNft === false ?
+                                                <i className="bi bi-heart "></i> :
+                                                <i className="bi bi-heart-fill"></i>}
+                                        </div>
+                                    </div>
                                     <div className="row">
                                         <div className="col-auto">Owner by</div>
-                                        {/*  */}
-                                        <div className="col">{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
+                                        <div className="col viewNFT_address_path viewNFT_cursor_pointer"
+                                            onClick={() => handlePathOwner(ownerNFTAddress)}
+                                        >{ownerNFTAddress === "0x0000000000000000000000000000000000000000" ? "" : shortenAddress(ownerNFTAddress)}</div>
                                     </div>
                                 </div>
                                 <div className="row mt-3">
