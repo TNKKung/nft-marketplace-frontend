@@ -5,3 +5,7 @@ export interface userAccountProps {
 export interface TransactionResProps {
     waitTransactionState: Boolean;
 }
+
+export interface JWTProps {
+    refreshJWT: string;
+}

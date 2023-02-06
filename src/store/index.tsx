@@ -4,6 +4,7 @@ import { save, load } from "redux-localstorage-simple";
 
 import userAccount from "./UserAction";
 import transactionRes from "./TransactionAction";
+import jwt from "./JWTAction";
 
 const PERSISTED_KEYS = {
   states: ["userAccount"],
@@ -13,7 +14,8 @@ const PERSISTED_KEYS = {
 const store = configureStore({
   reducer: {
     userAccount: userAccount,
-    transactionRes: transactionRes
+    transactionRes: transactionRes,
+    jwt: jwt
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save(PERSISTED_KEYS)),
