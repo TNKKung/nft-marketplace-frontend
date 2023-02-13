@@ -82,7 +82,7 @@ const ViewNFT: React.FC = () => {
         try {
             setNFTName(DataDetail.nameNFT);
             setNFTDescription(DataDetail.description);
-            setOwnerNFTAddress(DataDetail.ownerAddres);
+            setOwnerNFTAddress(DataDetail.ownerAddress);
             setNFTDocument(DataDetail.id);
             setNftCategory(DataDetail.category);
         } catch (error) {
@@ -96,6 +96,7 @@ const ViewNFT: React.FC = () => {
         const transactionRes = await getAllTransaction(DataDetail.id);
         try {
             setNftTransaction(transactionRes);
+            console.log(transactionRes);
         } catch (error) {
             console.log(error);
         }
@@ -319,20 +320,22 @@ const ViewNFT: React.FC = () => {
                                     <table className="table w-100">
                                         <thead className="table-dark">
                                             <tr>
-                                                <th scope="col" className="w-25 ps-3">Event</th>
+                                                <th scope="col" className="w-auto ps-3">Event</th>
                                                 <th scope="col" className="w-25">Price(ETH)</th>
                                                 <th scope="col" className="w-25">Owner</th>
+                                                <th scope="col" className="w-auto">Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {[...nftTransaction].reverse().map((transaction, index) =>
                                                 <tr key={index}>
-                                                    <td className="w-25 ps-3">{transaction.event}</td>
+                                                    <td className="w-auto ps-3">{transaction.event}</td>
                                                     <td>{!isNaN(transaction.eventData.price) ? transaction.eventData.price / 1000000000000000000 : ""}</td>
                                                     <td>
                                                         <div className="viewNFT_cursor_pointer viewNFT_address_path" onClick={() => handlePathOwner(transaction.eventData.owner)}>
                                                             {shortenAddress(transaction.eventData.owner)}</div>
                                                     </td>
+                                                    <td>{transaction.date} {transaction.time}</td>
                                                 </tr>
                                             )}
                                         </tbody>

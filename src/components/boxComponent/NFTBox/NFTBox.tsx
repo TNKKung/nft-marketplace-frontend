@@ -15,7 +15,11 @@ const NFTBox = (props: CollectionProps) => {
     "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   );
   const { readTokenIdData } = useBackend();
-  const { readTokenURI, readOwnerTokenID, getPrice } = useContracts();
+  const { 
+    // readTokenURI,
+    readOwnerTokenID, 
+    getPrice 
+  } = useContracts();
   const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
 
   const [NFTname, setNFTName] = useState("NFT Name");
@@ -23,6 +27,7 @@ const NFTBox = (props: CollectionProps) => {
   const [nftCost, setNFTCost] = useState(0);
   const fetchData = useCallback(async () => {
     const DataDetail = await readTokenIdData(props.TokenID);
+    console.log(DataDetail);
     const realOwnerAddress = await readOwnerTokenID(props.TokenID);
     if (realOwnerAddress === Market_ADDRESS) {
       setSaleNFTStatus(true);
@@ -36,8 +41,8 @@ const NFTBox = (props: CollectionProps) => {
       setSaleNFTStatus(false);
     }
     try {
-      const TokenURI = await readTokenURI(props.TokenID);
-      setURLImage(TokenURI);
+      // const TokenURI = await readTokenURI(props.TokenID);
+      setURLImage(DataDetail.tokenURI);
       setNFTName(DataDetail.nameNFT);
       setLoadingDataClass("");
     } catch (error) {
@@ -48,7 +53,7 @@ const NFTBox = (props: CollectionProps) => {
     props.TokenID,
     readOwnerTokenID,
     readTokenIdData,
-    readTokenURI,
+    // readTokenURI,
   ]);
 
   useEffect(() => {

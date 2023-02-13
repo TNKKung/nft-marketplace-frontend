@@ -197,6 +197,19 @@ const useBackend = () => {
         }
     }
 
+    const getSearchValue = async (searchValue: string|undefined) =>{
+        try{
+            const config = await getConfig();
+            const searchRes = await axios.get(
+                `${baseUrl}/search/?keyword=${searchValue}`,
+                config
+            );
+            return searchRes.data.response
+        }catch(error){
+            return false
+        }
+    }
+
     return {
         readTokenIdData,
         readTokenIdFromAddress,
@@ -210,7 +223,8 @@ const useBackend = () => {
         checkLikeNFT,
         addLikeNFT,
         removeLikeNFT,
-        getAllTransaction
+        getAllTransaction,
+        getSearchValue
 
     };
 }

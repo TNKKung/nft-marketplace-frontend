@@ -8,6 +8,7 @@ import ViewNFT from "./components/ViewNFT";
 import MyCollection from "./components/MyCollection";
 import Collection from "./components/Collection";
 import SellNFT from "./components/SellNFT";
+import Search from "./components/Search";
 function App() {
   return (
     <div>
@@ -22,6 +23,7 @@ function App() {
             <Route path="/collection/:collectionId" element={<Collection/>}></Route>
             <Route path="/viewNFT/:tokenID" element={<ViewNFT/>}></Route>
             <Route path="/sellNFT/:tokenID" element={<SellNFT/>}></Route>
+            <Route path="/search/:searchValue" element={<Search/>}></Route>
           </Routes>
       </BrowserRouter>
     </div>

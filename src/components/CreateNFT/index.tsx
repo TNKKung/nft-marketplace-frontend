@@ -211,6 +211,7 @@ const CreateNFT: React.FC = () => {
       nftDescriptionApprove === true &&
       nftImageApprove === true
     ) {
+      setConfirmModal(true);
       const collaborator = creatorAddressList.map(
         (item: any) => item.creatorAddress
       );
@@ -222,7 +223,6 @@ const CreateNFT: React.FC = () => {
         console.log(collaborator);
         console.log(collaboratorPercent);
         console.log(collection);
-        setConfirmModal(true);
         var sentNftnftName = nftName;
         if (sentNftnftName === "") {
           sentNftnftName = " ";
@@ -246,6 +246,7 @@ const CreateNFT: React.FC = () => {
           navigate("/viewNFT/" + minNFTRes)
         } else {
           setConfirmModal(false);
+          setWaitTransaction(false);
         }
       }
     }

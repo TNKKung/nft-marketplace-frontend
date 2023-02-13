@@ -3,3 +3,10 @@
     width: 300px;
     cursor: pointer;
 }
+
+.collectionBox_profile {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}

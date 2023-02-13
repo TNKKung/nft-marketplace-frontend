@@ -52,7 +52,7 @@ const useContracts = (): any => {
       // console.log(collection);
       const config = await getConfig();
       const response = await axios.post(`${baseUrl}/nft/`, {
-        ownerAddres: address,
+        ownerAddress: address,
         nameNFT,
         description,
         tokenId: Number(tokenId),
@@ -94,6 +94,7 @@ const useContracts = (): any => {
 
   const sellNFT = async (tokenId: string, price: number, idDocNFT: string) => {
     const convertPrice = BigNumber.from(Number(price * 1e18).toString());
+    console.log(convertPrice);
     try {
       const config = await getConfig();
       const tx = await contract_market.listedNFTItem(CONTRACT_ADDRESS, Number(tokenId), convertPrice);
