@@ -1,9 +1,7 @@
 import axios from "axios";
 import Web3 from "web3";
 
-import { auth } from "../utils/firebase";
 import { baseUrl } from "../config";
-import { signOut } from "firebase/auth";
 
 const useAuth = (): any => {
   const handleLogin = async (address: string): Promise<boolean> => {
@@ -44,12 +42,8 @@ const useAuth = (): any => {
     }
   };
 
-  const handleLogout = () => {
-    signOut(auth);
-  };
   return {
     handleLogin,
-    handleLogout,
   };
 };
 
