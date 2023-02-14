@@ -13,7 +13,7 @@ const PERSISTED_KEYS = {
 const store = configureStore({
   reducer: {
     userAccount: userAccount,
-    transactionRes: transactionRes
+    transactionRes: transactionRes,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save(PERSISTED_KEYS)),
