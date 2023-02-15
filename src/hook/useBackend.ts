@@ -8,7 +8,7 @@ const useBackend = () => {
     const readTokenIdData = async (tokenId: string | undefined) => {
         const config = await getConfig();
         const BackEndResponse = await axios.get(
-            `${baseUrl}/nft/getNFTByTokenId?tokenId=${tokenId}`,
+            `${baseUrl}/nft/getNFTByTokenId?tokenId=${Number(tokenId)}`,
             config
         );
         return BackEndResponse.data.response[0];
