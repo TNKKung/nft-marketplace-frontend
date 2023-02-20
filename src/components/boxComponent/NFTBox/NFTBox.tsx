@@ -62,16 +62,16 @@ const NFTBox = (props: CollectionProps) => {
   }, []);
   return (
     <div>
-      <div className="m-2 border rounded shadow-sm NFTBox_box d-flex flex-column align-items-center">
+      <div className="m-2 border rounded shadow-sm NFTBox_box d-flex flex-column align-items-center placeholder-glow">
         <img
-          className={"NFTBox_previewImg"}
+          className={"NFTBox_previewImg " + loadingDataClass}
           src={URLImage}
           alt="previewImage"
           loading="lazy"
         ></img>
         <div className="p-0 m-0 container-fluid w-100">
           <div className={"row align-items-center p-3"}>
-            <div className="col-8">
+            <div className="col-8 placeholder-glow">
               <h6
                 className={
                   "p-0 m-0 w-100 text-break text-truncate " + loadingDataClass
@@ -83,7 +83,7 @@ const NFTBox = (props: CollectionProps) => {
             {saleNFTStatus === false ? (
               <div></div>
             ) : (
-              <div className="col-4">
+              <div className="col-4 placeholder-glow">
                 <h6
                   className={
                     "p-0 m-0 w-100 text-break text-truncate text-end " +

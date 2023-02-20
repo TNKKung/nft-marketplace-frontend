@@ -43,12 +43,12 @@ const Search: React.FC = () => {
         <div className={mainClass1}>
             <div className="container mt-5">
                 <div className="row align-items-center pb-2 mb-2 border-bottom">
-                    <h5 className="col-auto">Search results : </h5>
-                    <h5 className="col-auto text-gray-500">{params.searchValue}</h5>
+                    <h4 className="col-auto">Search results : </h4>
+                    <h4 className="col-auto text-gray-500">{params.searchValue}</h4>
                 </div>
                 {searchValue[1].lists.length > 0 ?
                     <div>
-                        <div className="row mt-4"><h6 className="col-auto">NFT results : {searchValue[1].lists.length}</h6></div>
+                        <div className="row mt-4"><h5 className="col-auto">NFT results : {searchValue[1].lists.length}</h5></div>
                         <div className="row mt-1 justify-content-center">
                             <div className="d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded search_show_list">
                                 {searchValue[1].lists.map((value: any) => 
@@ -63,7 +63,7 @@ const Search: React.FC = () => {
 
                 {searchValue[0].lists.length > 0 ?
                     <div>
-                        <div className="row mt-4"><h6 className="col-auto">User results : {searchValue[0].lists.length}</h6></div>
+                        <div className="row mt-4"><h5 className="col-auto">User results : {searchValue[0].lists.length}</h5></div>
                         <div className="row mt-1 justify-content-center">
                             <div className="d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded search_show_list">
                                 {searchValue[0].lists.map((value: any) => 
@@ -78,7 +78,7 @@ const Search: React.FC = () => {
 
                 {searchValue[2].lists.length > 0 ?
                     <div>
-                        <div className="row mt-4"><h6 className="col-auto">Collection results : {searchValue[2].lists.length}</h6></div>
+                        <div className="row mt-4"><h5 className="col-auto">Collection results : {searchValue[2].lists.length}</h5></div>
                         <div className="row mt-1 justify-content-center">
                             <div className="d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded search_show_list">
                                 {searchValue[2].lists.map((value: any) => 

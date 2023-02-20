@@ -310,7 +310,7 @@ const CreateNFT: React.FC = () => {
 
   return (
     <div>
-      <div className="container-fluid mt-5">
+      <div className="container-fluid my-5">
         <div className="row justify-content-center">
           <div className="col-auto">
             <h4>Create NFT</h4>

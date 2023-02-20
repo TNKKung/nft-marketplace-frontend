@@ -2,6 +2,16 @@
     width: 340px;
 }
 
+.home_bgImg {
+    height: 330px;
+    width: 100%;
+    object-fit:cover;
+}
+
+.home_text {
+    background-color: rgb(255, 255, 255);
+}
+
 @media screen and (min-width: 800px) {
     .home_show_list {
         width: 660px;

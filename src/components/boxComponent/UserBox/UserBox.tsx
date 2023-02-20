@@ -59,7 +59,7 @@ const UserBox = (props: userProps) => {
                         </div>
                     </div>
                     <div className="row my-1 px-2 justify-content-end placeholder-glow">
-                        <h6 className={"col-6 m-0 text-break text-truncate text-end"+placeHolder}>{profileData.name}</h6>
+                        <h6 className={"col-6 m-0 text-break text-truncate text-end"+ placeHolder}>{profileData.name}</h6>
                     </div>
                     <div className="row my-1 px-2 justify-content-end placeholder-glow">
                         <div className={"col-auto"+placeHolder}>{shortenAddress(profileData.address)}</div>

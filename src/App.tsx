@@ -9,6 +9,10 @@ import MyCollection from "./components/MyCollection";
 import Collection from "./components/Collection";
 import SellNFT from "./components/SellNFT";
 import Search from "./components/Search";
+import ExploreNFT from "./components/ExploreNFT";
+import ExploreSaleNFT from "./components/ExploreSaleNFT";
+import ExploreCollection from "./components/ExploreCollection";
+
 function App() {
   return (
     <div>
@@ -24,6 +28,9 @@ function App() {
             <Route path="/viewNFT/:tokenID" element={<ViewNFT/>}></Route>
             <Route path="/sellNFT/:tokenID" element={<SellNFT/>}></Route>
             <Route path="/search/:searchValue" element={<Search/>}></Route>
+            <Route path="/viewNFT/" element={<ExploreNFT></ExploreNFT>}></Route>
+            <Route path="/viewSaleNFT/" element={<ExploreSaleNFT></ExploreSaleNFT>}></Route>
+            <Route path="/collection/" element={<ExploreCollection></ExploreCollection>}></Route>
           </Routes>
       </BrowserRouter>
     </div>
