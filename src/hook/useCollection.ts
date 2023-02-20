@@ -54,11 +54,21 @@ const useCollection = () => {
         return BackEndResponse?.data.response;
     }
 
+    const getAllCollection = async () =>{
+        const config = await getConfig();
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/collection/`,
+            config
+        );
+        return BackEndResponse?.data.response;
+    }
+
     return {
         createCollection,
         deleteCollection,
         getCollectionbyAddress,
-        getCollectionbyId
+        getCollectionbyId,
+        getAllCollection
     };
 }
 export default useCollection;

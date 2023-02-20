@@ -1,0 +1,21 @@
+.home_show_list {
+    width: 340px;
+}
+
+@media screen and (min-width: 800px) {
+    .home_show_list {
+        width: 660px;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .home_show_list {
+        width: 970px;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .home_show_list {
+        width: 1298px;
+    }
+}

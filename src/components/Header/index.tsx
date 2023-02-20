@@ -33,6 +33,10 @@ const Header: React.FC = () => {
     changeImgProfile
   ]);
 
+  const handleConnectBtn = (()=>{
+    loginMetamask();
+  });
+
   useEffect(() => {
     if (address !== undefined) {
       fetchAddress();
@@ -48,9 +52,7 @@ const Header: React.FC = () => {
       return (
         <button
           className="btn btn-outline-secondary mx-3"
-          onClick={() => {
-            loginMetamask();
-          }}
+          onClick={handleConnectBtn}
         >
           Connect Wallet
         </button>

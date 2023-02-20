@@ -5,6 +5,15 @@ import useAuth from "./useAuth";
 const useBackend = () => {
     const { getConfig } = useAuth();
 
+    const readAllTokenId = async () => {
+        const config = await getConfig();
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/nft/`,
+            config
+        );
+        return BackEndResponse.data.response;
+    }
+
     const readTokenIdData = async (tokenId: string | undefined) => {
         const config = await getConfig();
         const BackEndResponse = await axios.get(
@@ -211,6 +220,7 @@ const useBackend = () => {
     }
 
     return {
+        readAllTokenId,
         readTokenIdData,
         readTokenIdFromAddress,
         readProfileAddress,
@@ -224,8 +234,8 @@ const useBackend = () => {
         addLikeNFT,
         removeLikeNFT,
         getAllTransaction,
-        getSearchValue
-
+        getSearchValue,
+        
     };
 }
 export default useBackend;

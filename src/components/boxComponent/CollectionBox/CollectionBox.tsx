@@ -74,7 +74,9 @@ const CollectionBox = (props: CollectionProps) => {
                     </div>
                     <div className="row mb-2 px-2 justify-content-end placeholder-glow align-items-center">
                         <div className={"col-auto p-0 me-2" + placeHolder}>{profileName}</div>
-                        <img src={profileImage} alt="profileImage" className={"col-auto p-0 bg-gray-800 rounded-circle collectionBox_profile"}></img>
+                        <div className="col-auto p-0">
+                            <img src={profileImage} alt="profileImage" className={"collectionBox_profile p-0 bg-gray-800 " + placeHolder}></img>
+                        </div>
                     </div>
                 </div>
                 <Link className="position-absolute top-0 w-100 h-100" to={"/collection/" + props.CollectionId}></Link>
