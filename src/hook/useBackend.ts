@@ -5,10 +5,19 @@ import useAuth from "./useAuth";
 const useBackend = () => {
     const { getConfig } = useAuth();
 
+    const readAllTokenId = async () => {
+        const config = await getConfig();
+        const BackEndResponse = await axios.get(
+            `${baseUrl}/nft/`,
+            config
+        );
+        return BackEndResponse.data.response;
+    }
+
     const readTokenIdData = async (tokenId: string | undefined) => {
         const config = await getConfig();
         const BackEndResponse = await axios.get(
-            `${baseUrl}/nft/getNFTByTokenId?tokenId=${tokenId}`,
+            `${baseUrl}/nft/getNFTByTokenId?tokenId=${Number(tokenId)}`,
             config
         );
         return BackEndResponse.data.response[0];
@@ -184,7 +193,34 @@ const useBackend = () => {
         }
     }
 
+    const getAllTransaction = async (idDocNFT: string) =>{
+        try{
+            const config = await getConfig();
+            const transactionRes = await axios.get(
+                `${baseUrl}/nft/getAllTransaction?id=${idDocNFT}`,
+                config
+            );
+            return transactionRes.data.response
+        }catch(error){
+            return false
+        }
+    }
+
+    const getSearchValue = async (searchValue: string|undefined) =>{
+        try{
+            const config = await getConfig();
+            const searchRes = await axios.get(
+                `${baseUrl}/search/?keyword=${searchValue}`,
+                config
+            );
+            return searchRes.data.response
+        }catch(error){
+            return false
+        }
+    }
+
     return {
+        readAllTokenId,
         readTokenIdData,
         readTokenIdFromAddress,
         readProfileAddress,
@@ -196,8 +232,10 @@ const useBackend = () => {
         editImageBackground,
         checkLikeNFT,
         addLikeNFT,
-        removeLikeNFT
-
+        removeLikeNFT,
+        getAllTransaction,
+        getSearchValue,
+        
     };
 }
 export default useBackend;

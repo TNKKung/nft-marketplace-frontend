@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, removeItem } from ".";
+import { addItem, addProfileImg, removeItem } from ".";
+import { addRefreshJWT } from "../JWTAction";
 
 import useAuth from "../../hook/useAuth";
 
@@ -8,6 +9,10 @@ export const useUserAccount = () => {
   const address = useSelector(
     (state: { userAccount: { address: any } }) => state.userAccount.address
   );
+  const profileImg = useSelector((
+    state: { userAccount: { profileImg: string}}) => state.userAccount.profileImg
+    );
+    
   const dispatch = useDispatch();
 
   const { handleLogin, handleLogout } = useAuth();
@@ -28,12 +33,14 @@ export const useUserAccount = () => {
       }
     } else {
       dispatch(removeItem());
+      dispatch(addRefreshJWT(""));
       handleLogout();
     }
   };
 
   const changeMetamaskAccount = async () => {
     dispatch(removeItem());
+    dispatch(addRefreshJWT(""));
     handleLogout();
     if (window?.ethereum?.isMetaMask) {
       const accounts = await window.ethereum.request({
@@ -51,13 +58,20 @@ export const useUserAccount = () => {
 
   const logoutMetamask = async () => {
     dispatch(removeItem());
+    dispatch(addRefreshJWT(""));
     handleLogout();
   }
 
+  const changeImgProfile = async (imageProfile:string) => {
+    dispatch(addProfileImg(imageProfile));
+  }
+
   return {
+    profileImg,
     address,
     loginMetamask,
     changeMetamaskAccount,
-    logoutMetamask
+    logoutMetamask,
+    changeImgProfile
   };
 };

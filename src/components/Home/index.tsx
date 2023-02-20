@@ -1,23 +1,94 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import useContracts from '../../hook/useContracts';
+import useBackend from '../../hook/useBackend';
+import useCollection from '../../hook/useCollection';
 import NFTBox from '../boxComponent/NFTBox/NFTBox';
-
+import "./home.css";
+import { getShowData } from '../../utils/randomHelper';
+import CollectionBox from '../boxComponent/CollectionBox/CollectionBox';
+import MarketplaceBg from "./MarketplaceBg.png"
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
-  const { getNFTforSaleList } = useContracts();
 
-  const [saleNFTItem, setSaleNFTItem] = useState<any[]>([]);
+  //const
+  const jCStart = " justify-content-start";
+  const jCBetween = " justify-content-between";
+  const displayShow = " ";
+  const displayNone = " d-none";
 
+  //state
+  const [showNft, setShowNft] = useState<any[]>([]);
+  const [showCollection, setShowCollection] = useState<any[]>([]);
+  const [showSaleNFT, setShowSaleNFT] = useState<any[]>([]);
+
+  //className State
+  const [NFTShowState, setNFTShowState] = useState(jCStart);
+  const [NFTSaleShowState, setNFTSaleShowState] = useState(jCStart);
+  const [ExploreNFT, setExploreNFT] = useState(displayNone);
+  const [ExploreCollection, setExploreCollection] = useState(displayNone);
+  const [ExploreSale, setExploreSale] = useState(displayNone);
+
+
+  //hook
+  const { readAllTokenId } = useBackend();
+  const { getAllCollection } = useCollection();
+  const navigate = useNavigate();
+
+
+  //handle
+  const handleCollectionBtn = () =>{
+    navigate("/collection/");
+  }
+
+  const handleNFTBtn = () =>{
+    navigate("/viewNFT/");
+  }
+
+  const handleNFTSaleBtn = () =>{
+    navigate("/viewSaleNFT/");
+  }
+
+  //fetchdata
   const fetchData = useCallback(async () => {
-    const saleNFTList = await getNFTforSaleList();
-    const filterNFT = saleNFTList.filter((saleNFTList: any) => { return saleNFTList.sold === false });
+    const alltokenRes = await readAllTokenId();
     try {
-      console.log(filterNFT);
-      setSaleNFTItem(filterNFT);
+      // setNFTItem(alltokenRes);
+      if (alltokenRes.length > 0) {
+        const showTokenList = getShowData(alltokenRes, 4);
+        setShowNft(showTokenList);
+        if (showTokenList.length === 4) {
+          setNFTShowState(jCBetween);
+        }
+        setExploreNFT(displayShow);
+
+        const saleToken = alltokenRes.filter((tokenData: any) => { return tokenData.statusSale === true });
+        if (saleToken.length > 0) { 
+          const saleTokenList = getShowData(saleToken, 4);
+          setShowSaleNFT(saleTokenList);
+          if (saleToken.length === 4) {
+            setNFTSaleShowState(jCBetween);
+          }
+          setExploreSale(displayShow);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
-  }, [getNFTforSaleList]);
+
+    const allCollectionRes = await getAllCollection();
+    try {
+      if (allCollectionRes.length > 0) {
+        const showCollectionList = getShowData(allCollectionRes, 8);
+        setShowCollection(showCollectionList);
+        setExploreCollection(displayShow);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }, [getAllCollection,
+    readAllTokenId,
+  ]);
 
   useEffect(() => {
     fetchData();
@@ -26,28 +97,68 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <div className="container mt-5">
-        <div className="row py-3">
-          <div className="col">
-            <div className="container">
-              <div className="row">
-                <div className="col-6">
-                  <h5>NFT for sale</h5>
-                </div>
-              </div>
-              <div className="d-flex flex-row mt-3 flex-wrap">
-                {saleNFTItem.map((obj: any, index: number) => {
-                  return <div key={index}>
-                    <NFTBox TokenID={Number(obj.tokenId).toString()}></NFTBox>
-                  </div>
-                }
-                )}
-              </div>
+      <div className="container-fluid p-0">
+        <div className="row">
+          <div className="d-flex position-relative justify-content-center align-items-center">
+            <img src={MarketplaceBg} alt="bgProfileImage" className="home_bgImg bg-white"></img>
+            <div className="d-flex flex-column align-items-center position-absolute home_text ">
+              <h1>NFT Marketplace</h1>
+              <h5>Discover exclusive digital artworks.</h5>
             </div>
           </div>
         </div>
+        <div className="container">
+          <div className="row mt-4 justify-content-between align-items-center">
+            <h5 className="col-auto mb-0">Explore Collection</h5>
+            <div className="col-auto">
+              <button className="btn btn-outline-secondary" onClick={handleCollectionBtn}>View all</button>
+            </div>
+          </div>
+          <div className={"row mt-3 justify-content-center" + ExploreNFT}>
+            <div className={"d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list"}>
+              {showCollection.map((value: any) =>
+                <div className="m-2" key={value.collectionId}>
+                  <CollectionBox CollectionId={value.collectionId} ></CollectionBox>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="row mt-5 justify-content-between align-items-center">
+            <h5 className="col-auto mb-0">Explore NFT</h5>
+            <div className="col-auto">
+              <button className="btn btn-outline-secondary" onClick={handleNFTBtn}>View all</button>
+            </div>
+          </div>
+          <div className={"row mt-3 justify-content-center" + ExploreCollection}>
+            <div className={"d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list" + NFTShowState}>
+              {showNft.map((value: any) =>
+                <div key={value.tokenId}>
+                  <NFTBox TokenID={value.tokenId} ></NFTBox>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="row mt-5 justify-content-between align-items-center">
+            <h5 className="col-auto mb-0">Explore trading NFT</h5>
+            <div className="col-auto">
+              <button className="btn btn-outline-secondary" onClick={handleNFTSaleBtn}>View all</button>
+            </div>
+          </div>
+          <div className={"row mt-3 mb-5 justify-content-center" + ExploreSale}>
+            <div className={"d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list" + NFTSaleShowState}>
+              {showSaleNFT.map((value: any) =>
+                <div key={value.tokenId}>
+                  <NFTBox TokenID={value.tokenId} ></NFTBox>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </div >
   )
 }
 export default Home;

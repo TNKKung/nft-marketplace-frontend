@@ -7,7 +7,7 @@ import transactionRes from "./TransactionAction";
 import jwt from "./JWTAction";
 
 const PERSISTED_KEYS = {
-  states: ["userAccount"],
+  states: ["userAccount","jwt"],
   namespace: "app",
 };
 

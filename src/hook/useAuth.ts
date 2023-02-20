@@ -22,6 +22,7 @@ const useAuth = (): any => {
         `${baseUrl}/auth/message?address=${addressWallet}`
       );
       const messageToSign = response.data.response.messageToSign;
+      // console.log("messageToSign = " + messageToSign);
       if (!messageToSign) {
         throw new Error("Invalid message to sign");
       }
@@ -34,13 +35,13 @@ const useAuth = (): any => {
       const jwtResponse = await axios.get(
         `${baseUrl}/auth/jwt?address=${addressWallet}&signature=${signature}`
       );
-      console.log("data = "+jwtResponse);
+      // console.log("data = "+jwtResponse);
 
       const [accessToken, refreshToken] = [
         jwtResponse?.data?.response.accessToken,
         jwtResponse?.data?.response.refreshToken,
       ];
-      console.log({ accessToken, refreshToken });
+      // console.log({ accessToken, refreshToken });
       if (!accessToken && !refreshToken) {
         throw new Error("Invalid JWT");
       }else{

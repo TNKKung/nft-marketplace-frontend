@@ -45,23 +45,25 @@ const useContracts = (): any => {
       const tx = await contract.mint(collaborator, collaboratorPercent, uri);
       // "https://ipfs.pixura.io/ipfs/QmUyARmq5RUJk5zt7KUeaMLYB8SQbKHp3Gdqy5WSxRtPNa/SeaofRoses.jpg"
       setWaitTransaction(true);
+      await tx.wait();
+      console.log(tx);
       tokenId = await contract.getTokenCurrent();
       // console.log(Number(tokenCurrent) + 1);
       // console.log(collection);
       const config = await getConfig();
       const response = await axios.post(`${baseUrl}/nft/`, {
-        ownerAddres: address,
+        ownerAddress: address,
         nameNFT,
         description,
-        tokenId: Number(tokenId) + 1,
+        tokenId: Number(tokenId),
         category,
         collectionId: collection,
+        transactionHash: tx.hash
       },
       config);
       console.log(response);
-      await tx.wait();
       // console.log(receipt.logs);
-      return Number(tokenId) + 1;
+      return Number(tokenId);
     } catch (error) {
       console.log(error);
       return undefined;
@@ -92,6 +94,7 @@ const useContracts = (): any => {
 
   const sellNFT = async (tokenId: string, price: number, idDocNFT: string) => {
     const convertPrice = BigNumber.from(Number(price * 1e18).toString());
+    console.log(convertPrice);
     try {
       const config = await getConfig();
       const tx = await contract_market.listedNFTItem(CONTRACT_ADDRESS, Number(tokenId), convertPrice);
@@ -152,6 +155,11 @@ const useContracts = (): any => {
         id: idDocNFT,
       },
       config);
+      await axios.post(`${baseUrl}/nft/addTransactionHash`,{
+        id: idDocNFT,
+        transactionHash:tx.hash
+      },
+      config);
       return true;
     } catch (error) {
       console.log(error);
@@ -168,14 +176,6 @@ const useContracts = (): any => {
       return {};
     }
   }
-
-  // const getPassTransaction = async (tokenId: string) => {
-  //   try {
-  //     const tx = await contract.getPastEvents
-  //   } catch (error) {
-
-  //   }
-  // }
 
   return {
     readTokenURI,

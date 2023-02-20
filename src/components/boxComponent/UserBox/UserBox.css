@@ -1,18 +1,18 @@
-.collectionBox_box {
+.UserBox_box {
     position: relative;
     width: 300px;
     cursor: pointer;
 }
 
-.collectionBox_profile {
-    width: 30px;
-    height: 30px;
+.UserBox_profile {
+    width: 50px;
+    height: 50px;
     object-fit: cover;
     border-radius: 50%;
 }
 
-.collectionBox_bgImg {
-    height: 80px;
+.UserBox_bgProfileImg {
+    height: 50px;
     width: 100%;
     object-fit: cover;
 }

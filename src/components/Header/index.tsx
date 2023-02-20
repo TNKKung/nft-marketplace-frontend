@@ -8,21 +8,20 @@ import blankImage from "./blankImg.png";
 import "./header.css"
 
 const Header: React.FC = () => {
-  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask, changeImgProfile, profileImg } = useUserAccount();
   const { readProfileAddress } = useBackend();
 
   let navigate = useNavigate();
 
-  const [profileImg, setprofileImg] = useState(blankImage);
   const fetchAddress = useCallback(async () => {
     if (address !== undefined) {
       const ProfileRes = await readProfileAddress(address);
       try {
         console.log(ProfileRes);
-        if (ProfileRes !== "") {
-          setprofileImg(ProfileRes.profileImage);
+        if (ProfileRes.profileImage !== "") {
+          changeImgProfile(ProfileRes.profileImage);
         } else {
-          setprofileImg(blankImage);
+          changeImgProfile(blankImage);
         }
       } catch (error) {
         console.log(error);
@@ -30,14 +29,20 @@ const Header: React.FC = () => {
     }
   }, [
     address,
-    readProfileAddress
+    readProfileAddress,
+    changeImgProfile
   ]);
+
+  const handleConnectBtn = (()=>{
+    loginMetamask();
+  });
 
   useEffect(() => {
     if (address !== undefined) {
       fetchAddress();
     } else {
-      setprofileImg(blankImage);
+      // setprofileImg(blankImage);
+      changeImgProfile(blankImage);
     }
     // eslint-disable-next-line
   }, [address]);
@@ -47,9 +52,7 @@ const Header: React.FC = () => {
       return (
         <button
           className="btn btn-outline-secondary mx-3"
-          onClick={() => {
-            loginMetamask();
-          }}
+          onClick={handleConnectBtn}
         >
           Connect Wallet
         </button>
@@ -157,6 +160,27 @@ const Header: React.FC = () => {
     changeMetamaskAccount
   ]);
 
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearchBtn = useCallback(()=>{
+    if(searchInput !== ""){
+      navigate(`/search/${searchInput}`);
+      setSearchInput("");
+    }else{
+      navigate("/");
+    }
+  },[
+    searchInput,
+    navigate
+  ])
+  const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+    setSearchInput(e.target.value);
+  },[])
+  const handleEnterEvent = useCallback((e:React.KeyboardEvent<HTMLInputElement>)=>{
+    if(e.key === "Enter"){
+      handleSearchBtn();
+    }
+  },[handleSearchBtn])
+
   useEffect(() => {
     if (address !== undefined) {
       window.ethereum.on("accountsChanged", () => {
@@ -184,28 +208,16 @@ const Header: React.FC = () => {
             </Link>
 
             <div className="d-flex align-items-center px-3">
-              <div className="header_input_form">
+              <div className="header_input_form me-3">
                 <input
                   className="form-control"
                   placeholder="Search by Collection / User / Address"
+                  value={searchInput}
+                  onChange={handleSearchInput}
+                  onKeyDown={handleEnterEvent}
                 ></input>
               </div>
-              <div className="dropdown ms-2 me-1 header_dropdown_form">
-                <button
-                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  Collection </button>
-              </div>
-              <div className="dropdown m-1 header_dropdown_form">
-                <button
-                  className="btn btn-outline-secondary dropdown-toggle header_filter_form"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  Single owner </button>
-              </div>
+              <button className="btn btn-outline-secondary" onClick={handleSearchBtn}>Search</button>
             </div>
 
           </div>

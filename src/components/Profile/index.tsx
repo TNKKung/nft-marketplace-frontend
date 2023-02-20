@@ -30,6 +30,7 @@ const Profile: React.FC = () => {
 
   const [ownNftList, setOwnNftList] = useState<any[]>([]);
   const [favoriteNftList, setFavoriteNftList] = useState<any[]>([]);
+  const [onSaleList, setOnSaleList] = useState<any[]>([]);
 
   const [friendCount, setFriendCount] = useState(0);
 
@@ -59,10 +60,10 @@ const Profile: React.FC = () => {
 
   const navOnsaleBtn = useCallback(async () => {
     resetNav();
-    setOnDefaultShowNFT([]);
-    setFilterShowNFTList([]);
+    setOnDefaultShowNFT(onSaleList);
+    setFilterShowNFTList(onSaleList);
     setOnsale("Profile_nav_select")
-  }, [resetNav]);
+  }, [resetNav, onSaleList]);
 
   const navFavoriteBtn = useCallback(async () => {
     resetNav();
@@ -115,6 +116,7 @@ const Profile: React.FC = () => {
       setOwnNftList(OwnNFTListRes);
       setOnDefaultShowNFT(OwnNFTListRes);
       setFilterShowNFTList(OwnNFTListRes);
+      setOnSaleList(OwnNFTListRes.filter((NftList:any)=>{return NftList.statusSale === true}))
     } catch (error) {
       console.log(error);
     }
