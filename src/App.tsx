@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import SettingPage from "./components/Setting";
@@ -13,16 +13,19 @@ function App() {
     <div>
       <BrowserRouter>
         <Header />
-          <Routes>
-            <Route path="/" element={<Home/>}></Route>
-            <Route path="/profile" element={<Profile/>}></Route>
-            <Route path="/setting" element={<SettingPage/>}></Route>
-            <Route path="/createNFT" element={<CreateNFT/>}></Route>
-            <Route path="/myCollection" element={<MyCollection/>}></Route>
-            <Route path="/collection/:collectionId" element={<Collection/>}></Route>
-            <Route path="/viewNFT/:tokenID" element={<ViewNFT/>}></Route>
-            <Route path="/sellNFT/:tokenID" element={<SellNFT/>}></Route>
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/setting" element={<SettingPage />}></Route>
+          <Route path="/createNFT" element={<CreateNFT />}></Route>
+          <Route path="/myCollection" element={<MyCollection />}></Route>
+          <Route
+            path="/collection/:collectionId"
+            element={<Collection />}
+          ></Route>
+          <Route path="/viewNFT/:tokenID" element={<ViewNFT />}></Route>
+          <Route path="/sellNFT/:tokenID" element={<SellNFT />}></Route>
+        </Routes>
       </BrowserRouter>
     </div>
   );

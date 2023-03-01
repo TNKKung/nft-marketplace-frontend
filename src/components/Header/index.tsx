@@ -6,7 +6,8 @@ import { shortenAddress } from "../../utils/addressHelper";
 
 const Header: React.FC = () => {
   const [connectBtnText, setConnectBtnText] = useState("Connect");
-  const { address, loginMetamask, changeMetamaskAccount , logoutMetamask } = useUserAccount();
+  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } =
+    useUserAccount();
   let navigate = useNavigate();
 
   function isLogin() {
@@ -14,7 +15,7 @@ const Header: React.FC = () => {
       return (
         <li className="nav-item w d-flex align-items-center">
           <button
-            className="nav-link btn btn-secondary text-white"
+            className="text-white nav-link btn btn-secondary"
             onClick={() => {
               loginMetamask();
             }}
@@ -29,9 +30,12 @@ const Header: React.FC = () => {
           <li className="nav-item w-50 me-auto">
             <div className="nav-link d-flex align-items-center">
               <div className="dropdown">
-                <button className="btn btn-secondary dropdown-toggle text-white ms-2" type="button"
+                <button
+                  className="text-white btn btn-secondary dropdown-toggle ms-2"
+                  type="button"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false">
+                  aria-expanded="false"
+                >
                   Create
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
@@ -42,8 +46,7 @@ const Header: React.FC = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="dropdown-item" to="/createNFT">
+                    <Link className="dropdown-item" to="/createNFT">
                       Create NFT
                     </Link>
                   </li>
@@ -54,7 +57,7 @@ const Header: React.FC = () => {
           <li className="nav-item d-flex align-items-center">
             <div className="dropdown">
               <button
-                className="btn btn-secondary dropdown-toggle w-36 truncate whitespace-nowrap"
+                className="truncate btn btn-secondary dropdown-toggle w-36 whitespace-nowrap"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -115,15 +118,14 @@ const Header: React.FC = () => {
         navigate("/");
       }
     });
-  },[address,changeMetamaskAccount,navigate]);
-  
+  }, [address, changeMetamaskAccount, navigate]);
 
   return (
-    <nav className="navbar navbar-expand-lg bg-light sticky-top shadow-sm">
+    <nav className="shadow-sm navbar navbar-expand-lg bg-light sticky-top">
       <div className="container-fluid">
-        <div className="contrainer-fluid d-flex flex-row align-items-center w-50">
+        <div className="flex-row contrainer-fluid d-flex align-items-center w-50">
           <Link
-            className="navbar-brand mx-3 d-flex flex-column align-items-center"
+            className="mx-3 navbar-brand d-flex flex-column align-items-center"
             to="/"
           >
             <div className="h6">NFT</div>
@@ -149,7 +151,7 @@ const Header: React.FC = () => {
         </button>
         <div className="navbar-collapse collapse" id="navbarNavAltMarkup">
           <ul className="navbar-nav w-100">
-            <div className='me-auto'></div>
+            <div className="me-auto"></div>
             {isLogin()}
           </ul>
         </div>

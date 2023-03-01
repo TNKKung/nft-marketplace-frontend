@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import useContracts from '../../hook/useContracts';
-import NFTBox from '../boxComponent/NFTBox/NFTBox';
-
+import React, { useCallback, useEffect, useState } from "react";
+import useContracts from "../../hook/useContracts";
+import NFTBox from "../boxComponent/NFTBox/NFTBox";
 
 const Home: React.FC = () => {
   const { getNFTforSaleList } = useContracts();
@@ -10,7 +9,9 @@ const Home: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     const saleNFTList = await getNFTforSaleList();
-    const filterNFT = saleNFTList.filter((saleNFTList: any) => { return saleNFTList.sold === false });
+    const filterNFT = saleNFTList.filter((saleNFTList: any) => {
+      return saleNFTList.sold === false;
+    });
     try {
       console.log(filterNFT);
       setSaleNFTItem(filterNFT);
@@ -22,12 +23,12 @@ const Home: React.FC = () => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   return (
     <div>
       <div className="container mt-5">
-        <div className="row py-3">
+        <div className="py-3 row">
           <div className="col">
             <div className="container">
               <div className="row">
@@ -35,19 +36,20 @@ const Home: React.FC = () => {
                   <h5>NFT for sale</h5>
                 </div>
               </div>
-              <div className="d-flex flex-row mt-3 flex-wrap">
+              <div className="flex-row flex-wrap mt-3 d-flex">
                 {saleNFTItem.map((obj: any, index: number) => {
-                  return <div key={index}>
-                    <NFTBox TokenID={Number(obj.tokenId).toString()}></NFTBox>
-                  </div>
-                }
-                )}
+                  return (
+                    <div key={index}>
+                      <NFTBox TokenID={Number(obj.tokenId).toString()}></NFTBox>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 export default Home;
