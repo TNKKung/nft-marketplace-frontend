@@ -19,6 +19,7 @@ const SellNFT: React.FC = () => {
 
   const [URLImage, setURLImage] = useState();
   const [nftName, setNFTName] = useState<string>("");
+  const [nftDocument, setNFTDocument] = useState("");
 
   const { readTokenURI, readOwnerTokenID, sellNFT, readCollabPercent } =
     useContracts();
@@ -41,14 +42,21 @@ const SellNFT: React.FC = () => {
   const handleSellInput = useCallback(async () => {
     console.log(amountInput);
     setConfirmModal(true);
-    const tx = await sellNFT(params.tokenID, amountInput);
+    const tx = await sellNFT(params.tokenID, amountInput, nftDocument);
     if (tx === true) {
       setWaitTransaction(false);
       navigate("/viewNFT/" + params.tokenID);
     } else {
       setConfirmModal(false);
     }
-  }, [amountInput, navigate, params.tokenID, sellNFT, setWaitTransaction]);
+  }, [
+    amountInput,
+    navigate,
+    params.tokenID,
+    sellNFT,
+    setWaitTransaction,
+    nftDocument,
+  ]);
 
   const fetchData = useCallback(async () => {
     const TokenURI = await readTokenURI(params.tokenID);
@@ -62,6 +70,7 @@ const SellNFT: React.FC = () => {
     const DataDetail = await readTokenIdData(params.tokenID);
 
     try {
+      setNFTDocument(DataDetail.id);
       setNFTName(DataDetail.nameNFT);
       if (ownerAddress !== address) {
         navigate("/viewNFT/" + params.tokenID);

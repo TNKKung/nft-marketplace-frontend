@@ -47,12 +47,9 @@ const CreateNFT: React.FC = () => {
     { value: "collections", label: "Collections" },
   ];
 
-  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>();
+  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>({value: "",label: "..."});
   const [CollectionOptions, setCollectionOptions] = useState<any>([
-    { value: "artwork", label: "Artwork" },
-    { value: "memes", label: "Memes" },
-    { value: "photography", label: "Photography" },
-    { value: "collections", label: "Collections" },
+    { value: " ", label: "..." },
   ]);
 
   const [creatorAddressList, setCreatorAddressList] = useState([]);
@@ -133,7 +130,7 @@ const CreateNFT: React.FC = () => {
       setCreatorEarnClass("is-invalid");
       setCreatorInputValid("Wallet not found");
     }
-    if(creatorAddressList.length >= 2){
+    if (creatorAddressList.length >= 2) {
       creatorAddressApprove = false;
       setCreatorAddressClass("is-invalid");
       setCreatorEarnClass("is-invalid");
@@ -189,12 +186,13 @@ const CreateNFT: React.FC = () => {
       );
     }
     //Collection
-    var collection = " ";
-    if (selectedCollection?.value === undefined) {
-      collection = " ";
+    var collection: string | undefined = "";
+    if (selectedCollection?.value === "") {
+      collection = "none";
     } else {
-      collection = selectedCollection.value;
+      collection = selectedCollection?.value;
     }
+    console.log(collection);
 
     //Image
     var nftImageApprove = true;
@@ -213,6 +211,7 @@ const CreateNFT: React.FC = () => {
       nftDescriptionApprove === true &&
       nftImageApprove === true
     ) {
+      setConfirmModal(true);
       const collaborator = creatorAddressList.map(
         (item: any) => item.creatorAddress
       );
@@ -224,13 +223,12 @@ const CreateNFT: React.FC = () => {
         console.log(collaborator);
         console.log(collaboratorPercent);
         console.log(collection);
-        setConfirmModal(true);
         var sentNftnftName = nftName;
-        if(sentNftnftName === ""){
+        if (sentNftnftName === "") {
           sentNftnftName = " ";
         }
         var sentNftDescription = nftDescription;
-        if(sentNftDescription === ""){
+        if (sentNftDescription === "") {
           sentNftDescription = " ";
         }
 
@@ -243,11 +241,12 @@ const CreateNFT: React.FC = () => {
           CID,
           collection,
         );
-        if(minNFTRes !== undefined){
+        if (minNFTRes !== undefined) {
           setWaitTransaction(false);
           navigate("/viewNFT/" + minNFTRes)
-        }else{
+        } else {
           setConfirmModal(false);
+          setWaitTransaction(false);
         }
       }
     }
@@ -281,7 +280,12 @@ const CreateNFT: React.FC = () => {
 
   const fetchDate = useCallback(async () => {
     const getMyCollection = await getCollectionbyAddress(address);
-    var myCollectionOptions = [];
+    var myCollectionOptions = [
+      {
+        value: "",
+        label: "..."
+      }
+    ];
     for (let i = 0; i < getMyCollection.length; i++) {
       myCollectionOptions.push({
         value: getMyCollection[i].collectionId,
@@ -306,7 +310,7 @@ const CreateNFT: React.FC = () => {
 
   return (
     <div>
-      <div className="container-fluid mt-5">
+      <div className="container-fluid my-5">
         <div className="row justify-content-center">
           <div className="col-auto">
             <h4>Create NFT</h4>

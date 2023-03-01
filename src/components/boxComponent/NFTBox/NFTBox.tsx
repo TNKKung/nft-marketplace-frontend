@@ -15,7 +15,11 @@ const NFTBox = (props: CollectionProps) => {
     "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   );
   const { readTokenIdData } = useBackend();
-  const { readTokenURI, readOwnerTokenID, getPrice } = useContracts();
+  const { 
+    // readTokenURI,
+    readOwnerTokenID, 
+    getPrice 
+  } = useContracts();
   const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
 
   const [NFTname, setNFTName] = useState("NFT Name");
@@ -23,6 +27,7 @@ const NFTBox = (props: CollectionProps) => {
   const [nftCost, setNFTCost] = useState(0);
   const fetchData = useCallback(async () => {
     const DataDetail = await readTokenIdData(props.TokenID);
+    console.log(DataDetail);
     const realOwnerAddress = await readOwnerTokenID(props.TokenID);
     if (realOwnerAddress === Market_ADDRESS) {
       setSaleNFTStatus(true);
@@ -36,8 +41,8 @@ const NFTBox = (props: CollectionProps) => {
       setSaleNFTStatus(false);
     }
     try {
-      const TokenURI = await readTokenURI(props.TokenID);
-      setURLImage(TokenURI);
+      // const TokenURI = await readTokenURI(props.TokenID);
+      setURLImage(DataDetail.tokenURI);
       setNFTName(DataDetail.nameNFT);
       setLoadingDataClass("");
     } catch (error) {
@@ -48,7 +53,7 @@ const NFTBox = (props: CollectionProps) => {
     props.TokenID,
     readOwnerTokenID,
     readTokenIdData,
-    readTokenURI,
+    // readTokenURI,
   ]);
 
   useEffect(() => {
@@ -57,16 +62,16 @@ const NFTBox = (props: CollectionProps) => {
   }, []);
   return (
     <div>
-      <div className="m-2 border rounded shadow-sm NFTBox_box d-flex flex-column align-items-center">
+      <div className="m-2 border rounded shadow-sm NFTBox_box d-flex flex-column align-items-center placeholder-glow">
         <img
-          className={"NFTBox_previewImg"}
+          className={"NFTBox_previewImg " + loadingDataClass}
           src={URLImage}
           alt="previewImage"
           loading="lazy"
         ></img>
         <div className="p-0 m-0 container-fluid w-100">
           <div className={"row align-items-center p-3"}>
-            <div className="col-8">
+            <div className="col-8 placeholder-glow">
               <h6
                 className={
                   "p-0 m-0 w-100 text-break text-truncate " + loadingDataClass
@@ -78,7 +83,7 @@ const NFTBox = (props: CollectionProps) => {
             {saleNFTStatus === false ? (
               <div></div>
             ) : (
-              <div className="col-4">
+              <div className="col-4 placeholder-glow">
                 <h6
                   className={
                     "p-0 m-0 w-100 text-break text-truncate text-end " +

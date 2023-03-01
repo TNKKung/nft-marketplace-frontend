@@ -1,95 +1,157 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import useBackend from "../../hook/useBackend";
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
+import blankImage from "./blankImg.png";
+import "./header.css";
 
 const Header: React.FC = () => {
-  const [connectBtnText, setConnectBtnText] = useState("Connect");
-  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask } =
-    useUserAccount();
+  const {
+    address,
+    loginMetamask,
+    changeMetamaskAccount,
+    logoutMetamask,
+    changeImgProfile,
+    profileImg,
+  } = useUserAccount();
+  const { readProfileAddress } = useBackend();
+
   let navigate = useNavigate();
+
+  const fetchAddress = useCallback(async () => {
+    if (address !== undefined) {
+      const ProfileRes = await readProfileAddress(address);
+      try {
+        console.log(ProfileRes);
+        if (ProfileRes.profileImage !== "") {
+          changeImgProfile(ProfileRes.profileImage);
+        } else {
+          changeImgProfile(blankImage);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [address, readProfileAddress, changeImgProfile]);
+
+  const handleConnectBtn = () => {
+    loginMetamask();
+  };
+
+  useEffect(() => {
+    if (address !== undefined) {
+      fetchAddress();
+    } else {
+      // setprofileImg(blankImage);
+      changeImgProfile(blankImage);
+    }
+    // eslint-disable-next-line
+  }, [address]);
 
   function isLogin() {
     if (address === undefined) {
       return (
-        <li className="nav-item w d-flex align-items-center">
-          <button
-            className="text-white nav-link btn btn-secondary"
-            onClick={() => {
-              loginMetamask();
-            }}
-          >
-            Connect Wallet
-          </button>
-        </li>
+        <button
+          className="mx-3 btn btn-outline-secondary"
+          onClick={handleConnectBtn}
+        >
+          Connect Wallet
+        </button>
       );
     } else {
       return (
-        <div className="d-flex">
-          <li className="nav-item w-50 me-auto">
-            <div className="nav-link d-flex align-items-center">
-              <div className="dropdown">
-                <button
-                  className="text-white btn btn-secondary dropdown-toggle ms-2"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Create
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  {/* <li><hr className="dropdown-divider" /></li> */}
-                  <li>
-                    <Link className="dropdown-item" to="/myCollection">
-                      My collection
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/createNFT">
-                      Create NFT
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </li>
-          <li className="nav-item d-flex align-items-center">
-            <div className="dropdown">
-              <button
-                className="truncate btn btn-secondary dropdown-toggle w-36 whitespace-nowrap"
-                type="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+        <div className="d-flex align-items-center">
+          <div className="dropdown header_create_btn">
+            <button
+              className="text-white btn btn-secondary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Create
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li>
+                <Link className="dropdown-item text-end" to="/createNFT">
+                  Create NFT
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item text-end" to="/myCollection">
+                  My collection
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="mx-3 dropdown">
+            <button
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              className="d-flex align-items-center"
+            >
+              <img
+                className="header_btn_profile"
+                src={profileImg}
+                alt="profilePicture"
+              />
+            </button>
+            <ul className="dropdown-menu dropdown-menu-end">
+              <li className="dropdown-item-text text-end">
+                {shortenAddress(address)}
+              </li>
+              <li
+                className="dropdown-item text-end header_cursor_pointer"
+                onClick={() => navigator.clipboard.writeText(address)}
               >
-                {address ? shortenAddress(address) : connectBtnText}
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end">
-                {/* <li><hr className="dropdown-divider" /></li> */}
+                Copy address
+              </li>
+              <li>
+                <hr className="dropdown-divider"></hr>
+              </li>
+              <div className="header_profile_create">
                 <li>
-                  <Link className="dropdown-item" to="/profile">
-                    Profile
+                  <Link className="dropdown-item text-end" to="/createNFT">
+                    Create NFT
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/setting">
-                    Setting
+                  <Link className="dropdown-item text-end" to="/myCollection">
+                    My collection
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    className="dropdown-item"
-                    to="/"
-                    onClick={() => {
-                      logoutMetamask();
-                    }}
-                  >
-                    Disconnect
-                  </Link>
+                  <hr className="dropdown-divider"></hr>
                 </li>
-              </ul>
-            </div>
-          </li>
+              </div>
+              <li>
+                <Link
+                  className="dropdown-item text-end"
+                  to={"/profile/" + address}
+                >
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item text-end" to="/setting">
+                  Setting
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="dropdown-item text-end"
+                  to="/"
+                  onClick={() => {
+                    logoutMetamask();
+                  }}
+                >
+                  Disconnect
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       );
     }
@@ -103,60 +165,90 @@ const Header: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (address === undefined) {
-      setConnectBtnText("Connect");
-    } else {
-      setConnectBtnText(address);
+  const [accountsChanged, setAccountsChanged] = useState(false);
+
+  const changeAccount = useCallback(async () => {
+    if (address !== undefined) {
+      navigate("/");
+      await changeMetamaskAccount();
+      setAccountsChanged(false);
     }
-  }, [address]);
+  }, [address, navigate, changeMetamaskAccount]);
+
+  const [searchInput, setSearchInput] = useState("");
+  const handleSearchBtn = useCallback(() => {
+    if (searchInput !== "") {
+      navigate(`/search/${searchInput}`);
+      setSearchInput("");
+    } else {
+      navigate("/");
+    }
+  }, [searchInput, navigate]);
+  const handleSearchInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchInput(e.target.value);
+    },
+    []
+  );
+  const handleEnterEvent = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSearchBtn();
+      }
+    },
+    [handleSearchBtn]
+  );
 
   useEffect(() => {
-    window.ethereum.on("accountsChanged", () => {
-      if (address !== undefined) {
-        changeMetamaskAccount();
-        navigate("/");
-      }
-    });
-  }, [address, changeMetamaskAccount, navigate]);
+    if (address !== undefined) {
+      window.ethereum.on("accountsChanged", () => {
+        setAccountsChanged(true);
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (accountsChanged === true) {
+      changeAccount();
+    }
+    // eslint-disable-next-line
+  }, [accountsChanged]);
 
   return (
-    <nav className="shadow-sm navbar navbar-expand-lg bg-light sticky-top">
-      <div className="container-fluid">
-        <div className="flex-row contrainer-fluid d-flex align-items-center w-50">
-          <Link
-            className="mx-3 navbar-brand d-flex flex-column align-items-center"
-            to="/"
-          >
-            <div className="h6">NFT</div>
-            <div className="h6">Marketplace</div>
-          </Link>
-          <div className="w-100">
-            <input
-              className="form-control"
-              placeholder="Search by Collection / User / Address"
-            ></input>
+    <div className="py-2 shadow-sm container-fluid header_nav">
+      <div className="row justify-content-between align-items-center">
+        <div className="col-auto">
+          <div className="d-flex">
+            <Link
+              className="px-3 d-flex flex-column align-items-center header_brand"
+              to="/"
+            >
+              <div className="h6">NFT</div>
+              <div className="h6">Marketplace</div>
+            </Link>
+
+            <div className="px-3 d-flex align-items-center">
+              <div className="header_input_form me-3">
+                <input
+                  className="form-control"
+                  placeholder="Search by Collection / User / Address"
+                  value={searchInput}
+                  onChange={handleSearchInput}
+                  onKeyDown={handleEnterEvent}
+                ></input>
+              </div>
+              <button
+                className="btn btn-outline-secondary"
+                onClick={handleSearchBtn}
+              >
+                Search
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="navbar-collapse collapse" id="navbarNavAltMarkup">
-          <ul className="navbar-nav w-100">
-            <div className="me-auto"></div>
-            {isLogin()}
-          </ul>
-        </div>
+        <div className="col-auto">{isLogin()}</div>
       </div>
-    </nav>
+    </div>
   );
 };
 

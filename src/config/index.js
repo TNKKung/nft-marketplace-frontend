@@ -1,13 +1,14 @@
-const CONTRACT_ADDRESS = "0x1C2e4a65351c3C0968D2624a15b3B446E4fcee11";
-const Market_ADDRESS = "0xbFa1e8165862B3F9BcD00ed31f11a562A0Cf3740";
+const CONTRACT_ADDRESS = "0x985F253fB2F1b47acAAA6fcdc1D00178f7E7B207";
+const Market_ADDRESS = "0xe4876D177a6aDf402fAD2af19a9EB057F462Ef28";
 
-const baseUrl = "http://localhost:4000";
+// const baseUrl = "http://localhost:4000";
 
 const blockchainName = "Sepolia";
 const chainID = "0xaa36a7";
 
 module.exports = {
-  baseUrl,
+  baseUrl:
+    "https://us-central1-nft-marketplace-frontend.cloudfunctions.net/app/v1",
   CONTRACT_ADDRESS,
   blockchainName,
   chainID,

@@ -1,0 +1,56 @@
+.setting_cursor_pointer {
+    cursor: pointer;
+}
+
+.setting_bgProfileImg {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.setting_bgProfileImg_click {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0px;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 0);
+}
+
+.setting_bgProfileImg_click:hover {
+    background-color: rgba(0, 0, 0, 0.400);
+    color: white;
+    font-weight: bold;
+}
+
+.setting_profileImg {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.setting_profileEditIcon {
+    width: 200px;
+    top: 0px;
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 10px;
+    color: black;
+}
+
+.setting_profileImg_click {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(255, 255, 255, 0);
+}
+
+.setting_profileImg_click:hover {
+    background-color: rgba(0, 0, 0, 0.400);
+    color: white;
+    font-weight: bold;
+}
