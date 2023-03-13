@@ -3,6 +3,7 @@ import ReactModal from "react-modal";
 
 import { FriendListImportModalProps } from "./type";
 import { shortenAddress } from "../../utils/addressHelper";
+import { Link } from "react-router-dom";
 
 const customStyles = {
   content: {
@@ -42,12 +43,13 @@ const ModalFriendList: React.FC<FriendListImportModalProps> = ({
           {friendList &&
             friendList.map((friend: string, index: number) => {
               return (
-                <a
+                <Link
                   className="flex flex-row w-full text-dark text-decoration-none"
-                  href={`http://localhost:3000/profile/${friend}`}
+                  to={`/profile/${friend}`}
+                  onClick={handleClose}
                 >
                   <p>{index + 1}. </p> <p> {shortenAddress(friend)}</p>
-                </a>
+                </Link>
               );
             })}
         </div>
