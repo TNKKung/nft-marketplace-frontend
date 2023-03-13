@@ -7,7 +7,7 @@ import transactionRes from "./TransactionAction";
 import jwt from "./JWTAction";
 
 const PERSISTED_KEYS = {
-  states: ["userAccount", "jwt"],
+  states: ["userAccount","jwt"],
   namespace: "app",
 };
 
@@ -15,7 +15,7 @@ const store = configureStore({
   reducer: {
     userAccount: userAccount,
     transactionRes: transactionRes,
-    jwt: jwt,
+    jwt: jwt
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(save(PERSISTED_KEYS)),
