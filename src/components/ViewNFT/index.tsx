@@ -204,7 +204,7 @@ const ViewNFT: React.FC = () => {
         handleResize();
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [params.tokenID]);
 
     useEffect(() => {
         window.addEventListener("resize", handleResize);
@@ -327,12 +327,17 @@ const ViewNFT: React.FC = () => {
                                                         <button className="btn btn-secondary" disabled>Buy</button></div>
                                                     </div>
                                                     :
-                                                    <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
-                                                        <div className="col-auto">
-                                                            <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                    address === undefined ?
+                                                        <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                            <button className="btn btn-secondary" disabled>Buy</button></div>
                                                         </div>
-                                                    </div>
+                                                        :
+                                                        <div className="row justify-content-between align-items-center px-3">
+                                                            <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
+                                                            <div className="col-auto">
+                                                                <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                            </div>
+                                                        </div>
 
                                             }
                                         </div>

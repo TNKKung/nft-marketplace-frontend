@@ -129,23 +129,29 @@ const SettingPage: React.FC = () => {
     ]);
 
     const fetchData = useCallback(async () => {
-        const profileDataRes = await readProfileAddress(address);
-        try {
-            setProfileInfoData(profileDataRes);
-            console.log(profileDataRes);
-            setProfileName(profileDataRes.name);
-            setProfileBio(profileDataRes.bio);
-            if (profileDataRes.backgroundImage !== "") {
-                setPreviewProfileBgImage(profileDataRes.backgroundImage);
+        if (address !== undefined) {
+            const profileDataRes = await readProfileAddress(address);
+            try {
+                setProfileInfoData(profileDataRes);
+                console.log(profileDataRes);
+                setProfileName(profileDataRes.name);
+                setProfileBio(profileDataRes.bio);
+                if (profileDataRes.backgroundImage !== "") {
+                    setPreviewProfileBgImage(profileDataRes.backgroundImage);
+                }
+                if (profileDataRes.profileImage !== "") {
+                    setPreviewProfileImage(profileDataRes.profileImage);
+                }
+            } catch (error) {
+                console.log(error);
             }
-            if (profileDataRes.profileImage !== "") {
-                setPreviewProfileImage(profileDataRes.profileImage);
-            }
-        } catch (error) {
-            console.log(error);
+        } else {
+            navigate("/");
         }
+
     }, [address,
-        readProfileAddress
+        readProfileAddress,
+        navigate
     ]);
 
     useEffect(() => {

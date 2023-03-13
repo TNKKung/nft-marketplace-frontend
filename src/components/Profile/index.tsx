@@ -8,7 +8,6 @@ import useBackend from '../../hook/useBackend';
 import NFTBox from '../boxComponent/NFTBox/NFTBox';
 import { useNavigate, useParams } from 'react-router-dom';
 
-
 const Profile: React.FC = () => {
   const params = useParams();
   const profileAddress: any = params.walletAddress;
@@ -129,9 +128,13 @@ const Profile: React.FC = () => {
       setFavoriteNftList(profileDataRes.favoriteNFT);
       if (profileDataRes.profileImage !== "") {
         setProfileMainImg(profileDataRes.profileImage);
+      }else{
+        setProfileMainImg(blankImage);
       }
       if (profileDataRes.backgroundImage !== "") {
         setProfileBgImg(profileDataRes.backgroundImage);
+      }else{
+        setProfileBgImg(blankBgImage);
       }
       setFriendCount(profileDataRes.friendList.length);
     } catch (error) {
@@ -156,7 +159,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
-  }, []);
+  }, [profileAddress]);
 
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
   const NewMapShowNFT = useCallback(() => {
@@ -200,6 +203,7 @@ const Profile: React.FC = () => {
                     <div className="col-auto h3 p-0 m-0">{profileName}</div>
                     <div className="col-auto">{address === profileAddress ?
                       <button className="btn btn-outline-secondary" onClick={handleSetting}><i className="bi bi-sliders"></i> Setting</button> :
+                      address === undefined? null:
                       profileLike === true ?
                         <button className="btn btn-secondary" onClick={handleRemoveFriend}>Remove friend</button> :
                         <button className="btn btn-outline-secondary" onClick={handleAddFriend}>Add friend</button>}
