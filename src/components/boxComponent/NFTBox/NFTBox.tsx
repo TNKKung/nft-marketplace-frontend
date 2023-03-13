@@ -17,7 +17,7 @@ const NFTBox = (props: CollectionProps) => {
   const { readTokenIdData } = useBackend();
   const { 
     // readTokenURI,
-    readOwnerTokenID, 
+    // readOwnerTokenID, 
     getPrice 
   } = useContracts();
 
@@ -64,7 +64,7 @@ const NFTBox = (props: CollectionProps) => {
   }, [
     getPrice,
     props.TokenID,
-    readOwnerTokenID,
+    // readOwnerTokenID,
     readTokenIdData,
     // readTokenURI,
   ]);

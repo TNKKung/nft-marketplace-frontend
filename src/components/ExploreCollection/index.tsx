@@ -41,7 +41,7 @@ const ExploreCollection = () => {
         }else{
             setExplore(displayNone);
         }
-    },[showCollection]);
+    },[showCollection, filterNFT]);
 
     useEffect(() => {
         fetchData();
