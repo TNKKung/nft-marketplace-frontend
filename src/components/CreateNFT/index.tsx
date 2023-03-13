@@ -47,7 +47,7 @@ const CreateNFT: React.FC = () => {
     { value: "collections", label: "Collections" },
   ];
 
-  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>({ value: "", label: "..." });
+  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>({value: "",label: "..."});
   const [CollectionOptions, setCollectionOptions] = useState<any>([
     { value: " ", label: "..." },
   ]);
@@ -279,29 +279,23 @@ const CreateNFT: React.FC = () => {
   }, []);
 
   const fetchDate = useCallback(async () => {
-    if (address !== undefined) {
-      const getMyCollection = await getCollectionbyAddress(address);
-      var myCollectionOptions = [
-        {
-          value: "",
-          label: "..."
-        }
-      ];
-      for (let i = 0; i < getMyCollection.length; i++) {
-        myCollectionOptions.push({
-          value: getMyCollection[i].collectionId,
-          label: getMyCollection[i].collectionName
-        });
+    const getMyCollection = await getCollectionbyAddress(address);
+    var myCollectionOptions = [
+      {
+        value: "",
+        label: "..."
       }
-      setCollectionOptions(myCollectionOptions);
-    }else{
-      navigate("/");
+    ];
+    for (let i = 0; i < getMyCollection.length; i++) {
+      myCollectionOptions.push({
+        value: getMyCollection[i].collectionId,
+        label: getMyCollection[i].collectionName
+      });
     }
-
+    setCollectionOptions(myCollectionOptions);
   }, [
     getCollectionbyAddress,
-    address,
-    navigate
+    address
   ]);
 
   useEffect(() => {
