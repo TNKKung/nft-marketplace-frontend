@@ -4,7 +4,6 @@ import { useUserAccount } from '../../store/UserAction/hook';
 import AddCollection from './AddCollection/AddCollection';
 import CollectionBox from '../boxComponent/CollectionBox/CollectionBox';
 import DeleteCollection from './DeleteCollection/DeleteCollection';
-import { useNavigate } from 'react-router-dom';
 
 const MyCollection: React.FC = () => {
     const { getCollectionbyAddress } = useCollection();
@@ -12,7 +11,7 @@ const MyCollection: React.FC = () => {
     const [createCollection, setCreateCollection] = useState(false);
     const [deleteCollection, setDeleteCollection] = useState(false);
     const [selectDeleteCollection, setSelectDeleteCollection] = useState<any>({});
-    const navigate = useNavigate();
+
     const [collectionList, setCollectionList] = useState<any>([]);
 
 
@@ -35,15 +34,9 @@ const MyCollection: React.FC = () => {
     }, [deleteCollection])
 
     const fetchData = useCallback(async () => {
-        if(address !== undefined){
-            const collectionres = await getCollectionbyAddress(address);
-            setCollectionList(collectionres);
-        }else{
-            navigate("/");
-        }
-    }, [address, 
-        getCollectionbyAddress,
-        navigate])
+        const collectionres = await getCollectionbyAddress(address);
+        setCollectionList(collectionres);
+    }, [address, getCollectionbyAddress])
 
     const createCollectNotice = useCallback(() => {
         fetchData();
