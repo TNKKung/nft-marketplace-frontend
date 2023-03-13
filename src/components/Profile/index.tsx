@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
-import blankImage from "./blankImg.png";
-import blankBgImage from "./blankBgImg.png";
-import "./profile.css";
+import React, { useCallback, useEffect, useState } from 'react'
+import blankImage from "./blankImg.png"
+import blankBgImage from "./blankBgImg.png"
+import "./profile.css"
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
 import useBackend from "../../hook/useBackend";
@@ -12,12 +12,11 @@ const Profile: React.FC = () => {
   const params = useParams();
   const profileAddress: any = params.walletAddress;
   const { address } = useUserAccount();
-  const {
-    readTokenIdFromAddress,
+  const { readTokenIdFromAddress,
     readProfileAddress,
     checkLikeUser,
     addLikeUser,
-    removeLikeUser,
+    removeLikeUser
   } = useBackend();
   let navigate = useNavigate();
 
@@ -49,7 +48,7 @@ const Profile: React.FC = () => {
     setFavorite("Profile_nav");
     setCreated("Profile_nav");
     setSearchInput("");
-  }, []);
+  }, [])
 
   const navOwnBtn = useCallback(async () => {
     resetNav();
@@ -62,47 +61,49 @@ const Profile: React.FC = () => {
     resetNav();
     setOnDefaultShowNFT(onSaleList);
     setFilterShowNFTList(onSaleList);
-    setOnsale("Profile_nav_select");
+    setOnsale("Profile_nav_select")
   }, [resetNav, onSaleList]);
 
   const navFavoriteBtn = useCallback(async () => {
     resetNav();
     setOnDefaultShowNFT(favoriteNftList);
     setFilterShowNFTList(favoriteNftList);
-    setFavorite("Profile_nav_select");
+    setFavorite("Profile_nav_select")
   }, [resetNav, favoriteNftList]);
 
   const navCreatedBtn = useCallback(async () => {
     resetNav();
     setOnDefaultShowNFT([]);
     setFilterShowNFTList([]);
-    setCreated("Profile_nav_select");
+    setCreated("Profile_nav_select")
   }, [resetNav]);
 
-  const handleSearch = useCallback(
-    async (e: any) => {
-      setSearchInput(e.target.value);
+  const handleSearch = useCallback(async (e: any) => {
+    setSearchInput(e.target.value);
 
-      const includeNFT = onDefaultShowNFT.filter((nft: any) => {
-        return nft.nameNFT.toLowerCase().includes(e.target.value.toLowerCase());
-      });
+    const includeNFT = onDefaultShowNFT.filter((nft: any) => {
+      return nft.nameNFT.toLowerCase().includes(e.target.value.toLowerCase());
+    });
 
-      if (JSON.stringify(filterShowNFTList) !== JSON.stringify(includeNFT)) {
-        setFilterShowNFTList(includeNFT);
-      }
-    },
-    [onDefaultShowNFT, filterShowNFTList]
-  );
+    if (JSON.stringify(filterShowNFTList) !== JSON.stringify(includeNFT)) {
+      setFilterShowNFTList(includeNFT);
+    }
+  }, [onDefaultShowNFT, filterShowNFTList]);
 
   const handleAddFriend = useCallback(async () => {
     setProfileLike(true);
     addLikeUser(profileAddress, address);
-  }, [profileAddress, address, addLikeUser]);
+  }, [profileAddress,
+    address,
+    addLikeUser
+  ]);
 
   const handleRemoveFriend = useCallback(async () => {
     setProfileLike(false);
     removeLikeUser(profileAddress, address);
-  }, [profileAddress, address, removeLikeUser]);
+  }, [profileAddress,
+    address,
+    removeLikeUser]);
 
   const handleSetting = useCallback(async () => {
     navigate("/setting");
@@ -114,11 +115,7 @@ const Profile: React.FC = () => {
       setOwnNftList(OwnNFTListRes);
       setOnDefaultShowNFT(OwnNFTListRes);
       setFilterShowNFTList(OwnNFTListRes);
-      setOnSaleList(
-        OwnNFTListRes.filter((NftList: any) => {
-          return NftList.statusSale === true;
-        })
-      );
+      setOnSaleList(OwnNFTListRes.filter((NftList:any)=>{return NftList.statusSale === true}))
     } catch (error) {
       console.log(error);
     }
@@ -147,12 +144,12 @@ const Profile: React.FC = () => {
         console.log(error);
       }
     }
-  }, [
-    readTokenIdFromAddress,
+
+  }, [readTokenIdFromAddress,
     readProfileAddress,
     profileAddress,
     address,
-    checkLikeUser,
+    checkLikeUser
   ]);
 
   useEffect(() => {
@@ -163,15 +160,16 @@ const Profile: React.FC = () => {
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
   const NewMapShowNFT = useCallback(() => {
     let mapNFTList: any = [];
-    filterShowNFTList.forEach((mapNFT) => {
+    filterShowNFTList.forEach(mapNFT => {
       mapNFTList.push(
         <div key={Number(mapNFT.tokenId).toString()}>
           <NFTBox TokenID={Number(mapNFT.tokenId).toString()}></NFTBox>
-        </div>
-      );
+        </div>);
     });
     setMapShowNFT(mapNFTList);
-  }, [filterShowNFTList]);
+
+  }, [filterShowNFTList,
+  ]);
 
   useEffect(() => {
     NewMapShowNFT();
@@ -181,12 +179,8 @@ const Profile: React.FC = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="p-0 col-12 position-relative">
-          <img
-            src={profileBgImg}
-            alt="bgProfileImage"
-            className="bg-gray-300 Profile_bgProfileImg"
-          ></img>
+        <div className="col-12 p-0 position-relative">
+          <img src={profileBgImg} alt="bgProfileImage" className="Profile_bgProfileImg bg-gray-300"></img>
         </div>
       </div>
 
@@ -194,15 +188,12 @@ const Profile: React.FC = () => {
         <div className="col-12 position-relative" style={{ top: "-65px" }}>
           <div className="container">
             <div className="row">
+
               <div className="col-auto">
-                <img
-                  src={profileMainImg}
-                  alt="profileImage"
-                  className="bg-gray-800 rounded-circle Profile_profileImg"
-                ></img>
+                <img src={profileMainImg} alt="profileImage" className="bg-gray-800 rounded-circle Profile_profileImg"></img>
               </div>
 
-              <div className="px-0 col align-self-end">
+              <div className="col px-0 align-self-end">
                 <div className="container-fluid ps-4">
                   <div className="row justify-content-between align-items-center">
                     <div className="col-auto p-0 m-0 h3">{profileName}</div>
@@ -241,47 +232,26 @@ const Profile: React.FC = () => {
                       friend {friendCount}
                     </div>
                   </div>
+                  <div className="row my-2"><div className="col-auto border border-secondary rounded">{shortenAddress(profileAddress)}</div></div>
+                  <div className="row"><div className="col-auto border border-secondary rounded">friend {friendCount}</div></div>
                 </div>
               </div>
 
-              <div className="mt-3 row">
+              <div className="row mt-3">
                 <div className="col">Bio : {profileBio}</div>
               </div>
 
-              <div className="mt-4 row">
-                <div className="p-0 container-fluid">
+              <div className="row mt-4">
+                <div className="container-fluid p-0">
                   <div className="row justify-content-between align-items-center">
+
                     <div className="col-auto p-0">
-                      <div className="p-0 container-fluid">
+                      <div className="container-fluid p-0">
                         <div className="row">
-                          <button
-                            className={"col-auto fs-5 Profile_nav " + navOwn}
-                            onClick={navOwnBtn}
-                          >
-                            Own
-                          </button>
-                          <button
-                            className={"col-auto fs-5 Profile_nav " + navOnsale}
-                            onClick={navOnsaleBtn}
-                          >
-                            Onsale
-                          </button>
-                          <button
-                            className={
-                              "col-auto fs-5 Profile_nav " + navFavorite
-                            }
-                            onClick={navFavoriteBtn}
-                          >
-                            Favorite
-                          </button>
-                          <button
-                            className={
-                              "col-auto fs-5 Profile_nav " + navCreated
-                            }
-                            onClick={navCreatedBtn}
-                          >
-                            Created
-                          </button>
+                          <button className={"col-auto fs-5 Profile_nav " + navOwn} onClick={navOwnBtn}>Own</button>
+                          <button className={"col-auto fs-5 Profile_nav " + navOnsale} onClick={navOnsaleBtn}>Onsale</button>
+                          <button className={"col-auto fs-5 Profile_nav " + navFavorite} onClick={navFavoriteBtn}>Favorite</button>
+                          <button className={"col-auto fs-5 Profile_nav " + navCreated} onClick={navCreatedBtn}>Created</button>
                         </div>
                       </div>
                     </div>
@@ -293,29 +263,34 @@ const Profile: React.FC = () => {
                             <input
                               className="form-control"
                               value={searchInput}
-                              placeholder="Search"
-                              onChange={handleSearch}
-                            ></input>
+                              placeholder="Search" onChange={handleSearch}>
+                            </input>
                           </div>
                         </div>
                       </div>
                     </div>
+
                   </div>
 
                   <div className="row justify-content-center align-items-center">
                     <div className="col-auto">
-                      <div className="flex-row flex-wrap p-2 mt-3 border rounded d-flex border-secondary-subtle nft_show_list">
+                      <div className="d-flex flex-row p-2 mt-3 flex-wrap border border-secondary-subtle rounded nft_show_list">
                         {mapShowNFT}
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
+
             </div>
           </div>
         </div>
+
+
+
       </div>
     </div>
-  );
-};
+  )
+}
 export default Profile;
