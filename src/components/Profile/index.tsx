@@ -177,7 +177,7 @@ const Profile: React.FC = () => {
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line
-  }, []);
+  }, [profileAddress]);
 
   const [mapShowNFT, setMapShowNFT] = useState<any[]>([]);
   const NewMapShowNFT = useCallback(() => {
