@@ -14,5 +14,5 @@ module.exports = {
   blockchainName,
   chainID,
   Market_ADDRESS,
-  jwtSecretKey: "bezkoder-secret-key",
+  jwtSecretKey: process.env.REACT_APP_JWT_SECRET_KEY,
 };
