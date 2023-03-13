@@ -136,7 +136,6 @@ const Profile: React.FC = () => {
 
     const profileDataRes = await readProfileAddress(profileAddress);
     try {
-      console.log(profileDataRes);
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
       setFavoriteNftList(profileDataRes.favoriteNFT);
@@ -169,10 +168,6 @@ const Profile: React.FC = () => {
     address,
     checkLikeUser,
   ]);
-
-  useEffect(() => {
-    console.log(showModalFavoriteList);
-  }, [showModalFavoriteList]);
 
   useEffect(() => {
     fetchData();

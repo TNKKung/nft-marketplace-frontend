@@ -21,7 +21,6 @@ const ModalFriendList: React.FC<FriendListImportModalProps> = ({
   handleClose,
   friendList,
 }) => {
-  console.log(friendList);
   return (
     <ReactModal
       isOpen={isOpen}
