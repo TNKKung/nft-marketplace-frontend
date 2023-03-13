@@ -2,7 +2,11 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useContracts from "../../hook/useContracts";
 import useBackend from "../../hook/useBackend";
-import { CONTRACT_ADDRESS, blockchainName, Market_ADDRESS } from "../../config"
+import {
+    CONTRACT_ADDRESS,
+    blockchainName,
+    // Market_ADDRESS
+} from "../../config"
 import "./viewNFT.css"
 import { shortenAddress } from "../../utils/addressHelper";
 import { weiToEther } from "../../utils/costHelper";
@@ -27,7 +31,13 @@ const ViewNFT: React.FC = () => {
     const [nftCategory, setNftCategory] = useState<any[]>([]);
     const [nftCost, setNFTCost] = useState(0);
     const [nftTransaction, setNftTransaction] = useState<any[]>([]);
-    const { readTokenURI, readOwnerTokenID, buyNFT, cancelSellNFT, getPrice } = useContracts();
+    const {
+        // readTokenURI, 
+        // readOwnerTokenID,
+        buyNFT,
+        cancelSellNFT,
+        getPrice
+    } = useContracts();
     const { readTokenIdData,
         checkLikeNFT,
         addLikeNFT,
@@ -61,21 +71,21 @@ const ViewNFT: React.FC = () => {
         nftName]);
 
     const fetchData = useCallback(async () => {
-        const TokenURI = await readTokenURI(params.tokenID);
-        setURLImage(TokenURI);
-        const realOwnerAddress = await readOwnerTokenID(params.tokenID);
-        if (realOwnerAddress === Market_ADDRESS) {
-            setSaleNFTStatus(true);
-            try {
-                const weiCost = await getPrice(params.tokenID);
-                setNFTCost(weiToEther(weiCost));
-            } catch (Error) {
-                console.log(Error);
-            }
+        // const TokenURI = await readTokenURI(params.tokenID);
+        // setURLImage(TokenURI);
+        // const realOwnerAddress = await readOwnerTokenID(params.tokenID);
+        // if (realOwnerAddress === Market_ADDRESS) {
+        //     setSaleNFTStatus(true);
+        //     try {
+        //         const weiCost = await getPrice(params.tokenID);
+        //         setNFTCost(weiToEther(weiCost));
+        //     } catch (Error) {
+        //         console.log(Error);
+        //     }
 
-        } else {
-            setSaleNFTStatus(false);
-        }
+        // } else {
+        //     setSaleNFTStatus(false);
+        // }
 
         const DataDetail = await readTokenIdData(params.tokenID);
         console.log(DataDetail);
@@ -85,6 +95,19 @@ const ViewNFT: React.FC = () => {
             setOwnerNFTAddress(DataDetail.ownerAddress);
             setNFTDocument(DataDetail.id);
             setNftCategory(DataDetail.category);
+            setURLImage(DataDetail.tokenURI);
+
+            if (DataDetail.statusSale === true) {
+                setSaleNFTStatus(true);
+                try {
+                    const weiCost = await getPrice(params.tokenID);
+                    setNFTCost(weiToEther(weiCost));
+                } catch (Error) {
+                    console.log(Error);
+                }
+            } else {
+                setSaleNFTStatus(false);
+            }
         } catch (error) {
             setNFTName("Name NFT");
             setNFTDescription("");
@@ -102,8 +125,8 @@ const ViewNFT: React.FC = () => {
         }
 
     }, [params.tokenID,
-        readTokenURI,
-        readOwnerTokenID,
+        // readTokenURI,
+        // readOwnerTokenID,
         readTokenIdData,
         getPrice,
         checkLikeNFT,
@@ -181,7 +204,7 @@ const ViewNFT: React.FC = () => {
         handleResize();
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [params.tokenID]);
 
     useEffect(() => {
         window.addEventListener("resize", handleResize);
@@ -304,12 +327,17 @@ const ViewNFT: React.FC = () => {
                                                         <button className="btn btn-secondary" disabled>Buy</button></div>
                                                     </div>
                                                     :
-                                                    <div className="row justify-content-between align-items-center px-3">
-                                                        <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
-                                                        <div className="col-auto">
-                                                            <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                    address === undefined ?
+                                                        <div className="row justify-content-end align-items-center px-3"><div className="col-auto">
+                                                            <button className="btn btn-secondary" disabled>Buy</button></div>
                                                         </div>
-                                                    </div>
+                                                        :
+                                                        <div className="row justify-content-between align-items-center px-3">
+                                                            <div className="col-auto h5 mb-0">{nftCost} {blockchainName}ETH</div>
+                                                            <div className="col-auto">
+                                                                <button className="btn btn-secondary" onClick={handleBuyNFT}>Buy</button>
+                                                            </div>
+                                                        </div>
 
                                             }
                                         </div>
