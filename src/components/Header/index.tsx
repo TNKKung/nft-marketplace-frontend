@@ -5,10 +5,17 @@ import useBackend from "../../hook/useBackend";
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
 import blankImage from "./blankImg.png";
-import "./header.css"
+import "./header.css";
 
 const Header: React.FC = () => {
-  const { address, loginMetamask, changeMetamaskAccount, logoutMetamask, changeImgProfile, profileImg } = useUserAccount();
+  const {
+    address,
+    loginMetamask,
+    changeMetamaskAccount,
+    logoutMetamask,
+    changeImgProfile,
+    profileImg,
+  } = useUserAccount();
   const { readProfileAddress } = useBackend();
 
   let navigate = useNavigate();
@@ -27,15 +34,11 @@ const Header: React.FC = () => {
         console.log(error);
       }
     }
-  }, [
-    address,
-    readProfileAddress,
-    changeImgProfile
-  ]);
+  }, [address, readProfileAddress, changeImgProfile]);
 
-  const handleConnectBtn = (()=>{
+  const handleConnectBtn = () => {
     loginMetamask();
-  });
+  };
 
   useEffect(() => {
     if (address !== undefined) {
@@ -51,7 +54,7 @@ const Header: React.FC = () => {
     if (address === undefined) {
       return (
         <button
-          className="btn btn-outline-secondary mx-3"
+          className="mx-3 btn btn-outline-secondary"
           onClick={handleConnectBtn}
         >
           Connect Wallet
@@ -61,15 +64,17 @@ const Header: React.FC = () => {
       return (
         <div className="d-flex align-items-center">
           <div className="dropdown header_create_btn">
-            <button className="btn btn-secondary dropdown-toggle text-white" type="button"
+            <button
+              className="text-white btn btn-secondary dropdown-toggle"
+              type="button"
               data-bs-toggle="dropdown"
-              aria-expanded="false">
+              aria-expanded="false"
+            >
               Create
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               <li>
-                <Link
-                  className="dropdown-item text-end" to="/createNFT">
+                <Link className="dropdown-item text-end" to="/createNFT">
                   Create NFT
                 </Link>
               </li>
@@ -80,27 +85,35 @@ const Header: React.FC = () => {
               </li>
             </ul>
           </div>
-          <div className="dropdown mx-3">
+          <div className="mx-3 dropdown">
             <button
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
               className="d-flex align-items-center"
             >
-              <img className="header_btn_profile" src={profileImg} alt="profilePicture" />
+              <img
+                className="header_btn_profile"
+                src={profileImg}
+                alt="profilePicture"
+              />
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               <li className="dropdown-item-text text-end">
                 {shortenAddress(address)}
               </li>
-              <li className="dropdown-item text-end header_cursor_pointer" onClick={() => navigator.clipboard.writeText(address)}>
+              <li
+                className="dropdown-item text-end header_cursor_pointer"
+                onClick={() => navigator.clipboard.writeText(address)}
+              >
                 Copy address
               </li>
-              <li><hr className="dropdown-divider"></hr></li>
+              <li>
+                <hr className="dropdown-divider"></hr>
+              </li>
               <div className="header_profile_create">
                 <li>
-                  <Link
-                    className="dropdown-item text-end" to="/createNFT">
+                  <Link className="dropdown-item text-end" to="/createNFT">
                     Create NFT
                   </Link>
                 </li>
@@ -109,10 +122,15 @@ const Header: React.FC = () => {
                     My collection
                   </Link>
                 </li>
-                <li><hr className="dropdown-divider"></hr></li>
+                <li>
+                  <hr className="dropdown-divider"></hr>
+                </li>
               </div>
               <li>
-                <Link className="dropdown-item text-end" to={"/profile/" + address}>
+                <Link
+                  className="dropdown-item text-end"
+                  to={"/profile/" + address}
+                >
                   Profile
                 </Link>
               </li>
@@ -155,31 +173,31 @@ const Header: React.FC = () => {
       await changeMetamaskAccount();
       setAccountsChanged(false);
     }
-  }, [address,
-    navigate,
-    changeMetamaskAccount
-  ]);
+  }, [address, navigate, changeMetamaskAccount]);
 
   const [searchInput, setSearchInput] = useState("");
-  const handleSearchBtn = useCallback(()=>{
-    if(searchInput !== ""){
+  const handleSearchBtn = useCallback(() => {
+    if (searchInput !== "") {
       navigate(`/search/${searchInput}`);
       setSearchInput("");
-    }else{
+    } else {
       navigate("/");
     }
-  },[
-    searchInput,
-    navigate
-  ])
-  const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchInput(e.target.value);
-  },[])
-  const handleEnterEvent = useCallback((e:React.KeyboardEvent<HTMLInputElement>)=>{
-    if(e.key === "Enter"){
-      handleSearchBtn();
-    }
-  },[handleSearchBtn])
+  }, [searchInput, navigate]);
+  const handleSearchInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchInput(e.target.value);
+    },
+    []
+  );
+  const handleEnterEvent = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        handleSearchBtn();
+      }
+    },
+    [handleSearchBtn]
+  );
 
   useEffect(() => {
     if (address !== undefined) {
@@ -194,20 +212,22 @@ const Header: React.FC = () => {
       changeAccount();
     }
     // eslint-disable-next-line
-  }, [accountsChanged])
+  }, [accountsChanged]);
 
   return (
-
-    <div className="container-fluid py-2 header_nav shadow-sm">
+    <div className="py-2 shadow-sm container-fluid header_nav">
       <div className="row justify-content-between align-items-center">
         <div className="col-auto">
           <div className="d-flex">
-            <Link className="d-flex flex-column align-items-center px-3 header_brand" to="/">
+            <Link
+              className="px-3 d-flex flex-column align-items-center header_brand"
+              to="/"
+            >
               <div className="h6">NFT</div>
               <div className="h6">Marketplace</div>
             </Link>
 
-            <div className="d-flex align-items-center px-3">
+            <div className="px-3 d-flex align-items-center">
               <div className="header_input_form me-3">
                 <input
                   className="form-control"
@@ -217,14 +237,16 @@ const Header: React.FC = () => {
                   onKeyDown={handleEnterEvent}
                 ></input>
               </div>
-              <button className="btn btn-outline-secondary" onClick={handleSearchBtn}>Search</button>
+              <button
+                className="btn btn-outline-secondary"
+                onClick={handleSearchBtn}
+              >
+                Search
+              </button>
             </div>
-
           </div>
         </div>
-        <div className="col-auto">
-          {isLogin()}
-        </div>
+        <div className="col-auto">{isLogin()}</div>
       </div>
     </div>
   );
