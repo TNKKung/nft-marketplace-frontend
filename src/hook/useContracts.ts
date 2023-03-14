@@ -241,7 +241,7 @@ const useContracts = (): any => {
     if (contract_market !== undefined && signer !== undefined) {
       try {
         const config = await getConfig();
-        const address = signer.getAddress();
+        // const address = signer.getAddress();
         const price = await getPrice(tokenId);
         const itemID = await contract_market.itemFromTokenId(tokenId);
         const options0 = {

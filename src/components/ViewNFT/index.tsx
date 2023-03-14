@@ -75,8 +75,6 @@ const ViewNFT: React.FC = () => {
     removeLikeNFT,
     address,
     params,
-    nftCategory,
-    nftName,
   ]);
 
   const fetchData = useCallback(async () => {

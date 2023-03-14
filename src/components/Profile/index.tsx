@@ -230,19 +230,20 @@ const Profile: React.FC = () => {
                           >
                             <i className="bi bi-sliders"></i> Setting
                           </button>
-                        ) : profileLike === true ? (
+                        ) : address === undefined ? null : 
+                        profileLike === true ? (
                           <button
                             className="btn btn-secondary"
                             onClick={handleRemoveFriend}
                           >
-                            Remove friend
+                            Remove favorite
                           </button>
                         ) : (
                           <button
                             className="btn btn-outline-secondary"
                             onClick={handleAddFriend}
                           >
-                            Add friend
+                            Add favorite
                           </button>
                         )}
                       </div>
@@ -257,7 +258,7 @@ const Profile: React.FC = () => {
                       className="py-0 -translate-x-3 border btn border-secondary"
                       onClick={handleOpenModalFavorite}
                     >
-                      friend {friendList?.length}
+                      favorite people {friendList?.length}
                     </button>
                   </div>
                 </div>

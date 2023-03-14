@@ -28,17 +28,17 @@ const ModalFriendList: React.FC<FriendListImportModalProps> = ({
       contentLabel="Favorite list people"
     >
       <div className="flex flex-col space-y-4 h-80 w-96">
-        <div className="flex flex-row justify-between w-full h-8">
-          <p>Favorite list people</p>
+        <div className="flex flex-row justify-content-between align-items-center w-full">
+          <h5 className="m-0">Favorite people list</h5>
           <button
             type="button"
-            className="p-1 border rounded-md border-danger text-danger"
+            className="btn btn-outline-secondary p-1"
             onClick={handleClose}
           >
             close
           </button>
         </div>
-        <div className="flex flex-col h-full p-2 space-y-2 border rounded-md border-success">
+        <div className="flex flex-col h-full p-2 space-y-2 border rounded-md border-secondary-subtle">
           {friendList &&
             friendList.map((friend: string, index: number) => {
               return (
@@ -47,7 +47,7 @@ const ModalFriendList: React.FC<FriendListImportModalProps> = ({
                   to={`/profile/${friend}`}
                   onClick={handleClose}
                 >
-                  <p>{index + 1}. </p> <p> {shortenAddress(friend)}</p>
+                  <p className="m-0">{index + 1}. </p> <p className="m-0"> {shortenAddress(friend)}</p>
                 </Link>
               );
             })}
