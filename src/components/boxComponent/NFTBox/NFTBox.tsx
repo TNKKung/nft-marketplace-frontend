@@ -5,7 +5,7 @@ import "./NFTBox.css";
 import useBackend from "../../../hook/useBackend";
 import useContracts from "../../../hook/useContracts";
 import { weiToEther } from "../../../utils/costHelper";
-import { Market_ADDRESS } from "../../../config";
+// import { Market_ADDRESS } from "../../../config";
 
 interface CollectionProps {
   TokenID: string;
@@ -15,21 +15,33 @@ const NFTBox = (props: CollectionProps) => {
     "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   );
   const { readTokenIdData } = useBackend();
-  const { 
+  const {
     // readTokenURI,
-    readOwnerTokenID, 
-    getPrice 
+    // readOwnerTokenID,
+    getPrice,
   } = useContracts();
+
   const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
 
   const [NFTname, setNFTName] = useState("NFT Name");
   const [saleNFTStatus, setSaleNFTStatus] = useState(false);
   const [nftCost, setNFTCost] = useState(0);
+
   const fetchData = useCallback(async () => {
     const DataDetail = await readTokenIdData(props.TokenID);
-    console.log(DataDetail);
-    const realOwnerAddress = await readOwnerTokenID(props.TokenID);
-    if (realOwnerAddress === Market_ADDRESS) {
+    // const realOwnerAddress = await readOwnerTokenID(props.TokenID);
+    // if (realOwnerAddress === Market_ADDRESS) {
+    //   setSaleNFTStatus(true);
+    //   try {
+    //     const weiCost = await getPrice(props.TokenID);
+    //     setNFTCost(weiToEther(weiCost));
+    //   } catch (Error) {
+    //     console.log(Error);
+    //   }
+    // } else {
+    //   setSaleNFTStatus(false);
+    // }
+    if (DataDetail.statusSale === true) {
       setSaleNFTStatus(true);
       try {
         const weiCost = await getPrice(props.TokenID);
@@ -51,7 +63,7 @@ const NFTBox = (props: CollectionProps) => {
   }, [
     getPrice,
     props.TokenID,
-    readOwnerTokenID,
+    // readOwnerTokenID,
     readTokenIdData,
     // readTokenURI,
   ]);
