@@ -104,8 +104,8 @@ const MyCollection: React.FC = () => {
           </div>
         </div>
         <div className="flex-row flex-wrap mt-3 d-flex">
-          {collectionList.map((obj: any, index: number) => (
-            <div className="m-2 position-relative" key={index}>
+          {collectionList.map((obj: any) => (
+            <div className="m-2 position-relative" key={obj.id}>
               <CollectionBox
                 CollectionId={obj.id}
                 CollectionName={obj.collectionName}

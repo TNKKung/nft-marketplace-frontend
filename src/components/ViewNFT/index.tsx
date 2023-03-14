@@ -64,7 +64,7 @@ const ViewNFT: React.FC = () => {
   const handleLikeNFT = useCallback(async () => {
     if (likeNft === false) {
       setLikeNft(true);
-      addLikeNFT(params.tokenID, nftName, nftCategory, address);
+      addLikeNFT(params.tokenID, address);
     } else {
       setLikeNft(false);
       removeLikeNFT(params.tokenID, address);

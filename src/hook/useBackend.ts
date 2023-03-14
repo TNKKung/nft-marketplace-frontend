@@ -45,7 +45,7 @@ const useBackend = () => {
       config
     );
     try {
-      const addressFriendList = BackEndResponse.data.response[0].friendList;
+      const addressFriendList = BackEndResponse.data.response.friendList;
       if (addressFriendList.includes(profileAddress) === true) {
         return true;
       } else {
@@ -148,7 +148,7 @@ const useBackend = () => {
       config
     );
     try {
-      const favoriteNFTList = BackEndResponse.data.response[0].favoriteNFT;
+      const favoriteNFTList = BackEndResponse.data.response.favoriteNFT;
       const filterFavoriteNFT = favoriteNFTList.filter((Nftlist: any) => {
         return Nftlist.tokenId === Number(tokenId);
       });
@@ -165,8 +165,6 @@ const useBackend = () => {
 
   const addLikeNFT = async (
     tokenId: string | undefined,
-    nameNFT: string,
-    category: any[],
     address: string
   ) => {
     try {

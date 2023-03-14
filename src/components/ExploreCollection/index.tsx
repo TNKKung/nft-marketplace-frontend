@@ -54,7 +54,7 @@ const ExploreCollection = () => {
             <div className={"row mt-3 mb-5 justify-content-center" + ExploreCollection}>
                 <div className={"d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list"}>
                     {showCollection.map((value: any) =>
-                        <div className="m-2" key={value.tokenId}>
+                        <div className="m-2" key={value.collectionId}>
                             <CollectionBox CollectionId={value.collectionId} ></CollectionBox>
                         </div>
                     )}
