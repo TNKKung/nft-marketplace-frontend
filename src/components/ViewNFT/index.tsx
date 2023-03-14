@@ -30,7 +30,6 @@ const ViewNFT: React.FC = () => {
   const [ownerNFTAddress, setOwnerNFTAddress] = useState<string>(
     "0x0000000000000000000000000000000000000000"
   );
-  const [nftCategory, setNftCategory] = useState<any[]>([]);
   const [nftCost, setNFTCost] = useState(0);
   const [nftTransaction, setNftTransaction] = useState<any[]>([]);
   const {
@@ -69,13 +68,7 @@ const ViewNFT: React.FC = () => {
       setLikeNft(false);
       removeLikeNFT(params.tokenID, address);
     }
-  }, [
-    likeNft,
-    addLikeNFT,
-    removeLikeNFT,
-    address,
-    params,
-  ]);
+  }, [likeNft, addLikeNFT, removeLikeNFT, address, params]);
 
   const fetchData = useCallback(async () => {
     // const TokenURI = await readTokenURI(params.tokenID);
@@ -101,7 +94,6 @@ const ViewNFT: React.FC = () => {
       setNFTDescription(DataDetail.description);
       setOwnerNFTAddress(DataDetail.ownerAddress);
       setNFTDocument(DataDetail.id);
-      setNftCategory(DataDetail.category);
       setURLImage(DataDetail.tokenURI);
 
       if (DataDetail.statusSale === true) {
