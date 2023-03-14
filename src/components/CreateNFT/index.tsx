@@ -4,7 +4,7 @@ import Select, { MultiValue, SingleValue } from "react-select";
 import "./createNFT.css";
 
 import CreatorRoyaltyFee from "./CreatorRoyaltyFee";
-import WaitTransactionModal from "../WaitTransaction"
+import WaitTransactionModal from "../WaitTransaction";
 
 import { useUserAccount } from "../../store/UserAction/hook";
 import { useTransactionAction } from "../../store/TransactionAction/hook";
@@ -47,7 +47,9 @@ const CreateNFT: React.FC = () => {
     { value: "collections", label: "Collections" },
   ];
 
-  const [selectedCollection, setSelectedCollection] = useState<SingleValue<{ value: string; label: string }>>({value: "",label: "..."});
+  const [selectedCollection, setSelectedCollection] = useState<
+    SingleValue<{ value: string; label: string }>
+  >({ value: "", label: "..." });
   const [CollectionOptions, setCollectionOptions] = useState<any>([
     { value: " ", label: "..." },
   ]);
@@ -160,7 +162,6 @@ const CreateNFT: React.FC = () => {
   };
 
   const handleCreateNFT = useCallback(async () => {
-
     //Picture Name
     var nftNameApprove = true;
     if (nftName.length <= 0) {
@@ -239,11 +240,11 @@ const CreateNFT: React.FC = () => {
           collaborator,
           collaboratorPercent,
           CID,
-          collection,
+          collection
         );
         if (minNFTRes !== undefined) {
           setWaitTransaction(false);
-          navigate("/viewNFT/" + minNFTRes)
+          navigate("/viewNFT/" + minNFTRes);
         } else {
           setConfirmModal(false);
           setWaitTransaction(false);
@@ -279,30 +280,31 @@ const CreateNFT: React.FC = () => {
   }, []);
 
   const fetchDate = useCallback(async () => {
-    const getMyCollection = await getCollectionbyAddress(address);
-    var myCollectionOptions = [
-      {
-        value: "",
-        label: "..."
+    if (address !== undefined) {
+      const getMyCollection = await getCollectionbyAddress(address);
+      var myCollectionOptions = [
+        {
+          value: "",
+          label: "...",
+        },
+      ];
+      for (let i = 0; i < getMyCollection.length; i++) {
+        myCollectionOptions.push({
+          value: getMyCollection[i].collectionId,
+          label: getMyCollection[i].collectionName,
+        });
       }
-    ];
-    for (let i = 0; i < getMyCollection.length; i++) {
-      myCollectionOptions.push({
-        value: getMyCollection[i].collectionId,
-        label: getMyCollection[i].collectionName
-      });
+      setCollectionOptions(myCollectionOptions);
+    } else {
+      navigate("/");
     }
-    setCollectionOptions(myCollectionOptions);
-  }, [
-    getCollectionbyAddress,
-    address
-  ]);
+  }, [getCollectionbyAddress, address, navigate]);
 
   useEffect(() => {
     handleResize();
     fetchDate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -310,7 +312,7 @@ const CreateNFT: React.FC = () => {
 
   return (
     <div>
-      <div className="container-fluid my-5">
+      <div className="my-5 container-fluid">
         <div className="row justify-content-center">
           <div className="col-auto">
             <h4>Create NFT</h4>
@@ -346,7 +348,7 @@ const CreateNFT: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="row mt-2 justify-content-center">
+                  <div className="mt-2 row justify-content-center">
                     <div
                       className="col-12 createNFT_cursor_pointer"
                       onClick={handleImageOnclick}
@@ -373,7 +375,7 @@ const CreateNFT: React.FC = () => {
 
           <div className="container-fluid">
             <div className={"row " + detailMClassUI}>
-              <div className="col-6 mb-3">
+              <div className="mb-3 col-6">
                 <label htmlFor="pictureNameInput" className="form-label">
                   Name<span className="text-danger">*</span>
                 </label>
@@ -393,7 +395,7 @@ const CreateNFT: React.FC = () => {
               </div>
             </div>
             <div className={"row " + detailMClassUI}>
-              <div className="col-6 mb-3">
+              <div className="mb-3 col-6">
                 <label
                   htmlFor="descriptionInput"
                   className={"form-label " + descriptionInputClass}
@@ -415,9 +417,7 @@ const CreateNFT: React.FC = () => {
             </div>
             <div className={"row mb-3 " + detailMClassUI}>
               <div className="col-6">
-                <label className="form-label">
-                  Category
-                </label>
+                <label className="form-label">Category</label>
                 <Select
                   onChange={setselectedCategory}
                   options={categoryOptions}
@@ -427,9 +427,7 @@ const CreateNFT: React.FC = () => {
             </div>
             <div className={"row mb-3 " + detailMClassUI}>
               <div className="col-6">
-                <label className="form-label">
-                  Collection
-                </label>
+                <label className="form-label">Collection</label>
                 <Select
                   onChange={setSelectedCollection}
                   options={CollectionOptions}
@@ -439,26 +437,28 @@ const CreateNFT: React.FC = () => {
             </div>
             <div className={"row " + detailMClassUI}>
               <div
-                className="col-8 py-2 border rounded"
+                className="py-2 border rounded col-8"
                 style={{ minWidth: "400px" }}
               >
                 <div className="container-fluid">
                   <div className="row h5">Creator royalty fee (%)</div>
                   <div className="row form-text">Max total royalty fee 10%</div>
-                  <div className="row h6 mt-2">Creator wallet address (Max : 2 Creator)</div>
+                  <div className="mt-2 row h6">
+                    Creator wallet address (Max : 2 Creator)
+                  </div>
                   <CreatorRoyaltyFee
                     creatorList={creatorAddressList}
                     setCreatorList={setCreatorAddressList}
                     setTotal={setRoyaltyTotal}
                   />
-                  <div className="row mt-2 align-items-center">
+                  <div className="mt-2 row align-items-center">
                     <div className="col-9 text-end fw-bold">Total</div>
-                    <div className="col-2 text-center fw-bold">
+                    <div className="text-center col-2 fw-bold">
                       {royaltyTotal}
                     </div>
                     <div className="col-1 fw-bold">%</div>
                   </div>
-                  <div className="row h6 mt-2">Add creator</div>
+                  <div className="mt-2 row h6">Add creator</div>
                   <div className="row">
                     <div className="col-9">
                       <input
@@ -488,7 +488,7 @@ const CreateNFT: React.FC = () => {
                     </div>
                     <div className="col-1">%</div>
                   </div>
-                  <div className="row h6 mt-3">
+                  <div className="mt-3 row h6">
                     <button
                       className="btn btn-secondary"
                       onClick={handleAddCreator}
@@ -502,10 +502,10 @@ const CreateNFT: React.FC = () => {
           </div>
         </div>
 
-        <div className="row justify-content-center mt-3">
+        <div className="mt-3 row justify-content-center">
           <div className="col-auto">
             <button
-              className="btn btn-secondary text-white"
+              className="text-white btn btn-secondary"
               onClick={handleCreateNFT}
             >
               Create
@@ -513,7 +513,10 @@ const CreateNFT: React.FC = () => {
           </div>
         </div>
       </div>
-      <WaitTransactionModal popupState={confirmModal} setPopup={setConfirmModal} ></WaitTransactionModal>
+      <WaitTransactionModal
+        popupState={confirmModal}
+        setPopup={setConfirmModal}
+      ></WaitTransactionModal>
     </div>
   );
 };
