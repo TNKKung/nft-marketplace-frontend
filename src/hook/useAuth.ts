@@ -1,14 +1,11 @@
 import axios from "axios";
 import Web3 from "web3";
 
-import { auth } from "../utils/firebase";
 import { baseUrl } from "../config";
-import { signOut } from "firebase/auth";
 import { useJWToken } from "../store/JWTAction/hook";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 
 const useAuth = (): any => {
-
   const address = useSelector(
     (state: { userAccount: { address: any } }) => state.userAccount.address
   );
@@ -44,7 +41,7 @@ const useAuth = (): any => {
       // console.log({ accessToken, refreshToken });
       if (!accessToken && !refreshToken) {
         throw new Error("Invalid JWT");
-      }else{
+      } else {
         setRefreshJWToken(refreshToken);
       }
 
@@ -55,43 +52,41 @@ const useAuth = (): any => {
   };
 
   const handleLogout = () => {
-    signOut(auth);
+    // signOut(auth);
   };
 
-  const getAccessToken = async() => {
+  const getAccessToken = async () => {
     const config = {
       headers: {
-        authorization: "Bearer "+ refreshJWToken
-      }
-    }
-     try{
+        authorization: "Bearer " + refreshJWToken,
+      },
+    };
+    try {
       const getAccessTokenRes = await axios.get(
         `${baseUrl}/auth/requestAccessToken?address=${address}`,
         config
       );
-      return getAccessTokenRes?.data?.response.accessToken
-
-    }catch(error){
+      return getAccessTokenRes?.data?.response.accessToken;
+    } catch (error) {
       console.log();
-      
     }
-  }
+  };
 
   const getConfig = async () => {
     const accessToken = await getAccessToken();
     const config = {
-        headers: {
-            authorization: accessToken
-        }
-    }
-    return config
-}
+      headers: {
+        authorization: accessToken,
+      },
+    };
+    return config;
+  };
 
   return {
     handleLogin,
     handleLogout,
     getAccessToken,
-    getConfig
+    getConfig,
   };
 };
 
