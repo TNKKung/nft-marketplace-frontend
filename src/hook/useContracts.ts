@@ -238,9 +238,10 @@ const useContracts = (): any => {
   };
 
   const buyNFT = async (tokenId: string, idDocNFT: string) => {
-    if (contract_market !== undefined) {
+    if (contract_market !== undefined && signer !== undefined) {
       try {
         const config = await getConfig();
+        const address = signer.getAddress();
         const price = await getPrice(tokenId);
         const itemID = await contract_market.itemFromTokenId(tokenId);
         const options0 = {
@@ -261,13 +262,6 @@ const useContracts = (): any => {
           },
           config
         );
-        await axios.patch(
-          `${baseUrl}/nft/unlistingForSale`,
-          {
-            id: idDocNFT,
-          },
-          config
-        );
         await axios.post(
           `${baseUrl}/nft/addTransactionHash`,
           {
@@ -276,6 +270,13 @@ const useContracts = (): any => {
           },
           config
         );
+        // await axios.patch(
+        //   `${baseUrl}/nft/unlistingForSale?ownerAddress=${address}`,
+        //   {
+        //     id: idDocNFT,
+        //   },
+        //   config
+        // );
         return true;
       } catch (error) {
         console.log(error);
