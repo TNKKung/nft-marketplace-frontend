@@ -9,10 +9,11 @@ import useCollection from "../../../hook/useCollection";
 import etherPNG from "../../../asset/ethereum-icon.png";
 // import { Market_ADDRESS } from "../../../config";
 
-interface CollectionProps {
+interface NFTProps {
   TokenID: string;
+
 }
-const NFTBox = (props: CollectionProps) => {
+const NFTBox = (props: NFTProps) => {
   const [URLImage, setURLImage] = useState(
     "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   );
