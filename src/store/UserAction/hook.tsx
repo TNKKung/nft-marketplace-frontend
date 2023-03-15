@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, addProfileImg, removeItem } from ".";
-import { addRefreshJWT } from "../JWTAction";
+import { removeRefreshJWT } from "../JWTAction";
 
 import useAuth from "../../hook/useAuth";
 
@@ -9,10 +9,11 @@ export const useUserAccount = () => {
   const address = useSelector(
     (state: { userAccount: { address: any } }) => state.userAccount.address
   );
-  const profileImg = useSelector((
-    state: { userAccount: { profileImg: string}}) => state.userAccount.profileImg
-    );
-    
+  const profileImg = useSelector(
+    (state: { userAccount: { profileImg: string } }) =>
+      state.userAccount.profileImg
+  );
+
   const dispatch = useDispatch();
 
   const { handleLogin, handleLogout } = useAuth();
@@ -25,22 +26,21 @@ export const useUserAccount = () => {
         });
         const account = Web3.utils.toChecksumAddress(accounts[0]);
         const loginSuccess = await handleLogin(account);
-        if (loginSuccess)
-          dispatch(addItem(account));
+        if (loginSuccess) dispatch(addItem(account));
         else {
           alert("Login unsuccess!");
         }
       }
     } else {
       dispatch(removeItem());
-      dispatch(addRefreshJWT(""));
+      dispatch(removeRefreshJWT());
       handleLogout();
     }
   };
 
   const changeMetamaskAccount = async () => {
     dispatch(removeItem());
-    dispatch(addRefreshJWT(""));
+    dispatch(removeRefreshJWT());
     handleLogout();
     if (window?.ethereum?.isMetaMask) {
       const accounts = await window.ethereum.request({
@@ -48,23 +48,22 @@ export const useUserAccount = () => {
       });
       const account = Web3.utils.toChecksumAddress(accounts[0]);
       const loginSuccess = await handleLogin(account);
-      if (loginSuccess)
-        dispatch(addItem(account));
+      if (loginSuccess) dispatch(addItem(account));
       else {
         alert("Login unsuccess!");
       }
     }
-  }
+  };
 
   const logoutMetamask = async () => {
     dispatch(removeItem());
-    dispatch(addRefreshJWT(""));
+    dispatch(removeRefreshJWT());
     handleLogout();
-  }
+  };
 
-  const changeImgProfile = async (imageProfile:string) => {
+  const changeImgProfile = async (imageProfile: string) => {
     dispatch(addProfileImg(imageProfile));
-  }
+  };
 
   return {
     profileImg,
@@ -72,6 +71,6 @@ export const useUserAccount = () => {
     loginMetamask,
     changeMetamaskAccount,
     logoutMetamask,
-    changeImgProfile
+    changeImgProfile,
   };
 };
