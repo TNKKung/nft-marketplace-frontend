@@ -47,11 +47,15 @@ const useCollection = () => {
 
     const getCollectionbyId = async (collectionId: string) => {
         const config = await getConfig();
-        const BackEndResponse = await axios.get(
+        try{const BackEndResponse = await axios.get(
             `${baseUrl}/collection/getCollectionById?id=${collectionId}`,
             config
         );
-        return BackEndResponse?.data.response;
+        return BackEndResponse?.data.response;}
+        catch(error){
+            return undefined
+        }
+        
     }
 
     const getAllCollection = async () =>{

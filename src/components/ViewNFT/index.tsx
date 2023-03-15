@@ -116,7 +116,7 @@ const ViewNFT: React.FC = () => {
         setSaleNFTStatus(false);
       }
 
-      if (DataDetail.collectionId !== "" || DataDetail.collectionId !== "none") {
+      if (DataDetail.collectionId !== "" && DataDetail.collectionId !== "none") {
         try {
           const collectionRes = await getCollectionbyId(DataDetail.collectionId);
           setNftCollection(collectionRes);

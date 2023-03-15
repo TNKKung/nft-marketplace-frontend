@@ -4,11 +4,13 @@ import NFTBox from "../boxComponent/NFTBox/NFTBox";
 import useCollection from "../../hook/useCollection";
 import { useNavigate } from 'react-router-dom';
 import DeleteCollection from "../MyCollection/DeleteCollection/DeleteCollection";
+import { useUserAccount } from "../../store/UserAction/hook";
 
 const Collection: React.FC = () => {
     const params = useParams();
     const navigate = useNavigate();
     const { getCollectionbyId } = useCollection();
+    const { address } = useUserAccount();
 
     const [deleteCollection, setDeleteCollection] = useState(false);
     const handleDeleteCollection = useCallback(() => {
@@ -38,6 +40,7 @@ const Collection: React.FC = () => {
                 setCollectionDescription(collectionDescriptRes.description);
                 setCollectionListNFT(collectionDescriptRes.listNFT);
                 setLoadingDataClass("");
+
             } catch (error) {
                 navigate('/', { replace: true });
             }
@@ -69,6 +72,7 @@ const Collection: React.FC = () => {
                             <div className="col-auto">
                                 <div className="d-flex flex-row">
                                     <button className="btn btn-secondary mx-1"><i className="bi bi-share-fill"></i> Copy link</button>
+                                    {collectionOwner !== address ? null :(<div>
                                     <button className="btn btn-secondary mx-1" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
                                     <ul className="dropdown-menu dropdown-menu-end">
                                         <li>
@@ -87,6 +91,7 @@ const Collection: React.FC = () => {
                                             </button>
                                         </li>
                                     </ul>
+                                    </div>)}
                                 </div>
                             </div>
                         </div>

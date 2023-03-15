@@ -52,7 +52,7 @@ const NFTBox = (props: CollectionProps) => {
       setURLImage(DataDetail.tokenURI);
       setNFTName(DataDetail.nameNFT);
       setLoadingDataClass("");
-      if (DataDetail.collectionId !== "" || DataDetail.collectionId !== "none") {
+      if (DataDetail.collectionId !== "" && DataDetail.collectionId !== "none") {
         try {
           const collectionRes = await getCollectionbyId(DataDetail.collectionId);
           setCollection(collectionRes.collectionName);
