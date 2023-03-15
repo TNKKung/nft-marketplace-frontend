@@ -32,7 +32,7 @@ const CollectionBox = (props: CollectionProps) => {
             const listNft = collectionRes.listNFT.length;
             if (listNft > 0) {
                 const indexNFT = await Math.floor(Math.random() * listNft);
-                const tokenIDData = await readTokenIdData(collectionRes.listNFT[indexNFT].toString());
+                const tokenIDData = await readTokenIdData(collectionRes.listNFT[indexNFT].tokenId.toString());
                 setBgImage(tokenIDData.tokenURI);
             }
             const UserDataRes = await readProfileAddress(collectionRes.owner);
@@ -73,7 +73,7 @@ const CollectionBox = (props: CollectionProps) => {
                         <h6 className={"col-6 p-0 m-0 text-break text-truncate text-end" + placeHolder}>{collectionData.collectionName}</h6>
                     </div>
                     <div className="row mb-2 px-2 justify-content-end placeholder-glow align-items-center">
-                        <div className={"col-auto p-0 me-2" + placeHolder}>{profileName}</div>
+                        <div className={"col-6 p-0 me-2 text-break text-truncate text-end" + placeHolder}>{profileName}</div>
                         <div className="col-auto p-0">
                             <img src={profileImage} alt="profileImage" className={"collectionBox_profile p-0 bg-gray-800 " + placeHolder}></img>
                         </div>
