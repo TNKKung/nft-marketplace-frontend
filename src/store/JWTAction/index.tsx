@@ -15,8 +15,11 @@ export const jwtSlice = createSlice({
     ) => {
       state.refreshJWT = refresh;
     },
+    removeRefreshJWT: (state) => {
+      state.refreshJWT = "";
+    },
   },
 });
 
-export const { addRefreshJWT } = jwtSlice.actions;
+export const { addRefreshJWT, removeRefreshJWT } = jwtSlice.actions;
 export default jwtSlice.reducer;
