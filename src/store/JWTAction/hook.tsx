@@ -1,19 +1,23 @@
-import { useDispatch, useSelector } from "react-redux"
-import { addRefreshJWT } from ".";
-import { JWTProps } from "../type"
+import { useDispatch, useSelector } from "react-redux";
+import { addRefreshJWT as addRefreshJWTAction } from ".";
+import { JWTProps } from "../type";
 
-export const useJWToken = () => {
-    const refreshJWToken = useSelector(
-        (state: { jwt: JWTProps }) => state.jwt.refreshJWT
-    );
-    const dispatch = useDispatch();
+export const useJWToken = (): {
+  refreshJWToken: string;
+  reducer: { handleSetRefreshJWToken: (jwToken: string) => void };
+} => {
+  const refreshJWToken = useSelector(
+    (state: { jwt: JWTProps }) => state.jwt.refreshJWT
+  );
 
-    const setRefreshJWToken = (jwToken:string) => {
-        dispatch(addRefreshJWT(jwToken));
-    }
+  const dispatch = useDispatch();
 
-    return {
-        refreshJWToken,
-        setRefreshJWToken
-    }
-}
+  const handleSetRefreshJWToken = (jwToken: string) => {
+    dispatch(addRefreshJWTAction({ refresh: jwToken }));
+  };
+
+  return {
+    refreshJWToken,
+    reducer: { handleSetRefreshJWToken },
+  };
+};
