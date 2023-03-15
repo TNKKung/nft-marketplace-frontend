@@ -10,7 +10,10 @@ const useAuth = (): any => {
     (state: { userAccount: { address: any } }) => state.userAccount.address
   );
 
-  const { refreshJWToken, setRefreshJWToken } = useJWToken();
+  const {
+    refreshJWToken,
+    reducer: { handleSetRefreshJWToken },
+  } = useJWToken();
   const web3 = new Web3(Web3.givenProvider);
 
   const handleLogin = async (addressWallet: string): Promise<boolean> => {
@@ -42,7 +45,7 @@ const useAuth = (): any => {
       if (!accessToken && !refreshToken) {
         throw new Error("Invalid JWT");
       } else {
-        setRefreshJWToken(refreshToken);
+        handleSetRefreshJWToken(refreshToken);
       }
 
       return true;
@@ -73,10 +76,9 @@ const useAuth = (): any => {
   };
 
   const getConfig = async () => {
-    const accessToken = await getAccessToken();
     const config = {
       headers: {
-        authorization: accessToken,
+        authorization: refreshJWToken,
       },
     };
     return config;
