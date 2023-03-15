@@ -5,6 +5,8 @@ import "./NFTBox.css";
 import useBackend from "../../../hook/useBackend";
 import useContracts from "../../../hook/useContracts";
 import { weiToEther } from "../../../utils/costHelper";
+import useCollection from "../../../hook/useCollection";
+import etherPNG from "../../../asset/ethereum-icon.png";
 // import { Market_ADDRESS } from "../../../config";
 
 interface CollectionProps {
@@ -21,26 +23,19 @@ const NFTBox = (props: CollectionProps) => {
     getPrice,
   } = useContracts();
 
+  const {
+    getCollectionbyId
+  } = useCollection();
+
   const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
 
-  const [NFTname, setNFTName] = useState("NFT Name");
-  const [saleNFTStatus, setSaleNFTStatus] = useState(false);
+  const [NFTname, setNFTName] = useState<string>("NFT Name");
+  const [saleNFTStatus, setSaleNFTStatus] = useState<boolean>(false);
   const [nftCost, setNFTCost] = useState(0);
+  const [collection, setCollection] = useState<string>("Collection Name")
 
   const fetchData = useCallback(async () => {
     const DataDetail = await readTokenIdData(props.TokenID);
-    // const realOwnerAddress = await readOwnerTokenID(props.TokenID);
-    // if (realOwnerAddress === Market_ADDRESS) {
-    //   setSaleNFTStatus(true);
-    //   try {
-    //     const weiCost = await getPrice(props.TokenID);
-    //     setNFTCost(weiToEther(weiCost));
-    //   } catch (Error) {
-    //     console.log(Error);
-    //   }
-    // } else {
-    //   setSaleNFTStatus(false);
-    // }
     if (DataDetail.statusSale === true) {
       setSaleNFTStatus(true);
       try {
@@ -57,6 +52,14 @@ const NFTBox = (props: CollectionProps) => {
       setURLImage(DataDetail.tokenURI);
       setNFTName(DataDetail.nameNFT);
       setLoadingDataClass("");
+      if (DataDetail.collectionId !== "" || DataDetail.collectionId !== "none") {
+        try {
+          const collectionRes = await getCollectionbyId(DataDetail.collectionId);
+          setCollection(collectionRes.collectionName);
+        } catch (error) {
+          console.log(error);
+        }
+      }
     } catch (error) {
       setNFTName("NFT Name");
     }
@@ -66,6 +69,7 @@ const NFTBox = (props: CollectionProps) => {
     // readOwnerTokenID,
     readTokenIdData,
     // readTokenURI,
+    getCollectionbyId
   ]);
 
   useEffect(() => {
@@ -81,49 +85,39 @@ const NFTBox = (props: CollectionProps) => {
           alt="previewImage"
           loading="lazy"
         ></img>
-        <div className="p-0 m-0 container-fluid w-100">
-          <div className={"row align-items-center p-3"}>
-            <div className="col-8 placeholder-glow">
-              <h6
-                className={
-                  "p-0 m-0 w-100 text-break text-truncate " + loadingDataClass
-                }
-              >
-                {NFTname}
+        <div className="p-0 px-2 m-0 flex flex-row justify-content-between align-items-center w-100 NFTBox_textBox">
+          <div className="placeholder-glow NFTBox_text">
+            {collection === "Collection Name" ?
+              null : 
+              <h6 className={"p-0 m-0 w-100 text-break text-truncate " + loadingDataClass}>
+                {collection}
               </h6>
-            </div>
-            {saleNFTStatus === false ? (
-              <div></div>
-            ) : (
-              <div className="col-4 placeholder-glow">
-                <h6
-                  className={
-                    "p-0 m-0 w-100 text-break text-truncate text-end " +
-                    loadingDataClass
-                  }
-                >
+            }
+            <p className={"p-0 m-0 w-100 text-break text-truncate " + loadingDataClass}>
+              {NFTname}
+            </p>
+          </div>
+          {saleNFTStatus === false ? (
+            null
+          ) : (
+            <div className="placeholder-glow">
+              <div className="flex flex-row align-items-center">
+                <img className="NFTBox_etherIcon" src={etherPNG} alt="etherIcon" />
+                <h6 className={"p-0 m-0 w-100 text-break text-truncate text-end justify-content-center" +
+                  loadingDataClass
+                }>
                   {nftCost}
                 </h6>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
         </div>
 
         <Link
           className="top-0 position-absolute w-100 h-100"
           to={"/viewNFT/" + props.TokenID}
         ></Link>
-
-        {/* <div className="top-0 position-absolute end-0">
-                    <button className="btn" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <button className="dropdown-item text-end">
-                                Remove from collection
-                            </button>
-                        </li>
-                    </ul>
-                </div> */}
       </div>
     </div>
   );

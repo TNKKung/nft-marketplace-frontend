@@ -4,9 +4,22 @@
     cursor: pointer;
 }
 
+.NFTBox_textBox {
+    height: 60px;
+}
+
+.NFTBox_text {
+    width: 200px;
+}
+
 .NFTBox_previewImg {
-    width:300px;
-    height:300px;
+    width: 300px;
+    height: 300px;
     object-fit: cover;
     background-color: gray;
+}
+
+.NFTBox_etherIcon {
+    width: 25px;
+    height: 25px;
 }
