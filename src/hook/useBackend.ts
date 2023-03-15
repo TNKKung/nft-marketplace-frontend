@@ -219,6 +219,7 @@ const useBackend = () => {
         `${baseUrl}/search/?keyword=${searchValue}`,
         config
       );
+      console.log(searchRes.data.response);
       return searchRes.data.response;
     } catch (error) {
       return false;

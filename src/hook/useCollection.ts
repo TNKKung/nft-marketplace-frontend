@@ -23,6 +23,25 @@ const useCollection = () => {
         }
     }
 
+    const editCollection = async (collectionId: string | undefined, collectionNameInp: string, descriptionInp: string) => {
+        try{
+            const config = await getConfig();
+            await axios.patch(
+                `${baseUrl}/collection/`,
+                {
+                    id: collectionId,
+                    collectionName: collectionNameInp,
+                    description: descriptionInp
+                },
+                config
+            );
+            return "Success";
+
+        }catch(error){
+            return "Error";
+        }
+    }
+
     const deleteCollection = async (collectionId: string) => {
         try{
             const config = await getConfig();
@@ -45,7 +64,7 @@ const useCollection = () => {
         return BackEndResponse?.data.response;
     }
 
-    const getCollectionbyId = async (collectionId: string) => {
+    const getCollectionbyId = async (collectionId: string | undefined) => {
         const config = await getConfig();
         try{const BackEndResponse = await axios.get(
             `${baseUrl}/collection/getCollectionById?id=${collectionId}`,
@@ -72,7 +91,8 @@ const useCollection = () => {
         deleteCollection,
         getCollectionbyAddress,
         getCollectionbyId,
-        getAllCollection
+        getAllCollection,
+        editCollection
     };
 }
 export default useCollection;

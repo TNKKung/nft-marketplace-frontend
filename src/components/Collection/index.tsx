@@ -5,6 +5,7 @@ import useCollection from "../../hook/useCollection";
 import { useNavigate } from 'react-router-dom';
 import DeleteCollection from "../MyCollection/DeleteCollection/DeleteCollection";
 import { useUserAccount } from "../../store/UserAction/hook";
+import EditCollection from "./editCollection/EditCollection";
 
 const Collection: React.FC = () => {
     const params = useParams();
@@ -20,6 +21,20 @@ const Collection: React.FC = () => {
             setDeleteCollection(true);
         }
     }, [deleteCollection])
+
+    const [editCollection, setEditCollection] = useState(false);
+    const handleEditCollection = useCallback(()=>{
+        if(editCollection === true){
+            setEditCollection(false);
+        }else{
+            setEditCollection(true);
+        }
+    },[editCollection]);
+
+    const setNewCollection = useCallback((Name:string, description:string)=>{
+        setCollectionName(Name);
+        setCollectionDescription(description);
+    },[]);
 
     const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
     const [collectionObject, setCollectionObject] = useState<any>({});
@@ -72,25 +87,20 @@ const Collection: React.FC = () => {
                             <div className="col-auto">
                                 <div className="d-flex flex-row">
                                     <button className="btn btn-secondary mx-1"><i className="bi bi-share-fill"></i> Copy link</button>
-                                    {collectionOwner !== address ? null :(<div>
-                                    <button className="btn btn-secondary mx-1" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
-                                    <ul className="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <button className="dropdown-item text-end">
-                                                Add created NFT
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button className="dropdown-item text-end">
-                                                Edit
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button className="dropdown-item text-end" onClick={handleDeleteCollection}>
-                                                Delete
-                                            </button>
-                                        </li>
-                                    </ul>
+                                    {collectionOwner !== address ? null : (<div>
+                                        <button className="btn btn-secondary mx-1" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <button className="dropdown-item text-end" onClick={handleEditCollection}>
+                                                    Edit
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button className="dropdown-item text-end" onClick={handleDeleteCollection}>
+                                                    Delete
+                                                </button>
+                                            </li>
+                                        </ul>
                                     </div>)}
                                 </div>
                             </div>
@@ -120,7 +130,7 @@ const Collection: React.FC = () => {
                 </div>
             </div>
             <DeleteCollection popupState={deleteCollection} setPopup={setDeleteCollection} setCollectionList={backToMyCollection} collectionObject={collectionObject}></DeleteCollection>
-
+            <EditCollection setPopup={setEditCollection} popupState={editCollection} setCollection={setNewCollection} collectionId={params.collectionId}></EditCollection>
         </div>
     )
 }
