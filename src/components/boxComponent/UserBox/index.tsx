@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 
 import "./UserBox.css";
 import { ProfileDataObject, userProps } from "./type";
-import blankImg from "./blankImg.png";
-import blankBgImg from "./blankBgImg.png";
 
 import useBackend from "../../../hook/useBackend";
 import { shortenAddress } from "../../../utils/addressHelper";
@@ -12,8 +10,12 @@ import { shortenAddress } from "../../../utils/addressHelper";
 const UserBox: React.FC<userProps> = ({ userAddress }) => {
   const { readProfileAddress } = useBackend();
 
-  const [profileImage, setProfileImage] = useState<string>(blankImg);
-  const [profileBgImg, setProfileBgImg] = useState<string>(blankBgImg);
+  const [profileImage, setProfileImage] = useState<string>(
+    "/images/blank/blankImg.png"
+  );
+  const [profileBgImg, setProfileBgImg] = useState<string>(
+    "/images/blank/blankBgImg.png"
+  );
   const [placeHolder, setPlaceHolder] = useState<string>(" placeholder");
 
   const [profileData, setProfileData] = useState<ProfileDataObject>({
