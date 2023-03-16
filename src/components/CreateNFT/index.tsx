@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import Select, { MultiValue, SingleValue } from "react-select";
+import { useNavigate } from "react-router-dom";
 
 import "./createNFT.css";
 
@@ -12,7 +13,6 @@ import useIPFS from "../../hook/useIPFS";
 import useContracts from "../../hook/useContracts";
 import useAddress from "../../hook/useAddress";
 import useCollection from "../../hook/useCollection";
-import { useNavigate } from "react-router-dom";
 
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
@@ -25,19 +25,23 @@ const CreateNFT: React.FC = () => {
   const { getCollectionbyAddress } = useCollection();
   let navigate = useNavigate();
 
-  const [imageNFT, setImageNFT] = useState([]);
-  const [previewimageNFT, setPreviewImageNFT] = useState("");
-  const [previewDisplay, setPreviewDisplay] = useState("d-none");
-  const [previewDummyDisplay, setPreviewDummyDisplay] = useState("");
-  const [inputFileClass, setInputFileClass] = useState("");
+  const [imageNFT, setImageNFT] = useState<any>([]);
+  const [previewimageNFT, setPreviewImageNFT] = useState<string>("");
+  const [previewDisplay, setPreviewDisplay] = useState<string>("d-none");
+  const [previewDummyDisplay, setPreviewDummyDisplay] = useState<string>("");
+  const [inputFileClass, setInputFileClass] = useState<string>("");
 
-  const [nftName, setNftName] = useState("");
-  const [pictureNameInputClass, setPictureNameInputClass] = useState("");
-  const [pictureNameInvalidText, setPictureNameInvalidText] = useState("");
+  const [nftName, setNftName] = useState<string>("");
+  const [pictureNameInputClass, setPictureNameInputClass] =
+    useState<string>("");
+  const [pictureNameInvalidText, setPictureNameInvalidText] =
+    useState<string>("");
 
-  const [nftDescription, setNftDescription] = useState("");
-  const [descriptionInputClass, setDescriptionInputClass] = useState("");
-  const [descriptionInvalidText, setDescriptionInvalidText] = useState("");
+  const [nftDescription, setNftDescription] = useState<string>("");
+  const [descriptionInputClass, setDescriptionInputClass] =
+    useState<string>("");
+  const [descriptionInvalidText, setDescriptionInvalidText] =
+    useState<string>("");
 
   const [selectedCategory, setselectedCategory] = useState<
     MultiValue<{ value: string; label: string }>
@@ -52,22 +56,26 @@ const CreateNFT: React.FC = () => {
   const [selectedCollection, setSelectedCollection] = useState<
     SingleValue<{ value: string; label: string }>
   >({ value: "", label: "..." });
-  const [CollectionOptions, setCollectionOptions] = useState<any>([
-    { value: " ", label: "..." },
-  ]);
+  const [CollectionOptions, setCollectionOptions] = useState<
+    {
+      value: string;
+      label: string;
+    }[]
+  >([{ value: " ", label: "..." }]);
 
-  const [creatorAddressList, setCreatorAddressList] = useState([]);
+  const [creatorAddressList, setCreatorAddressList] = useState<any>();
   const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
 
-  const [creatorAddressInput, setCreatorAddressInput] = useState(address);
-  const [creatorAddressClass, setCreatorAddressClass] = useState("");
+  const [creatorAddressInput, setCreatorAddressInput] =
+    useState<string>(address);
+  const [creatorAddressClass, setCreatorAddressClass] = useState<string>("");
   const [creatorEarnInput, setCreatorEarnInput] = useState<number>(0);
-  const [creatorEarnClass, setCreatorEarnClass] = useState("");
-  const [creatorInputValid, setCreatorInputValid] = useState("");
+  const [creatorEarnClass, setCreatorEarnClass] = useState<string>("");
+  const [creatorInputValid, setCreatorInputValid] = useState<string>("");
 
   const ImageInputRef = useRef<any>(null);
 
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
 
   const handleImageOnclick = () => {
     ImageInputRef.current?.click();
@@ -195,7 +203,6 @@ const CreateNFT: React.FC = () => {
     } else {
       collection = selectedCollection?.value;
     }
-    console.log(collection);
 
     //Image
     var nftImageApprove = true;
@@ -223,9 +230,6 @@ const CreateNFT: React.FC = () => {
       );
       const CID = await getIPFS(imageNFT);
       if (CID !== false) {
-        console.log(collaborator);
-        console.log(collaboratorPercent);
-        console.log(collection);
         var sentNftnftName = nftName;
         if (sentNftnftName === "") {
           sentNftnftName = " ";
