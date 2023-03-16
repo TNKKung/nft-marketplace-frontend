@@ -26,7 +26,10 @@ const Profile: React.FC = () => {
   const [profileName, setProfileName] = useState("");
   const [showModalFavoriteList, setShowModalFavoriteList] =
     useState<boolean>(false);
-  const [profileBio, setProfileBio] = useState("");
+  const [profileBio, setProfileBio] = useState<string>("");
+  const [profileTwitter, setProfileTwitter] = useState<string>("");
+  const [profileIg, setProfileIg] = useState<string>("");
+  const [profileContact, setProfileContact] = useState<string>("");
   const [profileMainImg, setProfileMainImg] = useState(blankImage);
   const [profileBgImg, setProfileBgImg] = useState(blankBgImage);
 
@@ -142,13 +145,16 @@ const Profile: React.FC = () => {
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
       setFavoriteNftList(profileDataRes.favoriteNFT);
-      try{
+      setProfileContact(profileDataRes.contact);
+      setProfileIg(profileDataRes.instagram);
+      setProfileTwitter(profileDataRes.twitter);
+      try {
         const createdNFTRes = await readTokenIdCreatedByOwner(address);
         setCreatedList(createdNFTRes);
-      }catch(error){
+      } catch (error) {
         console.log(error);
       }
-      
+
       if (profileDataRes.profileImage !== "") {
         setProfileMainImg(profileDataRes.profileImage);
       } else {
@@ -241,22 +247,22 @@ const Profile: React.FC = () => {
                           >
                             <i className="bi bi-sliders"></i> Setting
                           </button>
-                        ) : address === undefined ? null : 
-                        profileLike === true ? (
-                          <button
-                            className="btn btn-secondary"
-                            onClick={handleRemoveFriend}
-                          >
-                            Remove favorite
-                          </button>
-                        ) : (
-                          <button
-                            className="btn btn-outline-secondary"
-                            onClick={handleAddFriend}
-                          >
-                            Add favorite
-                          </button>
-                        )}
+                        ) : address === undefined ? null :
+                          profileLike === true ? (
+                            <button
+                              className="btn btn-secondary"
+                              onClick={handleRemoveFriend}
+                            >
+                              Remove favorite
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-outline-secondary"
+                              onClick={handleAddFriend}
+                            >
+                              Add favorite
+                            </button>
+                          )}
                       </div>
                     </div>
                     <div className="my-2 row">
@@ -274,10 +280,26 @@ const Profile: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-3 row">
-                  <div className="col">Bio : {profileBio}</div>
-                </div>
-
+                {profileBio === "" ? null :
+                  <div className="mt-3 row">
+                    <div className="col fw-bold">Bio : <span className="fw-normal" >{profileBio}</span></div>
+                  </div>
+                }
+                {profileTwitter === "" ? null :
+                  <div className="mt-1 row">
+                    <div className="col fw-bold">Twitter : <span className="fw-normal" >{profileTwitter}</span></div>
+                  </div>
+                }
+                {profileIg === "" ? null :
+                  <div className="mt-1 row">
+                    <div className="col fw-bold">Instagram : <span className="fw-normal" >{profileIg}</span></div>
+                  </div>
+                }
+                {profileContact === "" ? null :
+                  <div className="mt-1 row">
+                    <div className="col fw-bold">Contact : <span className="fw-normal" >{profileContact}</span></div>
+                  </div>
+                }
                 <div className="mt-4 row">
                   <div className="p-0 container-fluid">
                     <div className="row justify-content-between align-items-center">

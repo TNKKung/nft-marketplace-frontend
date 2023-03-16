@@ -9,7 +9,7 @@ import {
 } from "../../config";
 import "./viewNFT.css";
 import { shortenAddress } from "../../utils/addressHelper";
-import { weiToEther } from "../../utils/costHelper";
+// import { weiToEther } from "../../utils/costHelper";
 import { useUserAccount } from "../../store/UserAction/hook";
 
 import WaitTransactionModal from "../WaitTransaction";
@@ -39,7 +39,7 @@ const ViewNFT: React.FC = () => {
   const {
     buyNFT,
     cancelSellNFT,
-    getPrice,
+    // getPrice,
   } = useContracts();
   const {
     readTokenIdData,
@@ -77,24 +77,8 @@ const ViewNFT: React.FC = () => {
   }, [likeNft, addLikeNFT, removeLikeNFT, address, params]);
 
   const fetchData = useCallback(async () => {
-    // const TokenURI = await readTokenURI(params.tokenID);
-    // setURLImage(TokenURI);
-    // const realOwnerAddress = await readOwnerTokenID(params.tokenID);
-    // if (realOwnerAddress === Market_ADDRESS) {
-    //     setSaleNFTStatus(true);
-    //     try {
-    //         const weiCost = await getPrice(params.tokenID);
-    //         setNFTCost(weiToEther(weiCost));
-    //     } catch (Error) {
-    //         console.log(Error);
-    //     }
-
-    // } else {
-    //     setSaleNFTStatus(false);
-    // }
-
     const DataDetail = await readTokenIdData(params.tokenID);
-    console.log(DataDetail);
+    // console.log(DataDetail);
     try {
       setNFTName(DataDetail.nameNFT);
       setNFTDescription(DataDetail.description);
@@ -107,8 +91,7 @@ const ViewNFT: React.FC = () => {
       if (DataDetail.statusSale === true) {
         setSaleNFTStatus(true);
         try {
-          const weiCost = await getPrice(params.tokenID);
-          setNFTCost(weiToEther(weiCost));
+          setNFTCost(DataDetail.price);
         } catch (Error) {
           console.log(Error);
         }
@@ -131,11 +114,13 @@ const ViewNFT: React.FC = () => {
     setLoadingClass("d-none");
     setMainClass1("d-flex");
 
-    setLikeNft(await checkLikeNFT(params.tokenID, address));
+    if(address !== undefined){
+      setLikeNft(await checkLikeNFT(params.tokenID, address));
+    }
     const transactionRes = await getAllTransaction(DataDetail.id);
     try {
       setNftTransaction(transactionRes);
-      console.log(transactionRes);
+      // console.log(transactionRes);
     } catch (error) {
       console.log(error);
     }
@@ -144,7 +129,7 @@ const ViewNFT: React.FC = () => {
     // readTokenURI,
     // readOwnerTokenID,
     readTokenIdData,
-    getPrice,
+    // getPrice,
     checkLikeNFT,
     address,
     getAllTransaction,
@@ -230,7 +215,7 @@ const ViewNFT: React.FC = () => {
     handleResize();
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.tokenID]);
+  }, [params.tokenID,address]);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -483,7 +468,10 @@ const ViewNFT: React.FC = () => {
                           </div>
                         </div>
                       ) : address === undefined ? (
-                        <div className="px-3 row justify-content-end align-items-center">
+                        <div className="px-3 row justify-content-between align-items-center">
+                          <div className="col-auto mb-0 h5">
+                            {nftCost} {blockchainName}ETH
+                          </div>
                           <div className="col-auto">
                             <button className="btn btn-secondary" disabled>
                               Buy

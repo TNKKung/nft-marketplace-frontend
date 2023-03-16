@@ -136,6 +136,9 @@ const SettingPage: React.FC = () => {
                 console.log(profileDataRes);
                 setProfileName(profileDataRes.name);
                 setProfileBio(profileDataRes.bio);
+                setProfileTwitter(profileDataRes.twitter);
+                setProfileInstagram(profileDataRes.instagram);
+                setProfileContact(profileDataRes.contact);
                 if (profileDataRes.backgroundImage !== "") {
                     setPreviewProfileBgImage(profileDataRes.backgroundImage);
                 }
