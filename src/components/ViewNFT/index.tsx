@@ -76,7 +76,7 @@ const ViewNFT: React.FC = () => {
   }, [likeNft, addLikeNFT, removeLikeNFT, address, params]);
 
   const fetchData = useCallback(async () => {
-    const DataDetail = await readTokenIdData(params.tokenID);
+    const DataDetail = await readTokenIdData(Number(params.tokenID));
     // console.log(DataDetail);
     try {
       setNFTName(DataDetail.nameNFT);

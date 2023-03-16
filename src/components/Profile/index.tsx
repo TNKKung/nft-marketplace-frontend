@@ -200,8 +200,8 @@ const Profile: React.FC = () => {
     let mapNFTList: any = [];
     filterShowNFTList.forEach((mapNFT) => {
       mapNFTList.push(
-        <div key={Number(mapNFT.tokenId).toString()}>
-          <NFTBox TokenID={Number(mapNFT.tokenId).toString()}></NFTBox>
+        <div key={mapNFT.tokenId}>
+          <NFTBox TokenID={mapNFT.tokenId}></NFTBox>
         </div>
       );
     });

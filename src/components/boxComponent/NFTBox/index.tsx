@@ -8,7 +8,7 @@ import useCollection from "../../../hook/useCollection";
 import etherPNG from "../../../asset/ethereum-icon.png";
 
 interface NFTProps {
-  TokenID: string;
+  TokenID: number;
 }
 const NFTBox: React.FC<NFTProps> = ({ TokenID }) => {
   const { readTokenIdData } = useBackend();

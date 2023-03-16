@@ -69,7 +69,7 @@ const SellNFT: React.FC = () => {
     if (ownerAddress === Market_ADDRESS) {
       navigate("/viewNFT/" + params.tokenID);
     }
-    const DataDetail = await readTokenIdData(params.tokenID);
+    const DataDetail = await readTokenIdData(Number(params.tokenID));
 
     try {
       setNFTDocument(DataDetail.id);
