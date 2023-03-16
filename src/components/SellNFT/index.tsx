@@ -195,7 +195,7 @@ const SellNFT: React.FC = () => {
       </div>
       <WaitTransactionModal
         popupState={confirmModal}
-        setPopup={setConfirmModal}
+        setPopup={() => setConfirmModal(false)}
       ></WaitTransactionModal>
     </div>
   );

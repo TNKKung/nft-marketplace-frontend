@@ -38,6 +38,17 @@ const ViewNFT: React.FC = () => {
   const [nftCategory, setNftCategory] = useState<any[]>([]);
   const [nftCost, setNFTCost] = useState(0);
   const [nftTransaction, setNftTransaction] = useState<any[]>([]);
+  const [descriptionClass, setDescriptionClass] = useState<string[]>([
+    "",
+    "-down",
+  ]);
+  const [detailsClass, setDetailsClass] = useState<string[]>(["", "-down"]);
+  const [creatorClass, setCreatorClass] = useState<string[]>(["show", "-up"]);
+
+  const [loadingClass, setLoadingClass] = useState<string>("");
+  const [mainClass1, setMainClass1] = useState<string>("d-none");
+
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const {
     buyNFT,
     cancelSellNFT,
@@ -51,11 +62,6 @@ const ViewNFT: React.FC = () => {
     getAllTransaction,
   } = useBackend();
   const { getCollectionbyId } = useCollection();
-
-  const [loadingClass, setLoadingClass] = useState("");
-  const [mainClass1, setMainClass1] = useState("d-none");
-
-  const [confirmModal, setConfirmModal] = useState(false);
 
   const handlePathOwner = useCallback(
     (walletAddress: string) => {
@@ -167,10 +173,6 @@ const ViewNFT: React.FC = () => {
     nftDocument,
     setWaitTransaction,
   ]);
-
-  const [descriptionClass, setDescriptionClass] = useState(["", "-down"]);
-  const [detailsClass, setDetailsClass] = useState(["", "-down"]);
-  const [creatorClass, setCreatorClass] = useState(["show", "-up"]);
 
   const handleDesciption = useCallback(() => {
     if (descriptionClass[0] === "") {
@@ -572,7 +574,7 @@ const ViewNFT: React.FC = () => {
       </div>
       <WaitTransactionModal
         popupState={confirmModal}
-        setPopup={setConfirmModal}
+        setPopup={() => setConfirmModal(false)}
       ></WaitTransactionModal>
     </div>
   );
