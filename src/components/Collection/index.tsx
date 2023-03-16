@@ -6,11 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import DeleteCollection from "../MyCollection/DeleteCollection/DeleteCollection";
 import { useUserAccount } from "../../store/UserAction/hook";
 import EditCollection from "./editCollection/EditCollection";
+import BlankImg from "../Profile/blankImg.png";
+import "./collection.css"
+import { shortenAddress } from "../../utils/addressHelper";
+import useBackend from "../../hook/useBackend";
 
 const Collection: React.FC = () => {
     const params = useParams();
     const navigate = useNavigate();
     const { getCollectionbyId } = useCollection();
+    const { readTokenIdData } = useBackend();
     const { address } = useUserAccount();
 
     const [deleteCollection, setDeleteCollection] = useState(false);
@@ -23,23 +28,24 @@ const Collection: React.FC = () => {
     }, [deleteCollection])
 
     const [editCollection, setEditCollection] = useState(false);
-    const handleEditCollection = useCallback(()=>{
-        if(editCollection === true){
+    const handleEditCollection = useCallback(() => {
+        if (editCollection === true) {
             setEditCollection(false);
-        }else{
+        } else {
             setEditCollection(true);
         }
-    },[editCollection]);
+    }, [editCollection]);
 
-    const setNewCollection = useCallback((Name:string, description:string)=>{
+    const setNewCollection = useCallback((Name: string, description: string) => {
         setCollectionName(Name);
         setCollectionDescription(description);
-    },[]);
+    }, []);
 
     const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
+    const [profileImg, setProfileImg] = useState<string>(BlankImg);
     const [collectionObject, setCollectionObject] = useState<any>({});
     const [collectionName, setCollectionName] = useState("Collection Name");
-    const [collectionOwner, setCollectionOwner] = useState("xxx");
+    const [collectionOwner, setCollectionOwner] = useState("0x0000000000000000000000000000000000000000");
     const [collectionDescription, setCollectionDescription] = useState("Description");
     const [collectionListNFT, setCollectionListNFT] = useState<any>([]);
     const [filterNFTlist, setFilterNFTList] = useState<any>([]);
@@ -49,11 +55,21 @@ const Collection: React.FC = () => {
     const fetchData = useCallback(async () => {
         if (params.collectionId !== undefined) {
             const collectionDescriptRes = await getCollectionbyId(params.collectionId);
-            console.log(collectionDescriptRes);
+            // console.log(collectionDescriptRes);
             try {
                 setCollectionObject(collectionDescriptRes);
                 setCollectionName(collectionDescriptRes.collectionName);
                 setCollectionOwner(collectionDescriptRes.owner);
+                try {
+                    const listNft = collectionDescriptRes.listNFT.length;
+                    if (listNft > 0) {
+                        const indexNFT = await Math.floor(Math.random() * listNft);
+                        const tokenIDData = await readTokenIdData(collectionDescriptRes.listNFT[indexNFT].tokenId.toString());
+                        setProfileImg(tokenIDData.tokenURI);
+                    } else {
+                        setProfileImg(BlankImg);
+                    }
+                } catch (error) { console.log(error); }
                 setCollectionDescription(collectionDescriptRes.description);
                 setCollectionListNFT(collectionDescriptRes.listNFT);
                 setFilterNFTList(collectionDescriptRes.listNFT);
@@ -68,23 +84,28 @@ const Collection: React.FC = () => {
 
     }, [params.collectionId,
         navigate,
-        getCollectionbyId
+        getCollectionbyId,
+        readTokenIdData
     ]);
 
-    const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+    const handleSearchInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchFilterInput(e.target.value);
-        if(e.target.value === ""){
+        if (e.target.value === "") {
             setFilterNFTList(collectionListNFT);
-        }else{
-          const filterCollection = collectionListNFT.filter((collection:any, index:number)=> 
-          collection.nameNFT.includes(e.target.value));
-          setFilterNFTList(filterCollection);
+        } else {
+            const filterCollection = collectionListNFT.filter((collection: any, index: number) =>
+                collection.nameNFT.includes(e.target.value));
+            setFilterNFTList(filterCollection);
         }
-      },[collectionListNFT]);
+    }, [collectionListNFT]);
 
     const backToMyCollection = useCallback(() => {
         navigate('/myCollection', { replace: true });
-    }, [navigate])
+    }, [navigate]);
+
+    const copyUrl = useCallback(() => {
+        navigator.clipboard.writeText(`${process.env.REACT_APP_FRONTEND_URL}/collection/${params.collectionId}`)
+    }, [params,])
 
     useEffect(() => {
         fetchData();
@@ -96,31 +117,41 @@ const Collection: React.FC = () => {
             <div className="row bg-gray-50 py-5">
                 <div className="col">
                     <div className="container">
-                        <div className="row justify-content-between align-items-center">
-                            <div className="col-auto"><h4 className={"m-0 " + loadingDataClass}>{collectionName}</h4></div>
-                            <div className="col-auto">
-                                <div className="d-flex flex-row">
-                                    <button className="btn btn-secondary mx-1"><i className="bi bi-share-fill"></i> Copy link</button>
-                                    {collectionOwner !== address ? null : (<div>
-                                        <button className="btn btn-secondary mx-1" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
-                                        <ul className="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <button className="dropdown-item text-end" onClick={handleEditCollection}>
-                                                    Edit
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button className="dropdown-item text-end" onClick={handleDeleteCollection}>
-                                                    Delete
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>)}
+                        <div className="flex flex-row justify-content-between">
+
+                            <img src={profileImg} alt="userProfileImg"
+                                className="bg-gray-300 rounded-circle collection_profileImg"></img>
+
+                            <div className="w-100">
+                                <div className="container-fluid">
+                                    <div className="row justify-content-between align-items-center">
+                                        <div className="col-auto"><h4 className={"m-0 " + loadingDataClass}>{collectionName}</h4></div>
+                                        <div className="col-auto">
+                                            <div className="d-flex flex-row">
+                                                <button className="btn btn-secondary mx-1" onClick={copyUrl}><i className="bi bi-share-fill"></i> Copy link</button>
+                                                {collectionOwner !== address ? null : (<div>
+                                                    <button className="btn btn-secondary mx-1" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi bi-three-dots"></i></button>
+                                                    <ul className="dropdown-menu dropdown-menu-end">
+                                                        <li>
+                                                            <button className="dropdown-item text-end" onClick={handleEditCollection}>
+                                                                Edit
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <button className="dropdown-item text-end" onClick={handleDeleteCollection}>
+                                                                Delete
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+                                                </div>)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row"><div className={"col-auto " + loadingDataClass}>Owned by <span>{shortenAddress(collectionOwner)}</span></div></div>
+                                    <div className="row mt-2 ps-2"><div className={"col-auto text-muted " + loadingDataClass}>{collectionDescription}</div></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="row"><div className={"col-auto " + loadingDataClass}>Owned by <span>{collectionOwner}</span></div></div>
-                        <div className="row mt-2 ps-2"><div className={"col-auto text-muted " + loadingDataClass}>{collectionDescription}</div></div>
                     </div>
                 </div>
             </div>
