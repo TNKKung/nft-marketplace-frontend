@@ -10,11 +10,13 @@ import "./header.css";
 const Header: React.FC = () => {
   const {
     address,
-    loginMetamask,
-    changeMetamaskAccount,
-    logoutMetamask,
-    changeImgProfile,
     profileImg,
+    reducer: {
+      loginMetamask,
+      changeMetamaskAccount,
+      logoutMetamask,
+      changeImgProfile,
+    },
   } = useUserAccount();
   const { readProfileAddress } = useBackend();
 

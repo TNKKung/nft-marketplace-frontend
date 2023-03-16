@@ -2,25 +2,30 @@ import { createSlice } from "@reduxjs/toolkit";
 import { userAccountProps } from "../type";
 
 const userAccount: userAccountProps = {
-    address: undefined,
-    profileImg: ""
+  address: undefined,
+  profileImg: "",
 };
 
 export const userSlice = createSlice({
-    name: 'userAccount',
-    initialState: userAccount,
-    reducers: {
-        addItem: (state, action) => {
-            state.address = action.payload;
-        },
-        addProfileImg: (state, action) => {
-            state.profileImg = action.payload;
-        },
-        removeItem: (state) => {
-            state.address = undefined;
-        }
-    }
-
+  name: "userAccount",
+  initialState: userAccount,
+  reducers: {
+    addItem: (
+      state,
+      { payload: { address } }: { payload: { address: string } }
+    ) => {
+      state.address = address;
+    },
+    addProfileImg: (
+      state,
+      { payload: { imageProfile } }: { payload: { imageProfile: string } }
+    ) => {
+      state.profileImg = imageProfile;
+    },
+    removeItem: (state) => {
+      state.address = undefined;
+    },
+  },
 });
 
 export const { addItem, removeItem, addProfileImg } = userSlice.actions;

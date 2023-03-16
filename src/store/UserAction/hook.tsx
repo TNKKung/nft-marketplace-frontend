@@ -5,9 +5,18 @@ import { removeRefreshJWT } from "../JWTAction";
 
 import useAuth from "../../hook/useAuth";
 
-export const useUserAccount = () => {
+export const useUserAccount = (): {
+  profileImg: string;
+  address: string;
+  reducer: {
+    loginMetamask: () => void;
+    changeMetamaskAccount: () => void;
+    logoutMetamask: () => void;
+    changeImgProfile: (imageProfile: string) => void;
+  };
+} => {
   const address = useSelector(
-    (state: { userAccount: { address: any } }) => state.userAccount.address
+    (state: { userAccount: { address: string } }) => state.userAccount.address
   );
   const profileImg = useSelector(
     (state: { userAccount: { profileImg: string } }) =>
@@ -26,7 +35,7 @@ export const useUserAccount = () => {
         });
         const account = Web3.utils.toChecksumAddress(accounts[0]);
         const loginSuccess = await handleLogin(account);
-        if (loginSuccess) dispatch(addItem(account));
+        if (loginSuccess) dispatch(addItem({ address: account }));
         else {
           alert("Login unsuccess!");
         }
@@ -48,7 +57,7 @@ export const useUserAccount = () => {
       });
       const account = Web3.utils.toChecksumAddress(accounts[0]);
       const loginSuccess = await handleLogin(account);
-      if (loginSuccess) dispatch(addItem(account));
+      if (loginSuccess) dispatch(addItem({ address: account }));
       else {
         alert("Login unsuccess!");
       }
@@ -62,15 +71,17 @@ export const useUserAccount = () => {
   };
 
   const changeImgProfile = async (imageProfile: string) => {
-    dispatch(addProfileImg(imageProfile));
+    dispatch(addProfileImg({ imageProfile }));
   };
 
   return {
     profileImg,
     address,
-    loginMetamask,
-    changeMetamaskAccount,
-    logoutMetamask,
-    changeImgProfile,
+    reducer: {
+      loginMetamask,
+      changeMetamaskAccount,
+      logoutMetamask,
+      changeImgProfile,
+    },
   };
 };
