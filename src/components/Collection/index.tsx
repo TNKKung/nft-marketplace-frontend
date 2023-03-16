@@ -244,12 +244,12 @@ const Collection: React.FC = () => {
       </div>
       <DeleteCollection
         popupState={deleteCollection}
-        setPopup={setDeleteCollection}
+        setPopup={() => setDeleteCollection(false)}
         setCollectionList={backToMyCollection}
         collectionObject={collectionObject}
       ></DeleteCollection>
       <EditCollection
-        setPopup={setEditCollection}
+        setPopup={() => setEditCollection(false)}
         popupState={editCollection}
         setCollection={setNewCollection}
         collectionId={params.collectionId}
