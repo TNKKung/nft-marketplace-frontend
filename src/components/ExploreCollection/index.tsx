@@ -58,11 +58,31 @@ const ExploreCollection = () => {
             "d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list"
           }
         >
-          {showCollection.map((value: any) => (
-            <div className="m-2" key={value.collectionId}>
-              <CollectionBox CollectionId={value.collectionId}></CollectionBox>
+          {showCollection.length !== 0 ? (
+            <>
+              {showCollection.map((value: any) => (
+                <div className="m-2" key={value.collectionId}>
+                  <CollectionBox
+                    owner={value.owner}
+                    description={value.description}
+                    collectionId={value.collectionId}
+                    collectionName={value.collectionName}
+                    nftImage={value.nftImage}
+                    ownerName={value.ownerName}
+                    profileImage={value.profileImage}
+                  />
+                </div>
+              ))}
+            </>
+          ) : (
+            <div
+              className={"container-fluid py-24 d-flex justify-content-center "}
+            >
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </Explore>

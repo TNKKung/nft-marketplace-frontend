@@ -66,9 +66,13 @@ const MyCollection: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     if (address !== undefined) {
-      const collectionres = await getCollectionbyAddress(address);
-      setCollectionList(collectionres);
-      setFilterCollectionList(collectionres);
+      try {
+        const collectionres = await getCollectionbyAddress(address);
+        setCollectionList(collectionres);
+        setFilterCollectionList(collectionres);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       navigate("/");
     }
@@ -133,36 +137,50 @@ const MyCollection: React.FC = () => {
           </div>
         </div>
         <div className="flex-row flex-wrap mt-3 d-flex">
-          {filtercollectionList.map((obj: any) => (
-            <div className="m-2 position-relative" key={obj.collectionId}>
-              <CollectionBox
-                CollectionId={obj.collectionId}
-                CollectionName={obj.collectionName}
-                CollectionDescription={obj.description}
-              ></CollectionBox>
-              <div className="top-0 position-absolute end-0">
-                <button
-                  className="btn"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i className="bi bi-three-dots"></i>
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <button
-                      className="dropdown-item text-end"
-                      onClick={() => {
-                        handleDeleteCollection(obj);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </li>
-                </ul>
+          {filtercollectionList.length === 0 ? (
+            <div className={"container-fluid py-24 flex justify-center "}>
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
               </div>
             </div>
-          ))}
+          ) : (
+            <>
+              {filtercollectionList.map((obj: any) => (
+                <div className="m-2 position-relative" key={obj.collectionId}>
+                  <CollectionBox
+                    owner={obj.owner}
+                    description={obj.description}
+                    collectionId={obj.collectionId}
+                    collectionName={obj.collectionName}
+                    nftImage={obj.nftImage}
+                    ownerName={obj.ownerName}
+                    profileImage={obj.profileImage}
+                  />
+                  <div className="top-0 position-absolute end-0">
+                    <button
+                      className="btn"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i className="bi bi-three-dots"></i>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <button
+                          className="dropdown-item text-end"
+                          onClick={() => {
+                            handleDeleteCollection(obj);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
       <AddCollection

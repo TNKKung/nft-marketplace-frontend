@@ -27,3 +27,13 @@ export interface NFTObject {
   tokenId: number;
   transactionHash: string;
 }
+
+export interface CollectionProps {
+  owner: string;
+  description: string;
+  collectionId: string;
+  collectionName: string;
+  nftImage: string;
+  ownerName: string;
+  profileImage: string;
+}

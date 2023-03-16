@@ -13,7 +13,8 @@ const Search: React.FC = () => {
   const params = useParams();
   const [loadingClass, setLoadingClass] = useState<string>("");
   const [mainClass1, setMainClass1] = useState<string>("d-none");
-  const { getSearchValue } = useBackend();
+  const { getSearchNFTValue, getSearchCollectionValue, getSearchUserValue } =
+    useBackend();
 
   const [nftSearchValue, setNftSearchValue] = useState<INFTValue[]>([]);
 
@@ -24,13 +25,22 @@ const Search: React.FC = () => {
   >([]);
 
   const fechData = useCallback(async () => {
-    const getSearchValueRes = await getSearchValue(params.searchValue);
-    setUserSearchValue(getSearchValueRes["user"]);
-    setNftSearchValue(getSearchValueRes["nft"]);
-    setCollectionSearchValue(getSearchValueRes["collection"]);
+    const getSearchNFTValueRes = await getSearchNFTValue(params.searchValue);
+    setNftSearchValue(getSearchNFTValueRes);
+    const getSearchUserValueRes = await getSearchUserValue(params.searchValue);
+    setUserSearchValue(getSearchUserValueRes);
+    const getSearchCollectionValueRes = await getSearchCollectionValue(
+      params.searchValue
+    );
+    setCollectionSearchValue(getSearchCollectionValueRes);
     setLoadingClass("d-none");
     setMainClass1("");
-  }, [getSearchValue, params]);
+  }, [
+    getSearchCollectionValue,
+    getSearchNFTValue,
+    getSearchUserValue,
+    params.searchValue,
+  ]);
 
   useEffect(() => {
     //first time running
@@ -39,7 +49,7 @@ const Search: React.FC = () => {
   }, [params]);
 
   return (
-    <div>
+    <div className="h-full pb-10">
       <div
         className={
           "container-fluid mt-5 d-flex justify-content-center " + loadingClass
@@ -64,11 +74,25 @@ const Search: React.FC = () => {
               </div>
               <div className="mt-1 row justify-content-center">
                 <div className="flex-row flex-wrap p-2 border rounded d-flex border-secondary-subtle search_show_list">
-                  {nftSearchValue.map((value: any) => (
-                    <div key={value.tokenId}>
-                      <NFTBox TokenID={value.tokenId}></NFTBox>
+                  {nftSearchValue.length === 0 ? (
+                    <div
+                      className={
+                        "container-fluid py-10 d-flex justify-content-center "
+                      }
+                    >
+                      <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
                     </div>
-                  ))}
+                  ) : (
+                    <>
+                      {nftSearchValue.map((value: any) => (
+                        <div key={value.tokenId}>
+                          <NFTBox TokenID={value.tokenId}></NFTBox>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -102,13 +126,33 @@ const Search: React.FC = () => {
               </div>
               <div className="mt-1 row justify-content-center">
                 <div className="flex-row flex-wrap p-2 border rounded d-flex border-secondary-subtle search_show_list">
-                  {collectionSearchValue.map((value: any) => (
-                    <div className="m-2" key={value.collectionId}>
-                      <CollectionBox
-                        CollectionId={value.collectionId}
-                      ></CollectionBox>
+                  {collectionSearchValue.length === 0 ? (
+                    <div
+                      className={
+                        "container-fluid py-10 d-flex justify-content-center "
+                      }
+                    >
+                      <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
                     </div>
-                  ))}
+                  ) : (
+                    <>
+                      {collectionSearchValue.map((value: any) => (
+                        <div className="m-2" key={value.collectionId}>
+                          <CollectionBox
+                            owner={value.owner}
+                            description={value.description}
+                            collectionId={value.collectionId}
+                            collectionName={value.collectionName}
+                            nftImage={value.nftImage}
+                            ownerName={value.ownerName}
+                            profileImage={value.profileImage}
+                          />
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
             </div>

@@ -35,7 +35,7 @@ const Home: React.FC = () => {
 
   //hook
   const { readAllTokenId } = useBackend();
-  const { getAllCollection } = useCollection();
+  const { getRandomCollection } = useCollection();
   const navigate = useNavigate();
 
   //handle
@@ -80,17 +80,16 @@ const Home: React.FC = () => {
       console.log(error);
     }
 
-    const allCollectionRes = await getAllCollection();
+    const allCollectionRes = await getRandomCollection();
     try {
       if (allCollectionRes.length > 0) {
-        const showCollectionList = getShowData(allCollectionRes, 8);
-        setShowCollection(showCollectionList);
+        setShowCollection(allCollectionRes);
         setExploreCollection(displayShow);
       }
     } catch (error) {
       console.log(error);
     }
-  }, [getAllCollection, readAllTokenId]);
+  }, [getRandomCollection, readAllTokenId]);
 
   useEffect(() => {
     fetchData();
@@ -128,16 +127,38 @@ const Home: React.FC = () => {
           <div className={"row mt-3 justify-content-center" + ExploreNFT}>
             <div
               className={
-                "d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list"
+                "flex flex-row p-2 justify-center flex-wrap border border-secondary-subtle rounded home_show_list"
               }
             >
-              {showCollection.map((value: any) => (
-                <div className="m-2" key={value.collectionId}>
-                  <CollectionBox
-                    CollectionId={value.collectionId}
-                  ></CollectionBox>
+              {showCollection.length === 0 ? (
+                <div
+                  className={
+                    "container-fluid py-10 d-flex justify-content-center "
+                  }
+                >
+                  <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                <>
+                  {showCollection.map((value: any) => {
+                    return (
+                      <div className="m-2" key={value.collectionId}>
+                        <CollectionBox
+                          owner={value.owner}
+                          description={value.description}
+                          collectionId={value.collectionId}
+                          collectionName={value.collectionName}
+                          nftImage={value.nftImage}
+                          ownerName={value.ownerName}
+                          profileImage={value.profileImage}
+                        />
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
           </div>
 
