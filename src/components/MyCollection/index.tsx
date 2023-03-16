@@ -8,6 +8,7 @@ import CollectionBox from "../boxComponent/CollectionBox";
 
 import useCollection from "../../hook/useCollection";
 import { useUserAccount } from "../../store/UserAction/hook";
+import { CollectionDataObject } from "./type";
 
 const MyCollection: React.FC = () => {
   const { getCollectionbyAddress } = useCollection();
@@ -15,12 +16,16 @@ const MyCollection: React.FC = () => {
   const navigate = useNavigate();
 
   const [searchCollection, setSearchCollection] = useState<string>("");
-  const [createCollection, setCreateCollection] = useState(false);
-  const [deleteCollection, setDeleteCollection] = useState(false);
+  const [createCollection, setCreateCollection] = useState<boolean>(false);
+  const [deleteCollection, setDeleteCollection] = useState<boolean>(false);
   const [selectDeleteCollection, setSelectDeleteCollection] = useState<any>({});
 
-  const [collectionList, setCollectionList] = useState<any>([]);
-  const [filtercollectionList, setFilterCollectionList] = useState<any>([]);
+  const [collectionList, setCollectionList] = useState<CollectionDataObject[]>(
+    []
+  );
+  const [filtercollectionList, setFilterCollectionList] = useState<
+    CollectionDataObject[]
+  >([]);
 
   const handleCreateCollection = useCallback(() => {
     if (createCollection === true) {
@@ -162,12 +167,12 @@ const MyCollection: React.FC = () => {
       </div>
       <AddCollection
         popupState={createCollection}
-        setPopup={setCreateCollection}
+        setPopup={() => setCreateCollection(false)}
         setCollectionList={createCollectNotice}
       ></AddCollection>
       <DeleteCollection
         popupState={deleteCollection}
-        setPopup={setDeleteCollection}
+        setPopup={() => setDeleteCollection(false)}
         setCollectionList={createCollectNotice}
         collectionObject={selectDeleteCollection}
       ></DeleteCollection>
