@@ -11,11 +11,14 @@ const MyCollection: React.FC = () => {
   const { getCollectionbyAddress } = useCollection();
   const { address } = useUserAccount();
   const navigate = useNavigate();
+
+  const [searchCollection, setSearchCollection] = useState<string>("");
   const [createCollection, setCreateCollection] = useState(false);
   const [deleteCollection, setDeleteCollection] = useState(false);
   const [selectDeleteCollection, setSelectDeleteCollection] = useState<any>({});
 
   const [collectionList, setCollectionList] = useState<any>([]);
+  const [filtercollectionList, setFilterCollectionList] = useState<any>([]);
 
   const handleCreateCollection = useCallback(() => {
     if (createCollection === true) {
@@ -38,10 +41,22 @@ const MyCollection: React.FC = () => {
     [deleteCollection]
   );
 
+  const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+    setSearchCollection(e.target.value);
+    if(e.target.value === ""){
+      setFilterCollectionList(collectionList);
+    }else{
+      const filterCollection = collectionList.filter((collection:any, index:number)=> 
+      collection.collectionName.includes(e.target.value));
+      setFilterCollectionList(filterCollection);
+    }
+  },[collectionList])
+
   const fetchData = useCallback(async () => {
     if (address !== undefined) {
       const collectionres = await getCollectionbyAddress(address);
       setCollectionList(collectionres);
+      setFilterCollectionList(collectionres);
     } else {
       navigate("/");
     }
@@ -99,15 +114,17 @@ const MyCollection: React.FC = () => {
               <input
                 className="form-control"
                 placeholder="Search my collection"
+                onChange={handleSearchInput}
+                value={searchCollection}
               ></input>
             </div>
           </div>
         </div>
         <div className="flex-row flex-wrap mt-3 d-flex">
-          {collectionList.map((obj: any) => (
-            <div className="m-2 position-relative" key={obj.id}>
+          {filtercollectionList.map((obj: any) => (
+            <div className="m-2 position-relative" key={obj.collectionId}>
               <CollectionBox
-                CollectionId={obj.id}
+                CollectionId={obj.collectionId}
                 CollectionName={obj.collectionName}
                 CollectionDescription={obj.description}
               ></CollectionBox>

@@ -42,6 +42,8 @@ const Collection: React.FC = () => {
     const [collectionOwner, setCollectionOwner] = useState("xxx");
     const [collectionDescription, setCollectionDescription] = useState("Description");
     const [collectionListNFT, setCollectionListNFT] = useState<any>([]);
+    const [filterNFTlist, setFilterNFTList] = useState<any>([]);
+    const [searchFilterInput, setSearchFilterInput] = useState<any>([]);
 
 
     const fetchData = useCallback(async () => {
@@ -54,6 +56,7 @@ const Collection: React.FC = () => {
                 setCollectionOwner(collectionDescriptRes.owner);
                 setCollectionDescription(collectionDescriptRes.description);
                 setCollectionListNFT(collectionDescriptRes.listNFT);
+                setFilterNFTList(collectionDescriptRes.listNFT);
                 setLoadingDataClass("");
 
             } catch (error) {
@@ -67,6 +70,17 @@ const Collection: React.FC = () => {
         navigate,
         getCollectionbyId
     ]);
+
+    const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+        setSearchFilterInput(e.target.value);
+        if(e.target.value === ""){
+            setFilterNFTList(collectionListNFT);
+        }else{
+          const filterCollection = collectionListNFT.filter((collection:any, index:number)=> 
+          collection.nameNFT.includes(e.target.value));
+          setFilterNFTList(filterCollection);
+        }
+      },[collectionListNFT]);
 
     const backToMyCollection = useCallback(() => {
         navigate('/myCollection', { replace: true });
@@ -117,13 +131,13 @@ const Collection: React.FC = () => {
                             <div className="col-6">
                                 <div className="input-group">
                                     <span className="input-group-text"><i className="bi bi-search"></i></span>
-                                    <input className="form-control" placeholder="Search"></input>
+                                    <input className="form-control" placeholder="Search" onChange={handleSearchInput} value={searchFilterInput}></input>
                                 </div>
                             </div>
                         </div>
                         <div className="d-flex flex-row mt-3 flex-wrap">
-                            {collectionListNFT.map((obj: any, index: number) =>
-                                <NFTBox TokenID={obj.toString()}></NFTBox>
+                            {filterNFTlist.map((obj: any, index: number) =>
+                                <NFTBox key={obj.tokenId} TokenID={obj.tokenId.toString()}></NFTBox>
                             )}
                         </div>
                     </div>

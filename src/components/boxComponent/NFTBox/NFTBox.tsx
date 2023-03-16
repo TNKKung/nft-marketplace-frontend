@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { LazyLoadImage } from "react-lazy-load-image-component";
 import "./NFTBox.css";
 import useBackend from "../../../hook/useBackend";
-import useContracts from "../../../hook/useContracts";
-import { weiToEther } from "../../../utils/costHelper";
 import useCollection from "../../../hook/useCollection";
 import etherPNG from "../../../asset/ethereum-icon.png";
-// import { Market_ADDRESS } from "../../../config";
+
 
 interface NFTProps {
   TokenID: string;
@@ -18,12 +15,6 @@ const NFTBox = (props: NFTProps) => {
     "data:image/gif;base64,R0lGODlhAQABAIAAAMLCwgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
   );
   const { readTokenIdData } = useBackend();
-  const {
-    // readTokenURI,
-    // readOwnerTokenID,
-    getPrice,
-  } = useContracts();
-
   const {
     getCollectionbyId
   } = useCollection();
@@ -37,11 +28,11 @@ const NFTBox = (props: NFTProps) => {
 
   const fetchData = useCallback(async () => {
     const DataDetail = await readTokenIdData(props.TokenID);
+    console.log(DataDetail);
     if (DataDetail.statusSale === true) {
       setSaleNFTStatus(true);
       try {
-        const weiCost = await getPrice(props.TokenID);
-        setNFTCost(weiToEther(weiCost));
+        setNFTCost(DataDetail.price);
       } catch (Error) {
         console.log(Error);
       }
@@ -65,7 +56,6 @@ const NFTBox = (props: NFTProps) => {
       setNFTName("NFT Name");
     }
   }, [
-    getPrice,
     props.TokenID,
     // readOwnerTokenID,
     readTokenIdData,
