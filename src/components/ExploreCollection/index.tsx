@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { CollectionObject } from "./type";
+
 import Explore from "../Explore";
 import CollectionBox from "../boxComponent/CollectionBox";
 
@@ -11,11 +13,11 @@ const ExploreCollection = () => {
   const displayNone = " d-none";
 
   //State
-  const [showCollection, setShowCollection] = useState<any[]>([]);
-  const [filterNFT, setFilterNFT] = useState("");
+  const [showCollection, setShowCollection] = useState<CollectionObject[]>([]);
+  const [filterNFT, setFilterNFT] = useState<string>("");
 
   //className State
-  const [ExploreCollection, setExplore] = useState(displayNone);
+  const [ExploreCollection, setExplore] = useState<string>(displayNone);
 
   //hook
   const { getAllCollection } = useCollection();
@@ -36,7 +38,6 @@ const ExploreCollection = () => {
   useEffect(() => {
     if (showCollection.length > 0) {
       setExplore(displayShow);
-      console.log(filterNFT);
     } else {
       setExplore(displayNone);
     }
