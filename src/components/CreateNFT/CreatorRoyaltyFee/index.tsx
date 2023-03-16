@@ -9,10 +9,12 @@ const CreatorRoyaltyFee: React.FC<CreatorRoyaltyFeeProps> = ({
   setCreatorList,
   setTotal,
 }) => {
-  const [creatorObjectList, setCreateObjectList] = useState([]);
+  const [creatorObjectList, setCreateObjectList] = useState<any>([]);
+
   useEffect(() => {
     setCreateObjectList(creatorList);
   }, [creatorList]);
+
   const creatorAddresRender = (
     creatorWalletAddress: string,
     creatorEarn: number,
@@ -54,13 +56,14 @@ const CreatorRoyaltyFee: React.FC<CreatorRoyaltyFeeProps> = ({
 
   return (
     <div>
-      {creatorObjectList.map((item: any, index: number) => {
-        return creatorAddresRender(
-          item.creatorAddress,
-          item.creatorEarn,
-          index
-        );
-      })}
+      {creatorObjectList &&
+        creatorObjectList.map((item: any, index: number) => {
+          return creatorAddresRender(
+            item.creatorAddress,
+            item.creatorEarn,
+            index
+          );
+        })}
     </div>
   );
 };
