@@ -89,7 +89,7 @@ const Collection: React.FC = () => {
             );
             setProfileImg(tokenIDData.tokenURI);
           } else {
-            setProfileImg("/images/blank/BlankImg.png");
+            setProfileImg("/images/blank/blankImg.png");
           }
         } catch (error) {
           console.log(error);
