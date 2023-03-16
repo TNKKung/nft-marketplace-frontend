@@ -3,8 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "./profile.css";
 
-import blankImage from "./blankImg.png";
-import blankBgImage from "./blankBgImg.png";
 import ModalFriendList from "./ModalFriendList";
 
 import NFTBox from "../boxComponent/NFTBox";
@@ -12,6 +10,7 @@ import NFTBox from "../boxComponent/NFTBox";
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
 import useBackend from "../../hook/useBackend";
+import { NFTObject } from "./type";
 
 const Profile: React.FC = () => {
   const params = useParams();
@@ -34,20 +33,24 @@ const Profile: React.FC = () => {
   const [profileTwitter, setProfileTwitter] = useState<string>("");
   const [profileIg, setProfileIg] = useState<string>("");
   const [profileContact, setProfileContact] = useState<string>("");
-  const [profileMainImg, setProfileMainImg] = useState(blankImage);
-  const [profileBgImg, setProfileBgImg] = useState(blankBgImage);
+  const [profileMainImg, setProfileMainImg] = useState<string>(
+    "/images/blank/blankImg.png"
+  );
+  const [profileBgImg, setProfileBgImg] = useState<string>(
+    "/images/blank/blankBgImg.png"
+  );
 
-  const [profileLike, setProfileLike] = useState(false);
+  const [profileLike, setProfileLike] = useState<boolean>(false);
 
-  const [ownNftList, setOwnNftList] = useState<any[]>([]);
+  const [ownNftList, setOwnNftList] = useState<NFTObject[]>([]);
   const [favoriteNftList, setFavoriteNftList] = useState<any[]>([]);
   const [onSaleList, setOnSaleList] = useState<any[]>([]);
   const [createdList, setCreatedList] = useState<any[]>([]);
 
   const [friendList, setFriendList] = useState<any[]>();
 
-  const [onDefaultShowNFT, setOnDefaultShowNFT] = useState<any[]>([]);
-  const [filterShowNFTList, setFilterShowNFTList] = useState<any[]>([]);
+  const [onDefaultShowNFT, setOnDefaultShowNFT] = useState<NFTObject[]>([]);
+  const [filterShowNFTList, setFilterShowNFTList] = useState<NFTObject[]>([]);
 
   const [searchInput, setSearchInput] = useState("");
   const [navOwn, setNavOwn] = useState("Profile_nav_select");
@@ -144,8 +147,9 @@ const Profile: React.FC = () => {
     }
 
     const profileDataRes = await readProfileAddress(profileAddress);
-    console.log(profileDataRes);
     try {
+      console.log(profileDataRes);
+
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
       setFavoriteNftList(profileDataRes.favoriteNFT);
@@ -162,12 +166,12 @@ const Profile: React.FC = () => {
       if (profileDataRes.profileImage !== "") {
         setProfileMainImg(profileDataRes.profileImage);
       } else {
-        setProfileMainImg(blankImage);
+        setProfileMainImg("/images/blank/blankImg.png");
       }
       if (profileDataRes.backgroundImage !== "") {
         setProfileBgImg(profileDataRes.backgroundImage);
       } else {
-        setProfileBgImg(blankBgImage);
+        setProfileBgImg("/images/blank/blankBgImg.png");
       }
       setFriendList(profileDataRes.friendList);
     } catch (error) {
