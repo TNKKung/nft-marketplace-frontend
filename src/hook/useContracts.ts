@@ -41,7 +41,9 @@ const useContracts = (): any => {
     // eslint-disable-next-line
   }, []);
 
-  const { setWaitTransaction } = useTransactionAction();
+  const {
+    reducer: { setWaitTransaction },
+  } = useTransactionAction();
   const changeNetwork = async () => {
     try {
       await window.ethereum.request({

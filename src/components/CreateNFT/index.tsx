@@ -16,7 +16,9 @@ import { useNavigate } from "react-router-dom";
 
 const CreateNFT: React.FC = () => {
   const { address } = useUserAccount();
-  const { setWaitTransaction } = useTransactionAction();
+  const {
+    reducer: { setWaitTransaction },
+  } = useTransactionAction();
   const { mintNFT } = useContracts();
   const { getIPFS } = useIPFS();
   const { checkWalletAddress } = useAddress();
