@@ -1,13 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import "./profile.css";
+
 import blankImage from "./blankImg.png";
 import blankBgImage from "./blankBgImg.png";
-import "./profile.css";
+import ModalFriendList from "./ModalFriendList";
+
+import NFTBox from "../boxComponent/NFTBox";
+
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
 import useBackend from "../../hook/useBackend";
-import NFTBox from "../boxComponent/NFTBox/NFTBox";
-import { useNavigate, useParams } from "react-router-dom";
-import ModalFriendList from "./ModalFriendList";
 
 const Profile: React.FC = () => {
   const params = useParams();
@@ -183,7 +187,7 @@ const Profile: React.FC = () => {
     profileAddress,
     address,
     checkLikeUser,
-    readTokenIdCreatedByOwner
+    readTokenIdCreatedByOwner,
   ]);
 
   useEffect(() => {
@@ -247,22 +251,22 @@ const Profile: React.FC = () => {
                           >
                             <i className="bi bi-sliders"></i> Setting
                           </button>
-                        ) : address === undefined ? null :
-                          profileLike === true ? (
-                            <button
-                              className="btn btn-secondary"
-                              onClick={handleRemoveFriend}
-                            >
-                              Remove favorite
-                            </button>
-                          ) : (
-                            <button
-                              className="btn btn-outline-secondary"
-                              onClick={handleAddFriend}
-                            >
-                              Add favorite
-                            </button>
-                          )}
+                        ) : address === undefined ? null : profileLike ===
+                          true ? (
+                          <button
+                            className="btn btn-secondary"
+                            onClick={handleRemoveFriend}
+                          >
+                            Remove favorite
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-outline-secondary"
+                            onClick={handleAddFriend}
+                          >
+                            Add favorite
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="my-2 row">
@@ -280,26 +284,36 @@ const Profile: React.FC = () => {
                   </div>
                 </div>
 
-                {profileBio === "" ? null :
+                {profileBio === "" ? null : (
                   <div className="mt-3 row">
-                    <div className="col fw-bold">Bio : <span className="fw-normal" >{profileBio}</span></div>
+                    <div className="col fw-bold">
+                      Bio : <span className="fw-normal">{profileBio}</span>
+                    </div>
                   </div>
-                }
-                {profileTwitter === "" ? null :
+                )}
+                {profileTwitter === "" ? null : (
                   <div className="mt-1 row">
-                    <div className="col fw-bold">Twitter : <span className="fw-normal" >{profileTwitter}</span></div>
+                    <div className="col fw-bold">
+                      Twitter :{" "}
+                      <span className="fw-normal">{profileTwitter}</span>
+                    </div>
                   </div>
-                }
-                {profileIg === "" ? null :
+                )}
+                {profileIg === "" ? null : (
                   <div className="mt-1 row">
-                    <div className="col fw-bold">Instagram : <span className="fw-normal" >{profileIg}</span></div>
+                    <div className="col fw-bold">
+                      Instagram : <span className="fw-normal">{profileIg}</span>
+                    </div>
                   </div>
-                }
-                {profileContact === "" ? null :
+                )}
+                {profileContact === "" ? null : (
                   <div className="mt-1 row">
-                    <div className="col fw-bold">Contact : <span className="fw-normal" >{profileContact}</span></div>
+                    <div className="col fw-bold">
+                      Contact :{" "}
+                      <span className="fw-normal">{profileContact}</span>
+                    </div>
                   </div>
-                }
+                )}
                 <div className="mt-4 row">
                   <div className="p-0 container-fluid">
                     <div className="row justify-content-between align-items-center">

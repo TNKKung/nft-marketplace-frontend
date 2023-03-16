@@ -2,9 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useBackend from "../../hook/useBackend";
 import "./search.css";
-import CollectionBox from "../boxComponent/CollectionBox/CollectionBox";
-import NFTBox from "../boxComponent/NFTBox/NFTBox";
-import UserBox from "../boxComponent/UserBox/UserBox";
+
+import CollectionBox from "../boxComponent/CollectionBox";
+import NFTBox from "../boxComponent/NFTBox";
+import UserBox from "../boxComponent/UserBox";
+
 import { ICollectionValue, INFTValue, IUserValue } from "./type";
 
 const Search: React.FC = () => {

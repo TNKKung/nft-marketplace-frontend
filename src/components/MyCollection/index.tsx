@@ -1,11 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import DeleteCollection from "./DeleteCollection/DeleteCollection";
+import AddCollection from "./AddCollection/AddCollection";
+
+import CollectionBox from "../boxComponent/CollectionBox";
+
 import useCollection from "../../hook/useCollection";
 import { useUserAccount } from "../../store/UserAction/hook";
-import AddCollection from "./AddCollection/AddCollection";
-import CollectionBox from "../boxComponent/CollectionBox/CollectionBox";
-import DeleteCollection from "./DeleteCollection/DeleteCollection";
 
 const MyCollection: React.FC = () => {
   const { getCollectionbyAddress } = useCollection();
@@ -41,16 +43,21 @@ const MyCollection: React.FC = () => {
     [deleteCollection]
   );
 
-  const handleSearchInput = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
-    setSearchCollection(e.target.value);
-    if(e.target.value === ""){
-      setFilterCollectionList(collectionList);
-    }else{
-      const filterCollection = collectionList.filter((collection:any, index:number)=> 
-      collection.collectionName.includes(e.target.value));
-      setFilterCollectionList(filterCollection);
-    }
-  },[collectionList])
+  const handleSearchInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchCollection(e.target.value);
+      if (e.target.value === "") {
+        setFilterCollectionList(collectionList);
+      } else {
+        const filterCollection = collectionList.filter(
+          (collection: any, index: number) =>
+            collection.collectionName.includes(e.target.value)
+        );
+        setFilterCollectionList(filterCollection);
+      }
+    },
+    [collectionList]
+  );
 
   const fetchData = useCallback(async () => {
     if (address !== undefined) {
