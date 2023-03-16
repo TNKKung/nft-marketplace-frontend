@@ -238,6 +238,48 @@ const useBackend = () => {
     }
   };
 
+  const getSearchNFTValue = async (searchValue: string | undefined) => {
+    try {
+      const config = await getConfig();
+      const searchRes = await axios.get(
+        `${baseUrl}/search/getNFTSearch?keyword=${searchValue}`,
+        config
+      );
+      console.log(searchRes.data.response);
+      return searchRes.data.response;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const getSearchUserValue = async (searchValue: string | undefined) => {
+    try {
+      const config = await getConfig();
+      const searchRes = await axios.get(
+        `${baseUrl}/search/getUserSearch?keyword=${searchValue}`,
+        config
+      );
+      console.log(searchRes.data.response);
+      return searchRes.data.response;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const getSearchCollectionValue = async (searchValue: string | undefined) => {
+    try {
+      const config = await getConfig();
+      const searchRes = await axios.get(
+        `${baseUrl}/search/getCollectionSearch?keyword=${searchValue}`,
+        config
+      );
+      console.log(searchRes.data.response);
+      return searchRes.data.response;
+    } catch (error) {
+      return false;
+    }
+  };
+
   return {
     readAllTokenId,
     readAllSaleTokenId,
@@ -256,6 +298,9 @@ const useBackend = () => {
     getAllTransaction,
     getSearchValue,
     readTokenIdCreatedByOwner,
+    getSearchNFTValue,
+    getSearchUserValue,
+    getSearchCollectionValue,
   };
 };
 export default useBackend;
