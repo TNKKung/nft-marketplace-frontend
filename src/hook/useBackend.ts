@@ -11,10 +11,16 @@ const useBackend = () => {
     return BackEndResponse.data.response;
   };
 
-  const readTokenIdData = async (tokenId: string | undefined) => {
+  const readAllSaleTokenId = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(`${baseUrl}/nft/sale`, config);
+    return BackEndResponse.data.response;
+  };
+
+  const readTokenIdData = async (tokenId: number | undefined) => {
     const config = await getConfig();
     const BackEndResponse = await axios.get(
-      `${baseUrl}/nft/getNFTByTokenId?tokenId=${Number(tokenId)}`,
+      `${baseUrl}/nft/getNFTByTokenId?tokenId=${tokenId}`,
       config
     );
     return BackEndResponse.data.response[0];
@@ -23,11 +29,11 @@ const useBackend = () => {
   const readTokenIdCreatedByOwner = async (tokenId: string | undefined) => {
     const config = await getConfig();
     const BackEndResponse = await axios.get(
-      `${baseUrl}/nft/getNFTCreatedByOwner?address=${(tokenId)}`,
+      `${baseUrl}/nft/getNFTCreatedByOwner?address=${tokenId}`,
       config
     );
     return BackEndResponse.data.response;
-  }
+  };
 
   const readTokenIdFromAddress = async (address: string | undefined) => {
     const config = await getConfig();
@@ -172,10 +178,7 @@ const useBackend = () => {
     }
   };
 
-  const addLikeNFT = async (
-    tokenId: string | undefined,
-    address: string
-  ) => {
+  const addLikeNFT = async (tokenId: string | undefined, address: string) => {
     try {
       const config = await getConfig();
       await axios.post(
@@ -237,6 +240,7 @@ const useBackend = () => {
 
   return {
     readAllTokenId,
+    readAllSaleTokenId,
     readTokenIdData,
     readTokenIdFromAddress,
     readProfileAddress,
@@ -251,7 +255,7 @@ const useBackend = () => {
     removeLikeNFT,
     getAllTransaction,
     getSearchValue,
-    readTokenIdCreatedByOwner
+    readTokenIdCreatedByOwner,
   };
 };
 export default useBackend;
