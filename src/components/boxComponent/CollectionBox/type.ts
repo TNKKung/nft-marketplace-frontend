@@ -11,7 +11,11 @@ export interface CollectionDataObject {
 }
 
 export interface CollectionProps {
-  CollectionId: string;
-  CollectionName?: string;
-  CollectionDescription?: string;
+  owner: string;
+  description: string;
+  collectionId: string;
+  collectionName: string;
+  nftImage: string;
+  ownerName: string;
+  profileImage: string;
 }
