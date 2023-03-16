@@ -162,14 +162,6 @@ const Header: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    if (window.ethereum) {
-      console.log("detected");
-    } else {
-      console.log("Not detect");
-    }
-  }, []);
-
   const changeAccount = useCallback(async () => {
     if (address !== undefined) {
       navigate("/");
