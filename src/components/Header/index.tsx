@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useBackend from "../../hook/useBackend";
 
+import "./header.css";
+
+import useBackend from "../../hook/useBackend";
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
-import blankImage from "./blankImg.png";
-import "./header.css";
 
 const Header: React.FC = () => {
   const {
@@ -22,6 +22,9 @@ const Header: React.FC = () => {
 
   let navigate = useNavigate();
 
+  const [accountsChanged, setAccountsChanged] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
+
   const fetchAddress = useCallback(async () => {
     if (address !== undefined) {
       const ProfileRes = await readProfileAddress(address);
@@ -30,7 +33,7 @@ const Header: React.FC = () => {
         if (ProfileRes.profileImage !== "") {
           changeImgProfile(ProfileRes.profileImage);
         } else {
-          changeImgProfile(blankImage);
+          changeImgProfile("/images/blank/blankImg.png");
         }
       } catch (error) {
         console.log(error);
@@ -47,7 +50,7 @@ const Header: React.FC = () => {
       fetchAddress();
     } else {
       // setprofileImg(blankImage);
-      changeImgProfile(blankImage);
+      changeImgProfile("/images/blank/blankImg.png");
     }
     // eslint-disable-next-line
   }, [address]);
@@ -167,8 +170,6 @@ const Header: React.FC = () => {
     }
   }, []);
 
-  const [accountsChanged, setAccountsChanged] = useState(false);
-
   const changeAccount = useCallback(async () => {
     if (address !== undefined) {
       navigate("/");
@@ -177,7 +178,6 @@ const Header: React.FC = () => {
     }
   }, [address, navigate, changeMetamaskAccount]);
 
-  const [searchInput, setSearchInput] = useState("");
   const handleSearchBtn = useCallback(() => {
     if (searchInput !== "") {
       navigate(`/search/${searchInput}`);
