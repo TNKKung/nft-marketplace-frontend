@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./home.css";
-import MarketplaceBg from "./MarketplaceBg.png";
 
 import NFTBox from "../boxComponent/NFTBox";
 import CollectionBox from "../boxComponent/CollectionBox";
@@ -10,6 +9,7 @@ import CollectionBox from "../boxComponent/CollectionBox";
 import useBackend from "../../hook/useBackend";
 import useCollection from "../../hook/useCollection";
 import { getShowData } from "../../utils/randomHelper";
+import { CollectionDataObject, NFTObject } from "./type";
 
 const Home: React.FC = () => {
   //const
@@ -19,16 +19,19 @@ const Home: React.FC = () => {
   const displayNone = " d-none";
 
   //state
-  const [showNft, setShowNft] = useState<any[]>([]);
-  const [showCollection, setShowCollection] = useState<any[]>([]);
-  const [showSaleNFT, setShowSaleNFT] = useState<any[]>([]);
+  const [showNft, setShowNft] = useState<NFTObject[]>([]);
+  const [showCollection, setShowCollection] = useState<CollectionDataObject[]>(
+    []
+  );
+  const [showSaleNFT, setShowSaleNFT] = useState<NFTObject[]>([]);
 
   //className State
-  const [NFTShowState, setNFTShowState] = useState(jCStart);
-  const [NFTSaleShowState, setNFTSaleShowState] = useState(jCStart);
-  const [ExploreNFT, setExploreNFT] = useState(displayNone);
-  const [ExploreCollection, setExploreCollection] = useState(displayNone);
-  const [ExploreSale, setExploreSale] = useState(displayNone);
+  const [NFTShowState, setNFTShowState] = useState<string>(jCStart);
+  const [NFTSaleShowState, setNFTSaleShowState] = useState<string>(jCStart);
+  const [ExploreNFT, setExploreNFT] = useState<string>(displayNone);
+  const [ExploreCollection, setExploreCollection] =
+    useState<string>(displayNone);
+  const [ExploreSale, setExploreSale] = useState<string>(displayNone);
 
   //hook
   const { readAllTokenId } = useBackend();
@@ -100,7 +103,7 @@ const Home: React.FC = () => {
         <div className="row">
           <div className="d-flex position-relative justify-content-center align-items-center">
             <img
-              src={MarketplaceBg}
+              src={"/images/background/MarketplaceBg.png"}
               alt="bgProfileImage"
               className="bg-white home_bgImg"
             ></img>
