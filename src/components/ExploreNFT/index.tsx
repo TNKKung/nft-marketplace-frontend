@@ -1,31 +1,39 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { CategoryObject, ExploreNFTProps, NFTObject } from "./type";
+
 import Explore from "../Explore";
 import NFTBox from "../boxComponent/NFTBox";
 
 import useBackend from "../../hook/useBackend";
 
-const ExploreNFT = () => {
+const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
   //const
   const displayShow = " ";
   const displayNone = " d-none";
 
   //State
-  const [NFTList, setNFTList] = useState<any[]>([]);
-  const [showNft, setShowNft] = useState<any[]>([]);
-  const [filterNFT, setFilterNFT] = useState("");
+  const [NFTList, setNFTList] = useState<NFTObject[]>([]);
+  const [showNft, setShowNft] = useState<NFTObject[]>([]);
+  const [filterNFT, setFilterNFT] = useState<string>("");
 
   //className State
-  const [ExploreNFT, setExploreNFT] = useState(displayNone);
+  const [ExploreNFT, setExploreNFT] = useState<string>(displayNone);
 
   //hook
-  const { readAllTokenId } = useBackend();
+  const { readAllTokenId, readAllSaleTokenId } = useBackend();
 
   //function
   const fetchData = useCallback(async () => {
-    const alltokenRes = await readAllTokenId();
+    let alltokenRes;
+    if (isSaleList) {
+      alltokenRes = await readAllSaleTokenId();
+    } else {
+      alltokenRes = await readAllTokenId();
+    }
     try {
       if (alltokenRes.length > 0) {
+        console.log(alltokenRes);
         setShowNft(alltokenRes);
         setNFTList(alltokenRes);
         setExploreNFT(displayShow);
@@ -33,11 +41,11 @@ const ExploreNFT = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [readAllTokenId]);
+  }, [isSaleList, readAllSaleTokenId, readAllTokenId]);
 
   const getfilter = useCallback(() => {
-    const getNFTFilter = NFTList.filter((NFT: any) => {
-      return NFT.category.some((category: any) => {
+    const getNFTFilter = NFTList.filter((NFT: NFTObject) => {
+      return NFT.category.some((category: CategoryObject) => {
         return category.label === filterNFT;
       });
     });
@@ -75,11 +83,27 @@ const ExploreNFT = () => {
             "d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list"
           }
         >
-          {showNft.map((value: any) => (
-            <div key={value.tokenId}>
-              <NFTBox TokenID={value.tokenId}></NFTBox>
-            </div>
-          ))}
+          {isSaleList ? (
+            <>
+              {showNft.map((value: NFTObject) => (
+                <>
+                  {value.statusSale && (
+                    <div key={value.tokenId}>
+                      <NFTBox TokenID={value.tokenId}></NFTBox>
+                    </div>
+                  )}
+                </>
+              ))}
+            </>
+          ) : (
+            <>
+              {showNft.map((value: NFTObject) => (
+                <div key={value.tokenId}>
+                  <NFTBox TokenID={value.tokenId}></NFTBox>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </Explore>
