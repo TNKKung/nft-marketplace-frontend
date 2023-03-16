@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import blankImage from "./blankImg.png";
-import blankBgImage from "./blankBgImg.png";
+
 import "./setting.css";
+
 import useBackend from "../../hook/useBackend";
 import { useUserAccount } from "../../store/UserAction/hook";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +24,19 @@ const SettingPage: React.FC = () => {
   const [profileInfoData, setProfileInfoData] = useState<any>();
 
   const profileImageInputRef = useRef<any>(null);
-  const [profileImage, setProfileImage] = useState(undefined);
-  const [previewProfileImage, setPreviewProfileImage] = useState(blankImage);
+  const [profileImage, setProfileImage] = useState<string | undefined>(
+    undefined
+  );
+  const profileBgImageInputRef = useRef<any>(null);
+  const [profileBgImage, setProfileBgImage] = useState<string | undefined>(
+    undefined
+  );
+  const [previewProfileBgImage, setPreviewProfileBgImage] = useState<string>(
+    "/images/blank/blankBgImg.png"
+  );
+  const [previewProfileImage, setPreviewProfileImage] = useState<string>(
+    "/images/blank/blankImg.png"
+  );
   const handleImageOnclick = () => {
     profileImageInputRef.current?.click();
   };
@@ -37,7 +48,7 @@ const SettingPage: React.FC = () => {
         setPreviewProfileImage(URL.createObjectURL(selectedFiles));
       } catch {
         if (profileInfoData.profileImage === "") {
-          setPreviewProfileImage(blankImage);
+          setPreviewProfileImage("/images/blank/blankImg.png");
         } else {
           setPreviewProfileImage(profileInfoData.profileImage);
         }
@@ -46,10 +57,6 @@ const SettingPage: React.FC = () => {
     [profileInfoData]
   );
 
-  const profileBgImageInputRef = useRef<any>(null);
-  const [profileBgImage, setProfileBgImage] = useState(undefined);
-  const [previewProfileBgImage, setPreviewProfileBgImage] =
-    useState(blankBgImage);
   const handleBgImageOnclick = () => {
     profileBgImageInputRef.current?.click();
   };
@@ -61,7 +68,7 @@ const SettingPage: React.FC = () => {
         setPreviewProfileBgImage(URL.createObjectURL(selectedFiles));
       } catch {
         if (profileInfoData.backgroundImage === "") {
-          setPreviewProfileBgImage(blankBgImage);
+          setPreviewProfileBgImage("/images/blank/blankBgImg.png");
         } else {
           setPreviewProfileBgImage(profileInfoData.backgroundImage);
         }
@@ -70,11 +77,11 @@ const SettingPage: React.FC = () => {
     [profileInfoData]
   );
 
-  const [profileName, setProfileName] = useState("");
-  const [profileBio, setProfileBio] = useState("");
-  const [profiletwitter, setProfileTwitter] = useState("");
-  const [profileInstagram, setProfileInstagram] = useState("");
-  const [profileContact, setProfileContact] = useState("");
+  const [profileName, setProfileName] = useState<string>("");
+  const [profileBio, setProfileBio] = useState<string>("");
+  const [profiletwitter, setProfileTwitter] = useState<string>("");
+  const [profileInstagram, setProfileInstagram] = useState<string>("");
+  const [profileContact, setProfileContact] = useState<string>("");
 
   const handleProfileName = useCallback((e: any) => {
     setProfileName(e.target.value);
@@ -108,9 +115,7 @@ const SettingPage: React.FC = () => {
       );
       console.log(profileImage);
       if (profileImage !== undefined) {
-        console.log("editprofileImg");
         const CIDprofileImage = await getIPFS(profileImage);
-        console.log(CIDprofileImage);
         if (CIDprofileImage !== false) {
           editImageProfile(CIDprofileImage, address);
           changeImgProfile(CIDprofileImage);
