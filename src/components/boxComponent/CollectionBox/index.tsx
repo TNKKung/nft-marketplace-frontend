@@ -1,33 +1,32 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import "./CollectionBox.css";
+import { CollectionDataObject, CollectionProps } from "./type";
+
 import useBackend from "../../../hook/useBackend";
 import useCollection from "../../../hook/useCollection";
-import "./CollectionBox.css";
-import blankImg from "./blankImg.png";
-import blankBgImg from "./blankBgImg.png";
-import { collectionDataObject } from "./type";
 
-interface CollectionProps {
-  CollectionId: string;
-  CollectionName?: string;
-  CollectionDescription?: string;
-}
-const CollectionBox = (props: CollectionProps) => {
+const CollectionBox: React.FC<CollectionProps> = ({ CollectionId }) => {
   const { getCollectionbyId } = useCollection();
   const { readProfileAddress, readTokenIdData } = useBackend();
+
   const [placeHolder, setPlaceHolder] = useState<string>(" placeholder");
-  const [collectionData, setCollectionData] = useState<collectionDataObject>({
+  const [collectionData, setCollectionData] = useState<CollectionDataObject>({
     collectionName: "collectionName",
     description: "-",
     listNFT: [],
   });
-  const [profileImage, setProfileImage] = useState<string>(blankImg);
-  const [bgImage, setBgImage] = useState<string>(blankBgImg);
+  const [profileImage, setProfileImage] = useState<string>(
+    "/images/blank/blankImg.png"
+  );
+  const [bgImage, setBgImage] = useState<string>(
+    "/images/blank/blankBgImg.png"
+  );
   const [profileName, setProfileName] = useState<string>("Name");
   const fetchData = useCallback(async () => {
     try {
-      const collectionRes = await getCollectionbyId(props.CollectionId);
-      // console.log(collectionRes);
+      const collectionRes = await getCollectionbyId(CollectionId);
       setCollectionData(collectionRes);
       const listNft = collectionRes.listNFT.length;
       if (listNft > 0) {
@@ -46,7 +45,7 @@ const CollectionBox = (props: CollectionProps) => {
     } catch (error) {
       console.log(error);
     }
-  }, [getCollectionbyId, props, readProfileAddress, readTokenIdData]);
+  }, [CollectionId, getCollectionbyId, readProfileAddress, readTokenIdData]);
 
   useEffect(() => {
     fetchData();
@@ -100,7 +99,7 @@ const CollectionBox = (props: CollectionProps) => {
         </div>
         <Link
           className="top-0 position-absolute w-100 h-100"
-          to={"/collection/" + props.CollectionId}
+          to={"/collection/" + CollectionId}
         ></Link>
       </div>
     </div>
