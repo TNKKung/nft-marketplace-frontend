@@ -19,6 +19,7 @@ const Profile: React.FC = () => {
     checkLikeUser,
     addLikeUser,
     removeLikeUser,
+    readTokenIdCreatedByOwner,
   } = useBackend();
   let navigate = useNavigate();
 
@@ -34,6 +35,7 @@ const Profile: React.FC = () => {
   const [ownNftList, setOwnNftList] = useState<any[]>([]);
   const [favoriteNftList, setFavoriteNftList] = useState<any[]>([]);
   const [onSaleList, setOnSaleList] = useState<any[]>([]);
+  const [createdList, setCreatedList] = useState<any[]>([]);
 
   const [friendList, setFriendList] = useState<any[]>();
 
@@ -85,10 +87,10 @@ const Profile: React.FC = () => {
 
   const navCreatedBtn = useCallback(async () => {
     resetNav();
-    setOnDefaultShowNFT([]);
-    setFilterShowNFTList([]);
+    setOnDefaultShowNFT(createdList);
+    setFilterShowNFTList(createdList);
     setCreated("Profile_nav_select");
-  }, [resetNav]);
+  }, [resetNav, createdList]);
 
   const handleSearch = useCallback(
     async (e: any) => {
@@ -135,10 +137,18 @@ const Profile: React.FC = () => {
     }
 
     const profileDataRes = await readProfileAddress(profileAddress);
+    console.log(profileDataRes);
     try {
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
       setFavoriteNftList(profileDataRes.favoriteNFT);
+      try{
+        const createdNFTRes = await readTokenIdCreatedByOwner(address);
+        setCreatedList(createdNFTRes);
+      }catch(error){
+        console.log(error);
+      }
+      
       if (profileDataRes.profileImage !== "") {
         setProfileMainImg(profileDataRes.profileImage);
       } else {
@@ -167,6 +177,7 @@ const Profile: React.FC = () => {
     profileAddress,
     address,
     checkLikeUser,
+    readTokenIdCreatedByOwner
   ]);
 
   useEffect(() => {
