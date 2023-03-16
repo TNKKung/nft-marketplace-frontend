@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import "./collection.css";
+import { CollectionDataObject, NFTObject } from "./type";
 import EditCollection from "./editCollection/EditCollection";
 
 import NFTBox from "../boxComponent/NFTBox";
-import BlankImg from "../Profile/blankImg.png";
 import DeleteCollection from "../MyCollection/DeleteCollection/DeleteCollection";
 
 import { useUserAccount } from "../../store/UserAction/hook";
@@ -21,7 +21,34 @@ const Collection: React.FC = () => {
   const { readTokenIdData } = useBackend();
   const { address } = useUserAccount();
 
-  const [deleteCollection, setDeleteCollection] = useState(false);
+  const [deleteCollection, setDeleteCollection] = useState<boolean>(false);
+  const [editCollection, setEditCollection] = useState<boolean>(false);
+  const [loadingDataClass, setLoadingDataClass] =
+    useState<string>("placeholder");
+  const [profileImg, setProfileImg] = useState<string>(
+    "/images/blank/BlankImg.png"
+  );
+  const [collectionObject, setCollectionObject] =
+    useState<CollectionDataObject>({
+      collectionName: "",
+      description: "",
+      listNFT: [],
+      collectionId: "",
+      owner: "",
+    });
+  const [collectionName, setCollectionName] =
+    useState<string>("Collection Name");
+  const [collectionOwner, setCollectionOwner] = useState<string>(
+    "0x0000000000000000000000000000000000000000"
+  );
+  const [collectionDescription, setCollectionDescription] =
+    useState<string>("Description");
+
+  const [collectionListNFT, setCollectionListNFT] = useState<NFTObject[]>([]);
+
+  const [filterNFTlist, setFilterNFTList] = useState<NFTObject[]>([]);
+  const [searchFilterInput, setSearchFilterInput] = useState<string>("");
+
   const handleDeleteCollection = useCallback(() => {
     if (deleteCollection === true) {
       setDeleteCollection(false);
@@ -30,7 +57,6 @@ const Collection: React.FC = () => {
     }
   }, [deleteCollection]);
 
-  const [editCollection, setEditCollection] = useState(false);
   const handleEditCollection = useCallback(() => {
     if (editCollection === true) {
       setEditCollection(false);
@@ -44,26 +70,13 @@ const Collection: React.FC = () => {
     setCollectionDescription(description);
   }, []);
 
-  const [loadingDataClass, setLoadingDataClass] = useState("placeholder");
-  const [profileImg, setProfileImg] = useState<string>(BlankImg);
-  const [collectionObject, setCollectionObject] = useState<any>({});
-  const [collectionName, setCollectionName] = useState("Collection Name");
-  const [collectionOwner, setCollectionOwner] = useState(
-    "0x0000000000000000000000000000000000000000"
-  );
-  const [collectionDescription, setCollectionDescription] =
-    useState("Description");
-  const [collectionListNFT, setCollectionListNFT] = useState<any>([]);
-  const [filterNFTlist, setFilterNFTList] = useState<any>([]);
-  const [searchFilterInput, setSearchFilterInput] = useState<any>([]);
-
   const fetchData = useCallback(async () => {
     if (params.collectionId !== undefined) {
       const collectionDescriptRes = await getCollectionbyId(
         params.collectionId
       );
-      // console.log(collectionDescriptRes);
       try {
+        console.log(collectionDescriptRes);
         setCollectionObject(collectionDescriptRes);
         setCollectionName(collectionDescriptRes.collectionName);
         setCollectionOwner(collectionDescriptRes.owner);
@@ -76,7 +89,7 @@ const Collection: React.FC = () => {
             );
             setProfileImg(tokenIDData.tokenURI);
           } else {
-            setProfileImg(BlankImg);
+            setProfileImg("/images/blank/BlankImg.png");
           }
         } catch (error) {
           console.log(error);
