@@ -131,13 +131,13 @@ const Home: React.FC = () => {
               }`}
             >
               {loadingRandomCollection ? (
-                <div className="flex justify-center w-full px-2 py-1 space-x-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center animate-pulse">
                   {MockWait.map(() => (
                     <BlankCollectionCard />
                   ))}
                 </div>
               ) : (
-                <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center">
                   {showCollection.map((value: any) => {
                     return (
                       <div className="m-2" key={value.collectionId}>
@@ -153,7 +153,7 @@ const Home: React.FC = () => {
                       </div>
                     );
                   })}
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -176,13 +176,13 @@ const Home: React.FC = () => {
               }`}
             >
               {loadingRandomNFT ? (
-                <div className="flex justify-center w-full animate-pulse">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center animate-pulse">
                   {MockWait.map(() => (
                     <BlankNFTCard />
                   ))}
                 </div>
               ) : (
-                <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center">
                   {showNft.map((value: any) => (
                     <div key={value.tokenId}>
                       <NFTBox
@@ -195,7 +195,7 @@ const Home: React.FC = () => {
                       ></NFTBox>
                     </div>
                   ))}
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -218,13 +218,13 @@ const Home: React.FC = () => {
               }`}
             >
               {loadingRandomNFTSale ? (
-                <div className="flex justify-center w-full animate-pulse">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center animate-pulse">
                   {MockWait.map(() => (
                     <BlankNFTCard />
                   ))}
                 </div>
               ) : (
-                <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5 w-full justify-items-center">
                   {showSaleNFT.map((value: any) => (
                     <div key={value.tokenId}>
                       <NFTBox
@@ -237,7 +237,7 @@ const Home: React.FC = () => {
                       ></NFTBox>
                     </div>
                   ))}
-                </>
+                </div>
               )}
             </div>
           </div>
