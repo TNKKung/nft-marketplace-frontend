@@ -10,10 +10,36 @@ const useBackend = () => {
     const BackEndResponse = await axios.get(`${baseUrl}/nft/`, config);
     return BackEndResponse.data.response;
   };
+  const readAllInfoTokenId = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(`${baseUrl}/nft/info`, config);
+    return BackEndResponse.data.response;
+  };
 
   const readAllSaleTokenId = async () => {
     const config = await getConfig();
     const BackEndResponse = await axios.get(`${baseUrl}/nft/sale`, config);
+    return BackEndResponse.data.response;
+  };
+
+  const readInfoSaleTokenId = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(`${baseUrl}/nft/infoSale`, config);
+    return BackEndResponse.data.response;
+  };
+
+  const readRandomToken = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(`${baseUrl}/nft/random`, config);
+    return BackEndResponse.data.response;
+  };
+
+  const readRandomSaleToken = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(
+      `${baseUrl}/nft/randomNFTSale`,
+      config
+    );
     return BackEndResponse.data.response;
   };
 
@@ -282,10 +308,14 @@ const useBackend = () => {
 
   return {
     readAllTokenId,
+    readAllInfoTokenId,
     readAllSaleTokenId,
+    readInfoSaleTokenId,
     readTokenIdData,
     readTokenIdFromAddress,
     readProfileAddress,
+    readRandomToken,
+    readRandomSaleToken,
     checkLikeUser,
     addLikeUser,
     removeLikeUser,

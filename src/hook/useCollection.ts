@@ -88,6 +88,15 @@ const useCollection = () => {
     return BackEndResponse?.data.response;
   };
 
+  const getLengthCollection = async () => {
+    const config = await getConfig();
+    const BackEndResponse = await axios.get(
+      `${baseUrl}/collection/length`,
+      config
+    );
+    return BackEndResponse?.data.response;
+  };
+
   const getRandomCollection = async () => {
     const config = await getConfig();
     const BackEndResponse = await axios.get(
@@ -105,6 +114,7 @@ const useCollection = () => {
     getAllCollection,
     editCollection,
     getRandomCollection,
+    getLengthCollection,
   };
 };
 export default useCollection;
