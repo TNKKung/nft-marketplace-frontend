@@ -88,7 +88,14 @@ const Search: React.FC = () => {
                     <>
                       {nftSearchValue.map((value: any) => (
                         <div key={value.tokenId}>
-                          <NFTBox TokenID={value.tokenId}></NFTBox>
+                          <NFTBox
+                            tokenId={value.tokenId}
+                            URLImage={value.tokenURI}
+                            collection={""}
+                            NFTname={value.nameNFT}
+                            saleNFTStatus={value.statusSale}
+                            price={value.price}
+                          ></NFTBox>
                         </div>
                       ))}
                     </>
