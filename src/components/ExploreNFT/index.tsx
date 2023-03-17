@@ -14,7 +14,6 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
   const displayNone = " d-none";
 
   //State
-  const [NFTList, setNFTList] = useState<NFTObject[]>([]);
   const [showNft, setShowNft] = useState<NFTObject[]>([]);
   const [infoList, setInfoList] = useState<NFTObject[]>([]);
   const [filterNFT, setFilterNFT] = useState<string>("");
@@ -41,9 +40,7 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
         alltokenRes = await readAllTokenId();
       }
       if (alltokenRes.length > 0) {
-        console.log(alltokenRes);
         setShowNft(alltokenRes);
-        setNFTList(alltokenRes);
         setExploreNFT(displayShow);
       }
     } catch (error) {
@@ -52,14 +49,13 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
   }, [isSaleList, readAllSaleTokenId, readAllTokenId]);
 
   const getfilter = useCallback(() => {
-    const getNFTFilter = NFTList.filter((NFT: NFTObject) => {
+    const getNFTFilter = infoList.filter((NFT: NFTObject) => {
       return NFT.category.some((category: CategoryObject) => {
         return category.label === filterNFT;
       });
     });
-    console.log(getNFTFilter);
     setShowNft(getNFTFilter);
-  }, [filterNFT, NFTList]);
+  }, [infoList, filterNFT]);
 
   useEffect(() => {
     const fetchInfoToken = async (): Promise<void> => {
@@ -68,9 +64,11 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
         if (isSaleList) {
           const responseInfo = await readInfoSaleTokenId();
           setInfoList(responseInfo);
+          setShowNft(responseInfo);
         } else {
           const responseInfo = await readAllInfoTokenId();
           setInfoList(responseInfo);
+          setShowNft(responseInfo);
         }
         setLoading(false);
       } catch (error) {
@@ -87,7 +85,7 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
     if (filterNFT !== "") {
       getfilter();
     } else {
-      setShowNft(NFTList);
+      setShowNft(infoList);
     }
     // eslint-disable-next-line
   }, [filterNFT]);
@@ -105,6 +103,10 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    console.log(showNft);
+  }, [showNft]);
+
   return (
     <Explore name="NFT" dropdown={true} setFilter={setFilterNFT}>
       <div className={"row mt-3 mb-5 justify-content-center" + ExploreNFT}>
@@ -117,18 +119,18 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
             <>
               {loading ? (
                 <div className="grid grid-cols-4 gap-3.5 animate-pulse">
-                  {showNft.map(() => (
-                    <BlankNFTCard />
+                  {showNft.map((_, index: number) => (
+                    <BlankNFTCard key={index} />
                   ))}
                 </div>
               ) : (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 ">
-                  {infoList.map((value: any) => (
+                  {showNft.map((value: any) => (
                     <div key={value.tokenId}>
                       <NFTBox
                         tokenId={value.tokenId}
                         URLImage={value.tokenURI}
-                        collection={""}
+                        collection={value.collectionName}
                         NFTname={value.nameNFT}
                         saleNFTStatus={value.statusSale}
                         price={value.price}
@@ -142,18 +144,18 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
             <>
               {loading ? (
                 <div className="grid grid-cols-4 gap-3.5 animate-pulse">
-                  {showNft.map(() => (
-                    <BlankNFTCard />
+                  {showNft.map((_, index: number) => (
+                    <BlankNFTCard key={index} />
                   ))}
                 </div>
               ) : (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 ">
-                  {infoList.map((value: any) => (
+                  {showNft.map((value: any) => (
                     <div key={value.tokenId}>
                       <NFTBox
                         tokenId={value.tokenId}
                         URLImage={value.tokenURI}
-                        collection={""}
+                        collection={value.collectionName}
                         NFTname={value.nameNFT}
                         saleNFTStatus={value.statusSale}
                         price={value.price}

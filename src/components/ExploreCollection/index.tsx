@@ -51,7 +51,7 @@ const ExploreCollection = () => {
   }, []);
 
   return (
-    <Explore name="Collection" dropdown={false}>
+    <Explore name="Collection" dropdown={false} setFilter={undefined}>
       <div className={"row mt-3 mb-5 justify-content-center"}>
         <div
           className={
