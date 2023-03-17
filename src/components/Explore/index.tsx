@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface Exploreprops {
   name: string;
@@ -15,15 +15,6 @@ const Explore: React.FC<Exploreprops> = ({
 }) => {
   //state
   const [dropdownSelect, setDropdownSelect] = useState("All");
-
-  //function
-  useEffect(() => {
-    if (dropdownSelect === "All") {
-      setFilter("");
-    } else {
-      setFilter(dropdownSelect);
-    }
-  }, [dropdownSelect, setFilter]);
 
   return (
     <div className="container">

@@ -9,14 +9,9 @@ import useCollection from "../../hook/useCollection";
 import BlankCollectionCard from "../BlankCard/BlankCollectionCard";
 
 const ExploreCollection = () => {
-  //const
-  const displayShow = " ";
-  const displayNone = " d-none";
-
   //State
   const [showCollection, setShowCollection] = useState<CollectionObject[]>([]);
   const [listCollection, setListCollection] = useState<CollectionObject[]>([]);
-  const [filterNFT, setFilterNFT] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   //className State
@@ -56,7 +51,7 @@ const ExploreCollection = () => {
   }, []);
 
   return (
-    <Explore name="Collection" dropdown={false} setFilter={setFilterNFT}>
+    <Explore name="Collection" dropdown={false}>
       <div className={"row mt-3 mb-5 justify-content-center"}>
         <div
           className={
