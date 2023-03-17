@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 interface Exploreprops {
   name: string;
   dropdown: boolean;
-  setFilter: Function;
+  setFilter?: Function;
   children?: React.ReactNode;
 }
 
