@@ -235,7 +235,12 @@ const Collection: React.FC = () => {
               {filterNFTlist.map((obj: any, index: number) => (
                 <NFTBox
                   key={obj.tokenId}
-                  TokenID={obj.tokenId.toString()}
+                  tokenId={obj.tokenId.toString()}
+                  URLImage={obj.tokenURI}
+                  collection={""}
+                  NFTname={obj.nameNFT}
+                  saleNFTStatus={obj.statusSale}
+                  price={obj.price}
                 ></NFTBox>
               ))}
             </div>
