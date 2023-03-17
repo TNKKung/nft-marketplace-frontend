@@ -9,7 +9,6 @@ import CollectionBox from "../boxComponent/CollectionBox";
 import useBackend from "../../hook/useBackend";
 import useCollection from "../../hook/useCollection";
 import { CollectionDataObject, NFTObject } from "./type";
-import { IconSpin } from "../Icon";
 import BlankCollectionCard from "../BlankCard/BlankCollectionCard";
 import BlankNFTCard from "../BlankCard/BlankNFTCard";
 
