@@ -188,7 +188,7 @@ const Home: React.FC = () => {
                       <NFTBox
                         tokenId={value.tokenId}
                         URLImage={value.tokenURI}
-                        collection={""}
+                        collection={value.collectionName}
                         NFTname={value.nameNFT}
                         saleNFTStatus={value.statusSale}
                         price={value.price}
