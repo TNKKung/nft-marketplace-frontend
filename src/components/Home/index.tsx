@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./home.css";
@@ -8,17 +8,14 @@ import CollectionBox from "../boxComponent/CollectionBox";
 
 import useBackend from "../../hook/useBackend";
 import useCollection from "../../hook/useCollection";
-import { getShowData } from "../../utils/randomHelper";
 import { CollectionDataObject, NFTObject } from "./type";
+import { IconSpin } from "../Icon";
+import BlankCollectionCard from "../BlankCard/BlankCollectionCard";
+import BlankNFTCard from "../BlankCard/BlankNFTCard";
 
 const Home: React.FC = () => {
-  //const
-  const jCStart = " justify-content-start";
-  const jCBetween = " justify-content-between";
-  const displayShow = " ";
-  const displayNone = " d-none";
-
   //state
+  const MockWait = [0, 1, 2, 3];
   const [showNft, setShowNft] = useState<NFTObject[]>([]);
   const [showCollection, setShowCollection] = useState<CollectionDataObject[]>(
     []
@@ -26,15 +23,15 @@ const Home: React.FC = () => {
   const [showSaleNFT, setShowSaleNFT] = useState<NFTObject[]>([]);
 
   //className State
-  const [NFTShowState, setNFTShowState] = useState<string>(jCStart);
-  const [NFTSaleShowState, setNFTSaleShowState] = useState<string>(jCStart);
-  const [ExploreNFT, setExploreNFT] = useState<string>(displayNone);
-  const [ExploreCollection, setExploreCollection] =
-    useState<string>(displayNone);
-  const [ExploreSale, setExploreSale] = useState<string>(displayNone);
+
+  const [loadingRandomNFT, setLoadingRandomNFT] = useState<boolean>(false);
+  const [loadingRandomNFTSale, setLoadingRandomNFTSale] =
+    useState<boolean>(false);
+  const [loadingRandomCollection, setLoadingRandomCollection] =
+    useState<boolean>(false);
 
   //hook
-  const { readAllTokenId } = useBackend();
+  const { readRandomSaleToken, readRandomToken } = useBackend();
   const { getRandomCollection } = useCollection();
   const navigate = useNavigate();
 
@@ -51,48 +48,52 @@ const Home: React.FC = () => {
     navigate("/viewSaleNFT/");
   };
 
-  //fetchdata
-  const fetchData = useCallback(async () => {
-    const alltokenRes = await readAllTokenId();
-    try {
-      // setNFTItem(alltokenRes);
-      if (alltokenRes.length > 0) {
-        const showTokenList = getShowData(alltokenRes, 4);
-        setShowNft(showTokenList);
-        if (showTokenList.length === 4) {
-          setNFTShowState(jCBetween);
-        }
-        setExploreNFT(displayShow);
-
-        const saleToken = alltokenRes.filter((tokenData: any) => {
-          return tokenData.statusSale === true;
-        });
-        if (saleToken.length > 0) {
-          const saleTokenList = getShowData(saleToken, 4);
-          setShowSaleNFT(saleTokenList);
-          if (saleToken.length === 4) {
-            setNFTSaleShowState(jCBetween);
-          }
-          setExploreSale(displayShow);
-        }
+  useEffect(() => {
+    const fetchRandomNFT = async (): Promise<void> => {
+      setLoadingRandomNFT(true);
+      try {
+        const randomToken = await readRandomToken();
+        console.log(randomToken);
+        setShowNft(randomToken);
+        setLoadingRandomNFT(false);
+      } catch (err) {
+        console.log(err);
       }
-    } catch (error) {
-      console.log(error);
-    }
-
-    const allCollectionRes = await getRandomCollection();
-    try {
-      if (allCollectionRes.length > 0) {
-        setShowCollection(allCollectionRes);
-        setExploreCollection(displayShow);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [getRandomCollection, readAllTokenId]);
+      setLoadingRandomNFT(false);
+    };
+    fetchRandomNFT();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    fetchData();
+    const fetchRandomCollection = async (): Promise<void> => {
+      setLoadingRandomCollection(true);
+      try {
+        const allCollectionRes = await getRandomCollection();
+        setShowCollection(allCollectionRes);
+        setLoadingRandomCollection(false);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoadingRandomCollection(false);
+    };
+    fetchRandomCollection();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const fetchRandomNFTSale = async (): Promise<void> => {
+      setLoadingRandomNFTSale(true);
+      try {
+        const alltokenRes = await readRandomSaleToken();
+        setShowSaleNFT(alltokenRes);
+        setLoadingRandomNFTSale(false);
+      } catch (error) {
+        console.log(error);
+      }
+      setLoadingRandomNFTSale(false);
+    };
+    fetchRandomNFTSale();
     // eslint-disable-next-line
   }, []);
 
@@ -124,21 +125,17 @@ const Home: React.FC = () => {
               </button>
             </div>
           </div>
-          <div className={"row mt-3 justify-content-center" + ExploreNFT}>
+          <div className={"row mt-3 justify-content-center"}>
             <div
-              className={
-                "flex flex-row p-2 justify-center flex-wrap border border-secondary-subtle rounded home_show_list"
-              }
+              className={`flex flex-row p-2  flex-wrap border border-secondary-subtle rounded home_show_list ${
+                showCollection.length === 4 && "justify-center "
+              }`}
             >
-              {showCollection.length === 0 ? (
-                <div
-                  className={
-                    "container-fluid py-10 d-flex justify-content-center "
-                  }
-                >
-                  <div className="spinner-border" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
+              {loadingRandomCollection ? (
+                <div className="flex justify-center w-full px-2 py-1 space-x-4">
+                  {MockWait.map(() => (
+                    <BlankCollectionCard />
+                  ))}
                 </div>
               ) : (
                 <>
@@ -173,20 +170,34 @@ const Home: React.FC = () => {
               </button>
             </div>
           </div>
-          <div
-            className={"row mt-3 justify-content-center" + ExploreCollection}
-          >
+          <div className={"row mt-3 justify-content-center"}>
             <div
-              className={
-                "d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list" +
-                NFTShowState
-              }
+              className={` d-flex flex-row p-2  flex-wrap border border-secondary-subtle rounded home_show_list ${
+                showNft.length === 4 && "justify-center"
+              }`}
             >
-              {showNft.map((value: any) => (
-                <div key={value.tokenId}>
-                  <NFTBox TokenID={value.tokenId}></NFTBox>
+              {loadingRandomNFT ? (
+                <div className="flex justify-center w-full animate-pulse">
+                  {MockWait.map(() => (
+                    <BlankNFTCard />
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <>
+                  {showNft.map((value: any) => (
+                    <div key={value.tokenId}>
+                      <NFTBox
+                        tokenId={value.tokenId}
+                        URLImage={value.tokenURI}
+                        collection={""}
+                        NFTname={value.nameNFT}
+                        saleNFTStatus={value.statusSale}
+                        price={value.price}
+                      ></NFTBox>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
 
@@ -201,18 +212,34 @@ const Home: React.FC = () => {
               </button>
             </div>
           </div>
-          <div className={"row mt-3 mb-5 justify-content-center" + ExploreSale}>
+          <div className={"row mt-3 mb-5 justify-content-center"}>
             <div
-              className={
-                "d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list" +
-                NFTSaleShowState
-              }
+              className={`d-flex flex-row p-2 flex-wrap border border-secondary-subtle rounded home_show_list ${
+                showSaleNFT.length === 4 && "justify-center"
+              }`}
             >
-              {showSaleNFT.map((value: any) => (
-                <div key={value.tokenId}>
-                  <NFTBox TokenID={value.tokenId}></NFTBox>
+              {loadingRandomNFTSale ? (
+                <div className="flex justify-center w-full animate-pulse">
+                  {MockWait.map(() => (
+                    <BlankNFTCard />
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <>
+                  {showSaleNFT.map((value: any) => (
+                    <div key={value.tokenId}>
+                      <NFTBox
+                        tokenId={value.tokenId}
+                        URLImage={value.tokenURI}
+                        collection={""}
+                        NFTname={value.nameNFT}
+                        saleNFTStatus={value.statusSale}
+                        price={value.price}
+                      ></NFTBox>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>
