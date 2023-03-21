@@ -14,6 +14,7 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
   const displayNone = " d-none";
 
   //State
+  const [nftLenght, setNftLengt] = useState<NFTObject[]>([]);
   const [showNft, setShowNft] = useState<NFTObject[]>([]);
   const [infoList, setInfoList] = useState<NFTObject[]>([]);
   const [filterNFT, setFilterNFT] = useState<string>("");
@@ -39,22 +40,21 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
       } else {
         alltokenRes = await readAllTokenId();
       }
-      if (alltokenRes.length > 0) {
-        setShowNft(alltokenRes);
-        setExploreNFT(displayShow);
-      }
+      setNftLengt(alltokenRes);
+      setExploreNFT(displayShow);
     } catch (error) {
       console.log(error);
     }
   }, [isSaleList, readAllSaleTokenId, readAllTokenId]);
 
   const getfilter = useCallback(() => {
-    const getNFTFilter = infoList.filter((NFT: NFTObject) => {
-      return NFT.category.some((category: CategoryObject) => {
-        return category.label === filterNFT;
-      });
-    });
-    setShowNft(getNFTFilter);
+    setShowNft(
+      infoList.filter((NFT: NFTObject) => {
+        return NFT.category.some((category: CategoryObject) => {
+          return category.label === filterNFT;
+        });
+      })
+    );
   }, [infoList, filterNFT]);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
             <>
               {loading ? (
                 <div className="grid grid-cols-4 gap-3.5 animate-pulse">
-                  {showNft.map((_, index: number) => (
+                  {nftLenght.map((_, index: number) => (
                     <BlankNFTCard key={index} />
                   ))}
                 </div>
@@ -144,7 +144,7 @@ const ExploreNFT: React.FC<ExploreNFTProps> = ({ isSaleList }) => {
             <>
               {loading ? (
                 <div className="grid grid-cols-4 gap-3.5 animate-pulse">
-                  {showNft.map((_, index: number) => (
+                  {nftLenght.map((_, index: number) => (
                     <BlankNFTCard key={index} />
                   ))}
                 </div>
