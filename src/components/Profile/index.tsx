@@ -145,10 +145,11 @@ const Profile: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+  }, [readTokenIdFromAddress, profileAddress]);
 
-    const profileDataRes = await readProfileAddress(profileAddress);
+  const fetchInfoUser = useCallback(async (): Promise<void> => {
     try {
-      console.log(profileDataRes);
+      const profileDataRes = await readProfileAddress(profileAddress);
 
       setProfileName(profileDataRes.name);
       setProfileBio(profileDataRes.bio);
@@ -186,13 +187,17 @@ const Profile: React.FC = () => {
       }
     }
   }, [
-    readTokenIdFromAddress,
-    readProfileAddress,
-    profileAddress,
     address,
     checkLikeUser,
+    profileAddress,
+    readProfileAddress,
     readTokenIdCreatedByOwner,
   ]);
+
+  useEffect(() => {
+    fetchInfoUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchData();
