@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "./header.css";
 
+import { IconSearch } from "../Icon";
+
 import useBackend from "../../hook/useBackend";
 import { useUserAccount } from "../../store/UserAction/hook";
 import { shortenAddress } from "../../utils/addressHelper";
@@ -223,15 +225,18 @@ const Header: React.FC = () => {
               <div className="h6">Marketplace</div>
             </Link>
 
-            <div className="px-3 d-flex align-items-center">
-              <div className="header_input_form me-3">
-                <input
-                  className="form-control"
-                  placeholder="Search by Collection / User / Address"
-                  value={searchInput}
-                  onChange={handleSearchInput}
-                  onKeyDown={handleEnterEvent}
-                ></input>
+            <div className="px-3 space-x-2 d-flex align-items-center">
+              <div className="w-full p-2 border rounded-md">
+                <IconSearch className="absolute w-5 h-5 translate-x-1 translate-y-0.5" />
+                <div className="pl-8 header_input_form me-3">
+                  <input
+                    className="w-full outline-none"
+                    placeholder="Search by Collection / User / Address"
+                    value={searchInput}
+                    onChange={handleSearchInput}
+                    onKeyDown={handleEnterEvent}
+                  />
+                </div>
               </div>
               <button
                 className="btn btn-outline-secondary"
