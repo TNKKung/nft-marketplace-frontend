@@ -63,7 +63,7 @@ const CreateNFT: React.FC = () => {
     }[]
   >([{ value: " ", label: "..." }]);
 
-  const [creatorAddressList, setCreatorAddressList] = useState<any>();
+  const [creatorAddressList, setCreatorAddressList] = useState<any[]>([]);
   const [royaltyTotal, setRoyaltyTotal] = useState<number>(0);
 
   const [creatorAddressInput, setCreatorAddressInput] =
