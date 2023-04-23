@@ -194,12 +194,13 @@ const Profile: React.FC = () => {
     readTokenIdCreatedByOwner,
   ]);
 
-  useEffect(() => {
-    fetchInfoUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   fetchInfoUser();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
+    fetchInfoUser();
     fetchData();
     // eslint-disable-next-line
   }, [profileAddress]);

@@ -50,7 +50,7 @@ const Search: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
-    setLoadingCollections(true);
+    setLoadingCollections(false);
   }, [getSearchCollectionValue, params.searchValue]);
 
   const fetchDataUsers = useCallback(async () => {
