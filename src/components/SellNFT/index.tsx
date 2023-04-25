@@ -167,10 +167,10 @@ const SellNFT: React.FC = () => {
             <div className="col-auto h6">Fee</div>
           </div>
           <div className="p-2 border rounded container-fluid">
-            <div className="row justify-content-between">
+            {/* <div className="row justify-content-between">
               <div className="col-auto text-muted">NFT Marketplace Fee</div>
               <div className="col-auto text-muted">2.5%</div>
-            </div>
+            </div> */}
             <div className="row justify-content-between">
               <div className="col-auto text-muted">Creator Earn</div>
               <div className="col-auto text-muted">{collabPercent}%</div>
@@ -180,7 +180,7 @@ const SellNFT: React.FC = () => {
                 Estimate total earnings ({blockchainName})
               </div>
               <div className="col-auto h6">
-                {amountInput * ((100 - 2.5 - collabPercent) / 100)}
+                {amountInput * ((100 - collabPercent) / 100)}
               </div>
             </div>
           </div>
