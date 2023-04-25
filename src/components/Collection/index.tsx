@@ -26,7 +26,7 @@ const Collection: React.FC = () => {
   const [loadingDataClass, setLoadingDataClass] =
     useState<string>("placeholder");
   const [profileImg, setProfileImg] = useState<string>(
-    "/images/blank/BlankImg.png"
+    "/images/blank/blankImg.png"
   );
   const [collectionObject, setCollectionObject] =
     useState<CollectionDataObject>({
