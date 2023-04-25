@@ -158,7 +158,7 @@ const Profile: React.FC = () => {
       setProfileIg(profileDataRes.instagram);
       setProfileTwitter(profileDataRes.twitter);
       try {
-        const createdNFTRes = await readTokenIdCreatedByOwner(address);
+        const createdNFTRes = await readTokenIdCreatedByOwner(profileAddress);
         setCreatedList(createdNFTRes);
       } catch (error) {
         console.log(error);

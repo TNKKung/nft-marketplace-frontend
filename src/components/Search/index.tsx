@@ -25,6 +25,8 @@ const Search: React.FC = () => {
     ICollectionValue[]
   >([]);
 
+  const [foundState, setFoundState] = useState<boolean>(true);
+
   const [loadingNFTs, setLoadingNFTs] = useState<boolean>(false);
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
   const [loadingUsers, setLoadingUsers] = useState<boolean>(false);
@@ -69,20 +71,23 @@ const Search: React.FC = () => {
   useEffect(() => {
     //first time running
     fetchDataNFTs();
-    // eslint-disable-next-line
-  }, [params]);
-
-  useEffect(() => {
-    //first time running
     fetchDataUsers();
-    // eslint-disable-next-line
-  }, [params]);
-
-  useEffect(() => {
-    //first time running
     fetchDataCollections();
     // eslint-disable-next-line
   }, [params]);
+
+  useEffect(()=>{
+    if(userSearchValue.length === 0 &&
+      nftSearchValue.length === 0 &&
+      collectionSearchValue.length === 0){
+        setFoundState(false);
+      }else{
+        setFoundState(true);
+      }
+  },[nftSearchValue, 
+    collectionSearchValue,
+  userSearchValue]);
+
 
   return (
     <div className="h-full pb-10">
@@ -192,9 +197,7 @@ const Search: React.FC = () => {
             </div>
           </div>
         ) : null}
-        {userSearchValue.length === 0 &&
-        nftSearchValue.length === 0 &&
-        collectionSearchValue.length === 0 ? (
+        {foundState === false ? (
           <div>No result found</div>
         ) : null}
       </div>
