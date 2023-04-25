@@ -25,8 +25,8 @@ const Search: React.FC = () => {
     ICollectionValue[]
   >([]);
 
-  const [foundState, setFoundState] = useState<boolean>(true);
-  const [firstState, setFirstState] = useState<boolean>(true);
+  // const [foundState, setFoundState] = useState<boolean>(true);
+  // const [firstState, setFirstState] = useState<boolean>(true);
 
   const [loadingNFTs, setLoadingNFTs] = useState<boolean>(false);
   const [loadingCollections, setLoadingCollections] = useState<boolean>(false);
@@ -75,23 +75,23 @@ const Search: React.FC = () => {
     fetchDataNFTs();
     fetchDataUsers();
     fetchDataCollections();
-    setFirstState(false);
+    // setFirstState(false);
     // eslint-disable-next-line
   }, [params]);
 
-  useEffect(()=>{
-    if(userSearchValue.length === 0 &&
-      nftSearchValue.length === 0 &&
-      collectionSearchValue.length === 0 &&
-      firstState === false){
-        setFoundState(false);
-      }else{
-        setFoundState(true);
-      }
-  },[firstState,
-    nftSearchValue, 
-    collectionSearchValue,
-  userSearchValue]);
+  // useEffect(()=>{
+  //   if(userSearchValue.length === 0 &&
+  //     nftSearchValue.length === 0 &&
+  //     collectionSearchValue.length === 0 &&
+  //     firstState === false){
+  //       setFoundState(false);
+  //     }else{
+  //       setFoundState(true);
+  //     }
+  // },[firstState,
+  //   nftSearchValue, 
+  //   collectionSearchValue,
+  // userSearchValue]);
 
 
   return (
@@ -202,9 +202,9 @@ const Search: React.FC = () => {
             </div>
           </div>
         ) : null}
-        {foundState === false ? (
+        {/* {foundState === false ? (
           <div>No result found</div>
-        ) : null}
+        ) : null} */}
       </div>
     </div>
   );
