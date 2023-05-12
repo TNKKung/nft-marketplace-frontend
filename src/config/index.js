@@ -4,5 +4,4 @@ module.exports = {
   Market_ADDRESS: "0xE810a1Fa602E71548e3E40E0Db0109fF47A9B7D9",
   blockchainName: "Sepolia",
   chainID: "0xaa36a7",
-  jwtSecretKey: process.env.REACT_APP_JWT_SECRET_KEY,
 };
